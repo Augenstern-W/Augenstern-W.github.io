@@ -102,6 +102,6 @@ theme: gal
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repository: git@github.com:Augenstern-W/Augenstern-W.github.io.git
+  repository: git@ssh.github.com:Augenstern-W/Augenstern-W.github.io.git
   branch: main
   message: Update blog
