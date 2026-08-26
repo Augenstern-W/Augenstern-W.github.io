@@ -6,6 +6,7 @@ hexo.extend.filter.register('after_generate', function () {
   const src = path.join(hexo.base_dir, 'source', '.nojekyll');
   const dest = path.join(hexo.public_dir, '.nojekyll');
   if (fs.existsSync(src)) {
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
     fs.copyFileSync(src, dest);
   }
 });
