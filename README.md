@@ -2,7 +2,7 @@
 
 > 仗剑观书，落笔留痕。记录行路所见所闻，分享所思所想。
 
-基于 **Hexo** + **Gal 主题** 搭建的个人博客，部署在 **GitHub Pages** 上。
+基于 **Hexo** + **江湖 主题** 搭建的个人博客，部署在 **GitHub Pages** 上。
 
 🔗 在线访问：[https://Augenstern-W.github.io](https://Augenstern-W.github.io)
 
@@ -13,7 +13,7 @@
 | 工具 | 用途 |
 | :--- | :--- |
 | [Hexo](https://hexo.io/) | 快速、简洁的静态博客框架 |
-| [Gal 主题](https://github.com/ZEROKISEKI/hexo-theme-gal) | 二次元风格的 Hexo 主题 |
+| [江湖主题（基于Gal主题）](https://github.com/ZEROKISEKI/hexo-theme-gal) | 江湖风格的 Hexo 主题 |
 | [GitHub Pages](https://pages.github.com/) | 免费托管服务 |
 | Node.js + npm | 本地开发环境 |
 
