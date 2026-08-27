@@ -441,35 +441,35 @@
                 
                 <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
     
-    <a href="/tags/CTF/" style="font-size: 9.407761952300758px;" class="tag-cloud-link">CTF</a>
+    <a href="/tags/CTF/" style="font-size: 11.263006748555519px;" class="tag-cloud-link">CTF</a>
     
-    <a href="/tags/misc/" style="font-size: 8.931994385730734px;" class="tag-cloud-link">misc</a>
+    <a href="/tags/misc/" style="font-size: 16.327499381896395px;" class="tag-cloud-link">misc</a>
     
-    <a href="/tags/%E5%8F%96%E8%AF%81%E4%B8%8E%E5%AE%89%E5%85%A8%E6%9D%82%E9%A1%B9/" style="font-size: 9.741088618342808px;" class="tag-cloud-link">取证与安全杂项</a>
+    <a href="/tags/%E5%8F%96%E8%AF%81%E4%B8%8E%E5%AE%89%E5%85%A8%E6%9D%82%E9%A1%B9/" style="font-size: 15.918088954763224px;" class="tag-cloud-link">取证与安全杂项</a>
     
-    <a href="/tags/Bing/" style="font-size: 13.152310880929953px;" class="tag-cloud-link">Bing</a>
+    <a href="/tags/Bing/" style="font-size: 19.94734273667649px;" class="tag-cloud-link">Bing</a>
     
-    <a href="/tags/Google/" style="font-size: 17.66064099323639px;" class="tag-cloud-link">Google</a>
+    <a href="/tags/Google/" style="font-size: 18.783183604514065px;" class="tag-cloud-link">Google</a>
     
-    <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 16.94962183982059px;" class="tag-cloud-link">虚拟机</a>
+    <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 13.953736409059118px;" class="tag-cloud-link">虚拟机</a>
     
-    <a href="/tags/Linux/" style="font-size: 13.639944601800675px;" class="tag-cloud-link">Linux</a>
+    <a href="/tags/Linux/" style="font-size: 13.461408035138867px;" class="tag-cloud-link">Linux</a>
     
-    <a href="/tags/Recon/" style="font-size: 13.25613505362634px;" class="tag-cloud-link">Recon</a>
+    <a href="/tags/Recon/" style="font-size: 10.436968165381135px;" class="tag-cloud-link">Recon</a>
     
-    <a href="/tags/Encoding/" style="font-size: 8.315510832479669px;" class="tag-cloud-link">Encoding</a>
+    <a href="/tags/Encoding/" style="font-size: 19.98618801381742px;" class="tag-cloud-link">Encoding</a>
     
-    <a href="/tags/Stego/" style="font-size: 14.123584681487884px;" class="tag-cloud-link">Stego</a>
+    <a href="/tags/Stego/" style="font-size: 19.276386124182867px;" class="tag-cloud-link">Stego</a>
     
-    <a href="/tags/Forensics/" style="font-size: 19.080505001269078px;" class="tag-cloud-link">Forensics</a>
+    <a href="/tags/Forensics/" style="font-size: 10.54002221512333px;" class="tag-cloud-link">Forensics</a>
     
-    <a href="/tags/Traffic/" style="font-size: 8.36276828585858px;" class="tag-cloud-link">Traffic</a>
+    <a href="/tags/Traffic/" style="font-size: 8.487915706862175px;" class="tag-cloud-link">Traffic</a>
     
-    <a href="/tags/SandBox/" style="font-size: 12.577239810375115px;" class="tag-cloud-link">SandBox</a>
+    <a href="/tags/SandBox/" style="font-size: 10.770274203464774px;" class="tag-cloud-link">SandBox</a>
     
-    <a href="/tags/Blockchain/" style="font-size: 10.774850889110077px;" class="tag-cloud-link">Blockchain</a>
+    <a href="/tags/Blockchain/" style="font-size: 11.222691239947135px;" class="tag-cloud-link">Blockchain</a>
     
-    <a href="/tags/AI/" style="font-size: 10.654363227362936px;" class="tag-cloud-link">AI</a>
+    <a href="/tags/AI/" style="font-size: 19.30638869991418px;" class="tag-cloud-link">AI</a>
     
 </div>
                 
@@ -534,7 +534,13 @@
         <div class="music-head">
             <span id="music-title">♫ 未播放</span>
             <div class="music-head-btns">
-                <button type="button" id="music-volume" class="music-close" title="静音 / 取消静音"><i class="fa fa-volume-up"></i></button>
+                <div class="music-vol-wrap">
+                    <button type="button" id="music-volume" class="music-close" title="静音 / 取消静音（悬停调音量）"><i class="fa fa-volume-up"></i></button>
+                    <div class="music-vol-pop">
+                        <input type="range" id="music-vol" min="0" max="100" step="1" value="70">
+                        <span id="music-val">70%</span>
+                    </div>
+                </div>
                 <button type="button" id="music-close" class="music-close" title="收起"><i class="fa fa-chevron-down"></i></button>
             </div>
         </div>
@@ -632,23 +638,40 @@
     margin: 0;
     cursor: pointer;
 }
-#gal-music .music-volume {
+#gal-music .music-vol-wrap {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 6px;
-    margin-bottom: 10px;
-    font-size: 11px;
-    color: #bbb;
 }
-#gal-music .music-volume input[type="range"] {
-    flex: 1;
+#gal-music .music-vol-pop {
+    display: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 100%;
+    width: 36px;
+    padding: 8px 0 6px;
+    border-top: 12px solid transparent;
+    background: rgba(20, 20, 20, 0.95) padding-box;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+#gal-music .music-vol-wrap:hover .music-vol-pop {
+    display: flex;
+}
+#gal-music .music-vol-pop #music-vol {
+    width: 88px;
     margin: 0;
-    height: auto;
+    transform: rotate(-90deg);
     cursor: pointer;
 }
-#gal-music .music-volume #music-val {
-    min-width: 30px;
-    text-align: right;
+#gal-music .music-vol-pop #music-val {
+    font-size: 10px;
+    color: #bbb;
+    line-height: 1;
 }
 #gal-music input[type="range"] {
     accent-color: #6cf;
