@@ -195,7 +195,7 @@
                 <a href="/2026/08/26/hello-world/">
                     <div class="img">
                         
-                        <img src="/imgs/preview/preview1.jpg" alt="Hello World">
+                        <img src="/imgs/preview/preview3.jpg" alt="Hello World">
                     </div>
                     <div class="info">
                         
@@ -229,7 +229,7 @@
             <p style="text-align: center;">
                 <a href="/2026/08/26/hello-world/">
                     
-                    <img src="/imgs/preview/preview2.jpg" alt="Hello World">
+                    <img src="/imgs/preview/preview4.jpg" alt="Hello World">
                 </a>
             </p>
         </div>
@@ -452,13 +452,18 @@
             <input type="range" id="music-progress" min="0" max="100" step="0.1" value="0">
             <span id="music-dur">0:00</span>
         </div>
+        <div class="music-volume">
+            <i class="fa fa-volume-down"></i>
+            <input type="range" id="music-vol" min="0" max="100" step="1" value="70">
+            <span id="music-val">70%</span>
+        </div>
         <div class="music-bar">
             <button type="button" id="music-prev" title="上一首"><i class="fa fa-backward"></i></button>
             <button type="button" id="music-play" title="播放 / 暂停"><i class="fa fa-play"></i></button>
             <button type="button" id="music-next" title="下一首"><i class="fa fa-forward"></i></button>
             <button type="button" id="music-speed" title="切换倍速">1.0x</button>
         </div>
-        <audio id="music-audio" preload="auto"></audio>
+        <audio id="music-audio" preload="auto" autoplay muted></audio>
     </div>
 </div>
 
@@ -536,6 +541,27 @@
     margin: 0;
     cursor: pointer;
 }
+#gal-music .music-volume {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+    font-size: 11px;
+    color: #bbb;
+}
+#gal-music .music-volume input[type="range"] {
+    flex: 1;
+    margin: 0;
+    height: auto;
+    cursor: pointer;
+}
+#gal-music .music-volume #music-val {
+    min-width: 30px;
+    text-align: right;
+}
+#gal-music input[type="range"] {
+    accent-color: #6cf;
+}
 #gal-music .music-bar {
     display: flex;
     align-items: center;
@@ -579,12 +605,15 @@
     var progressEl = document.getElementById('music-progress');
     var curEl = document.getElementById('music-cur');
     var durEl = document.getElementById('music-dur');
+    var volEl = document.getElementById('music-vol');
+    var valEl = document.getElementById('music-val');
 
     var speeds = [0.75, 1, 1.25, 1.5, 2];
     var current = 0;
     var speedIndex = 1;
     var playing = false;
     var seeking = false;
+    var autoMutedByBrowser = false;
 
     function formatTime(s) {
         if (!isFinite(s) || s < 0) s = 0;
@@ -594,8 +623,9 @@
         return m + ':' + (sec < 10 ? '0' + sec : sec);
     }
 
-    function setVolumeIcon() {
+    function setVolumeUI() {
         volumeBtn.innerHTML = audio.muted ? '<i class="fa fa-volume-off"></i>' : '<i class="fa fa-volume-up"></i>';
+        valEl.textContent = Math.round(audio.volume * 100) + '%';
     }
 
     function load(index) {
@@ -671,14 +701,35 @@
         curEl.textContent = formatTime(audio.currentTime);
     });
 
-    // 打开网站默认自动播放
+    // 音量调节（默认 70%）
+    audio.volume = 0.7;
+    volEl.value = 70;
+    setVolumeUI();
+    volEl.addEventListener('input', function () {
+        audio.volume = volEl.value / 100;
+        if (audio.muted) audio.muted = false;
+        autoMutedByBrowser = false;
+        setVolumeUI();
+    });
+
+    // 被浏览器静音自动播放后，用户首次点击页面任意位置即恢复声音
+    document.addEventListener('click', function () {
+        if (autoMutedByBrowser) {
+            autoMutedByBrowser = false;
+            audio.muted = false;
+            setVolumeUI();
+        }
+    }, true);
+
+    // 打开网站默认自动播放；若被浏览器拦截则静音自动播放，
+    // 待用户首次点击页面任意位置后恢复声音
     load(0);
     var autoPlay = audio.play();
     if (autoPlay && typeof autoPlay.catch === 'function') {
         autoPlay.catch(function () {
-            // 浏览器阻止带声音的自动播放，改为静音自动播放
             audio.muted = true;
-            setVolumeIcon();
+            setVolumeUI();
+            autoMutedByBrowser = true;
             audio.play().catch(function () {});
         });
     }
