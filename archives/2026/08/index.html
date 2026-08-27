@@ -367,9 +367,15 @@
     <div id="music-panel" class="music-panel">
         <div class="music-head">
             <span id="music-title">♫ 未播放</span>
-            <button type="button" id="music-close" class="music-close" title="收起">
-                <i class="fa fa-chevron-down"></i>
-            </button>
+            <div class="music-head-btns">
+                <button type="button" id="music-volume" class="music-close" title="静音 / 取消静音"><i class="fa fa-volume-up"></i></button>
+                <button type="button" id="music-close" class="music-close" title="收起"><i class="fa fa-chevron-down"></i></button>
+            </div>
+        </div>
+        <div class="music-progress">
+            <span id="music-cur">0:00</span>
+            <input type="range" id="music-progress" min="0" max="100" step="0.1" value="0">
+            <span id="music-dur">0:00</span>
         </div>
         <div class="music-bar">
             <button type="button" id="music-prev" title="上一首"><i class="fa fa-backward"></i></button>
@@ -377,7 +383,7 @@
             <button type="button" id="music-next" title="下一首"><i class="fa fa-forward"></i></button>
             <button type="button" id="music-speed" title="切换倍速">1.0x</button>
         </div>
-        <audio id="music-audio" preload="none"></audio>
+        <audio id="music-audio" preload="auto"></audio>
     </div>
 </div>
 
@@ -427,7 +433,12 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 180px;
+    max-width: 150px;
+}
+#gal-music .music-head-btns {
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 #gal-music .music-close {
     border: none;
@@ -435,6 +446,20 @@
     color: #ccc;
     cursor: pointer;
     font-size: 14px;
+    padding: 0;
+}
+#gal-music .music-progress {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+    font-size: 11px;
+    color: #bbb;
+}
+#gal-music .music-progress input[type="range"] {
+    flex: 1;
+    margin: 0;
+    cursor: pointer;
 }
 #gal-music .music-bar {
     display: flex;
@@ -470,21 +495,41 @@
     var fab = document.getElementById('music-fab');
     var panel = document.getElementById('music-panel');
     var closeBtn = document.getElementById('music-close');
+    var volumeBtn = document.getElementById('music-volume');
     var titleEl = document.getElementById('music-title');
     var playBtn = document.getElementById('music-play');
     var prevBtn = document.getElementById('music-prev');
     var nextBtn = document.getElementById('music-next');
     var speedBtn = document.getElementById('music-speed');
+    var progressEl = document.getElementById('music-progress');
+    var curEl = document.getElementById('music-cur');
+    var durEl = document.getElementById('music-dur');
 
     var speeds = [0.75, 1, 1.25, 1.5, 2];
     var current = 0;
     var speedIndex = 1;
     var playing = false;
+    var seeking = false;
+
+    function formatTime(s) {
+        if (!isFinite(s) || s < 0) s = 0;
+        s = Math.floor(s);
+        var m = Math.floor(s / 60);
+        var sec = s % 60;
+        return m + ':' + (sec < 10 ? '0' + sec : sec);
+    }
+
+    function setVolumeIcon() {
+        volumeBtn.innerHTML = audio.muted ? '<i class="fa fa-volume-off"></i>' : '<i class="fa fa-volume-up"></i>';
+    }
 
     function load(index) {
         current = (index + songs.length) % songs.length;
         audio.src = songs[current].url;
         titleEl.textContent = '♫ ' + songs[current].name;
+        progressEl.value = 0;
+        curEl.textContent = '0:00';
+        durEl.textContent = '0:00';
     }
 
     function togglePlay() {
@@ -512,12 +557,26 @@
         load(current + 1);
         audio.play();
     });
+    audio.addEventListener('loadedmetadata', function () {
+        progressEl.max = audio.duration || 100;
+        durEl.textContent = formatTime(audio.duration);
+    });
+    audio.addEventListener('timeupdate', function () {
+        if (!seeking && audio.duration) {
+            progressEl.value = audio.currentTime;
+            curEl.textContent = formatTime(audio.currentTime);
+        }
+    });
 
     fab.addEventListener('click', function () {
         panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
     });
     closeBtn.addEventListener('click', function () {
         panel.style.display = 'none';
+    });
+    volumeBtn.addEventListener('click', function () {
+        audio.muted = !audio.muted;
+        setVolumeIcon();
     });
     playBtn.addEventListener('click', togglePlay);
     nextBtn.addEventListener('click', next);
@@ -528,7 +587,26 @@
         speedBtn.textContent = speeds[speedIndex] + 'x';
     });
 
+    progressEl.addEventListener('mousedown', function () { seeking = true; });
+    progressEl.addEventListener('touchstart', function () { seeking = true; });
+    progressEl.addEventListener('mouseup', function () { seeking = false; });
+    progressEl.addEventListener('touchend', function () { seeking = false; });
+    progressEl.addEventListener('input', function () {
+        audio.currentTime = progressEl.value;
+        curEl.textContent = formatTime(audio.currentTime);
+    });
+
+    // 打开网站默认自动播放
     load(0);
+    var autoPlay = audio.play();
+    if (autoPlay && typeof autoPlay.catch === 'function') {
+        autoPlay.catch(function () {
+            // 浏览器阻止带声音的自动播放，改为静音自动播放
+            audio.muted = true;
+            setVolumeIcon();
+            audio.play().catch(function () {});
+        });
+    }
 })();
 </script>
 
