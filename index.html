@@ -229,7 +229,7 @@
             <p style="text-align: center;">
                 <a href="/2026/08/26/hello-world/">
                     
-                    <img src="/imgs/preview/preview4.jpg" alt="Hello World">
+                    <img src="/imgs/preview/preview3.jpg" alt="Hello World">
                 </a>
             </p>
         </div>
@@ -558,7 +558,7 @@
 
     function load(index) {
         current = (index + songs.length) % songs.length;
-        audio.src = encodeURI(songs[current].url);
+        audio.src = songs[current].url;
         titleEl.textContent = '♫ ' + songs[current].name;
     }
 
