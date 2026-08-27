@@ -59,35 +59,23 @@
                 </li>
                 <% } else { %>
                 <li class="dropdown">
-                    <!-- TODO 添加hover dropdown效果 -->
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false" data-hover="dropdown">
                         <i class="fa fa-<%= m.icon %>"></i><%= m.title %>
                     </a>
-                    <ul class="dropdown-menu">
-                        <% if (m.url === 'categories')  { %>
-                        <% site.categories.slice(0, m.dropdown).forEach(function (category, index) { %>
-                        <li>
-                            <a href="<%- url_for(category.path) %>"><%= category.name %></a>
+                    <% var galDropdownItems = (m.url === 'categories') ? site.categories : site.tags; %>
+                    <ul class="dropdown-menu gal-dropdown-menu">
+                        <li class="gal-dropdown-search">
+                            <form role="search" onsubmit="return false;">
+                                <input type="text" class="gal-tag-search" placeholder="输入关键词筛选..." autocomplete="off">
+                            </form>
+                        </li>
+                        <% galDropdownItems.forEach(function (item) { %>
+                        <li class="gal-dropdown-item" data-name="<%= String(item.name).toLowerCase() %>">
+                            <a href="<%- url_for(item.path) %>"><%= item.name %></a>
                         </li>
                         <% }) %>
-                        <% if(site.categories.length > m.dropdown) { %>
-                        <li>
-                            <a href="<%- url_for(m.url) %>">...</a>
-                        </li>
-                        <% } %>
-                        <% } else { %>
-                        <% site.tags.slice(0, m.dropdown).forEach(function (tag, index) { %>
-                        <li>
-                            <a href="<%- url_for(tag.path) %>"><%= tag.name %></a>
-                        </li>
-                        <% }) %>
-                        <% if(site.tags.length > m.dropdown) { %>
-                        <li>
-                            <a href="<%- url_for(m.url) %>">...</a>
-                        </li>
-                        <% } %>
-                        <% } %>
+                        <li class="gal-dropdown-empty">无匹配结果</li>
                     </ul>
                 </li>
                 <% } %>
@@ -103,3 +91,58 @@
         </div>
     </div>
 </header>
+<style>
+#gal-header .gal-dropdown-menu {
+    max-height: 65vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+}
+#gal-header .gal-dropdown-search {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 5px 10px;
+    background: #222;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+#gal-header .gal-dropdown-search input {
+    width: 100%;
+    height: 28px;
+    padding: 2px 8px;
+    font-size: 12px;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    outline: none;
+}
+#gal-header .gal-dropdown-search input:focus {
+    border-color: #228DFF;
+}
+#gal-header .gal-dropdown-empty {
+    display: none;
+    padding: 6px 14px;
+    color: #888;
+    font-size: 12px;
+}
+</style>
+<script>
+(function () {
+    document.addEventListener('input', function (e) {
+        var input = e.target;
+        if (!input.classList || !input.classList.contains('gal-tag-search')) return;
+        var menu = input.closest('.dropdown-menu');
+        if (!menu) return;
+        var kw = input.value.trim().toLowerCase();
+        var visible = 0;
+        menu.querySelectorAll('.gal-dropdown-item').forEach(function (li) {
+            var hit = !kw || li.getAttribute('data-name').indexOf(kw) !== -1;
+            li.style.display = hit ? '' : 'none';
+            if (hit) visible++;
+        });
+        var empty = menu.querySelector('.gal-dropdown-empty');
+        if (empty) empty.style.display = visible === 0 ? 'block' : 'none';
+    });
+})();
+</script>
