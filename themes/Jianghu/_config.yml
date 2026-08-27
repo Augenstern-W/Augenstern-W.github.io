@@ -87,7 +87,7 @@ links:
 # 如果使用了公告, 那么公告内容需要自己去配置
 # 在主题下的layout/_partial/issue.ejs进行内容修改
 # 如果不用公告, 请设置此项为false
-use_issue: true
+use_issue: false
 
 # 指定代码高亮风格
 # 目前支持以下选择
