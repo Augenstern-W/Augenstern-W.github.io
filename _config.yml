@@ -105,3 +105,4 @@ deploy:
   repository: git@ssh.github.com:Augenstern-W/Augenstern-W.github.io.git
   branch: main
   message: Update blog
+  ignore_hidden: false
