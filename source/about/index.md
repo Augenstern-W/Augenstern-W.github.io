@@ -4,21 +4,24 @@ date: 2026-08-27
 preview: preview3.jpg
 ---
 
-## About Me
+## 江湖自序
 
-你好，我是 **Augenstern-W**（忘江湖）。
+在下**忘江湖**，榕城人氏。少时凭栏，昔望闽江月；北地求学，今煮松江雪。辞八闽烟火，负笈吉大，专攻网安。以键铸剑，以码作谱，沉心求索，日夜淬砺。一别南国山水，江湖路远，风波未定，且行且观。
 
-一名 CTF 爱好者，目前主攻 **MISC（杂项）** 方向，偶尔也在 Web 和 Crypto 的世界里摸爬滚打。
-
-- 🚩 CTF 学习记录与题解分享
-- 📔 生活随笔与技术笔记
+- 🚩 计算机相关专业学习记录
+- 📚 网络空间安全学习记录
+- 📝 CTF 学习记录
+- 📚 技术博客与分享
+- 📔 生活随笔与感悟
 
 > 仗剑观书，落笔留痕，记录行路所见所闻，分享所思所想。
 
 ## 联系方式
 
 - GitHub：<https://github.com/Augenstern-W>
+- QQ：2464231867
+- 微信：Forgotten_Blade_6LGq
 
 ## 关于本站
 
-「剑行随记——忘江湖の博客」使用 [Hexo](https://hexo.io) 搭建，主题为 Jianghu（Gal 魔改版），部署于 GitHub Pages。
+「剑行随记——忘江湖の博客」使用 [Hexo](https://hexo.io) 搭建，主题为 Jianghu，部署于 GitHub Pages。
