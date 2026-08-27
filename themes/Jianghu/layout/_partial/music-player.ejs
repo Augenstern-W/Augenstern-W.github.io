@@ -123,25 +123,30 @@
     transform: translateX(-50%);
     bottom: 100%;
     width: 36px;
-    padding: 8px 0 6px;
+    height: 106px;
     border-top: 12px solid transparent;
     background: rgba(20, 20, 20, 0.95) padding-box;
     border-radius: 8px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
 }
 #gal-music .music-vol-wrap:hover .music-vol-pop {
-    display: flex;
+    display: block;
 }
 #gal-music .music-vol-pop #music-vol {
+    position: absolute;
     width: 88px;
+    left: 50%;
+    top: 44px;
+    transform: translate(-50%, -50%) rotate(-90deg);
     margin: 0;
-    transform: rotate(-90deg);
     cursor: pointer;
 }
 #gal-music .music-vol-pop #music-val {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 6px;
+    text-align: center;
     font-size: 10px;
     color: #bbb;
     line-height: 1;
