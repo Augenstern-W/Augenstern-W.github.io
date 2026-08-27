@@ -260,6 +260,17 @@
 
 <h2 id="MISC-是什么？"><a href="#MISC-是什么？" class="headerlink" title="MISC 是什么？"></a>MISC 是什么？</h2><p><strong>Misc</strong>（Miscellaneous），意为杂项。简单来说，不能被细分到其他方向的题都在 misc 里了（大乱炖）。就像它的名字一样，misc 包含了各种各样的题目，比如 Recon（信息搜集）、Encoding（编码）、Stego（隐写）、Forensics（取证）、Traffic（流量分析）、SandBox（沙箱逃逸）、Blockchain（区块链）以及今年最流行的 AI（学不完，根本学不完）。</p>
 <p>说完分类，接下来讲讲考点。misc 平等地考察出题人和做题人——出题的思路够不够清奇，做题的思路够不够天马行空。misc 中可以有相当多的创新题（创死新人的题），还有一些常被提及但也相当有趣的知识点。在这里你可以看到平时互相发送的文件、照片、音频中加入了奇妙的 flag，当然，没说游戏不行😏。</p>
+<p> misc 的题目大体围绕这几条主线展开：</p>
+<blockquote>
+<ul>
+<li><strong>隐写</strong>：图片（webp、png、jpg、gif）、音频（mp3、mov 等）、视频（mp4 等）、其他</li>
+<li><strong>压缩包处理</strong>：zip、rar、7z 等压缩包密码爆破、解压、拼接</li>
+<li><strong>流量分析</strong>：计算机网络协议、文件传输、USB、WIFI</li>
+<li><strong>数字取证</strong>：日志分析、内存取证分析、文件镜像取证、电子取证</li>
+<li><strong>脑洞题</strong>：说不尽……，多是送分或者压分、彩蛋题</li>
+</ul>
+</blockquote>
+<p>工具方面先混个脸熟：Kali 自带的 binwalk、foremost；十六进制编辑器 010 Editor 或 WinHex；WinRAR；以及 WPS。这些工具贯穿后面所有实战环节。</p>
 <h2 id="MISC-到底难不难？"><a href="#MISC-到底难不难？" class="headerlink" title="MISC 到底难不难？"></a>MISC 到底难不难？</h2><p>作为杂项（乱炖），misc 对于新人是相当友好的，它能在短时间内激发你的兴趣并且学到各种知识。</p>
 <p>但是创新题成功拉高了 misc 的难度——整不出正经题目的 misc 往往是最会整活的。你需要了解各方面的一点（确信）知识来保证能识别出题目考了什么（没说和游戏没关系嗷）。因为是杂项，了解其他方向的知识对解 misc 的题目也会有帮助（不能完全归类 ≠ 不是）。（misc 手人均全栈）</p>
 <p>misc 也相当考验你对新知识的接受度。大多数时候你的 misc 旅程会是在做中学，学完立刻实践，纵享开箱即用的丝滑感。</p>
@@ -288,30 +299,195 @@
 <p>对于从未接触过编程的同学，推荐先学 <strong>Python</strong>，因为它短小而通俗易懂（笔者推荐大一要学 C 的也学一下，因为开箱即用确实比学校教的基础方便很多，更多的编程语言请自行探索）。</p>
 <p>学习编程语言，首先要了解各种逻辑的执行方式：分支、循环等等；然后了解对应的代码写法；再尝试着使用代码来实现一些简单的功能，甚至可以写写游戏。当你做得差不多时，恭喜你，这门编程语言已经可以为你所用了。</p>
 <p>当然，Python 不止于此。在 misc 中，有一种专门针对 Python 语言的题目（<code>pyjail</code>），你需要通过执行有一系列限制条件的 Python 代码获取远程靶机的 shell 权限，这也是一类很有意思的题哦！（划线处内容详见 SandBox 入门指北）</p>
-<h2 id="MISC-题型"><a href="#MISC-题型" class="headerlink" title="MISC 题型"></a>MISC 题型</h2><h3 id="Recon（信息搜索）"><a href="#Recon（信息搜索）" class="headerlink" title="Recon（信息搜索）"></a>Recon（信息搜索）</h3><p>“hyw，我就拍了个旅行纪念照，你就给我盒了？”</p>
-<p>信息搜集题是通过照片或文字——现在还有电子账户等的信息——推断出一些有价值的东西。对于这种题，我们也有很多工具，比如国内的百度地图、国外的 Google 地图、百度识图等等，甚至是实 (xian) 地 (xia) 考 (zhen) 察 (shi)，都可以给你意想不到的收获。</p>
-<p>比如前年的 moe 新生赛要找一个画刊上的内容，主播（E&#x3D;hv）在网上找了半天最后惊奇地发现西电的图书馆里居然就有！今年也可以让各位体验到开盒的惊喜感。</p>
-<p>E&#x3D;hv 留言：信息搜集的尽头是线下真实。</p>
-<h3 id="Encoding（编码）"><a href="#Encoding（编码）" class="headerlink" title="Encoding（编码）"></a>Encoding（编码）</h3><p>在这里，你能看见各种各样奇奇怪怪的编码：像 base 家族、社会主义价值观加密、snow 加密，或者是跟对照表一个个对照解码，比如福尔摩斯跳舞的小人（或许有人在解谜类游戏里见过？）、标准银河字母（mc 还在追杀我）。</p>
-<p>这里推荐 <strong>CyberChef</strong>，属于是解码的神器了。古典编码现在也逐渐被归类到 misc，各位该实践你们的信息检索能力了，自行搜索了解一下吧，后面大概率要用的哦 OvO。</p>
-<h3 id="Stego（隐写）"><a href="#Stego（隐写）" class="headerlink" title="Stego（隐写）"></a>Stego（隐写）</h3><p>隐写，通俗易懂：隐藏信息。至于怎么隐藏——你可以给他设个密码，或者是”什么叫图片里有个视频？””什么又叫图片里有个压缩包？””静图里不要塞动图谢谢”。</p>
-<p>神奇的隐写能做到在各种文件里藏东西：图片、音频、视频、压缩包，甚至是文本。用十六进制文本查看器（010 Editor &#x2F; WinHex）直接抄他老底，一个字节一个字节的找问题，关键位置往往有惊喜。</p>
-<p>加密的怎么办呢，好难找啊 QAQ。图片隐写推荐 <strong>Stegsolve</strong>，有各种功能，更多隐写各位可以日后自行探索。</p>
-<h3 id="Forensics（取证）"><a href="#Forensics（取证）" class="headerlink" title="Forensics（取证）"></a>Forensics（取证）</h3><p>这里借用学长的解释：”一个内存镜像，破解出了我妈给我电脑设的开机密码！”</p>
-<p>取证就是对转储下来的内存或者磁盘的内容进行分析，从中提取信息。通过内存分析，我们可以获得很多有用的信息，比如刚刚输入了啥命令、桌面上有什么东西，甚至是开机密码，都可以知道。</p>
-<p>常用工具：</p>
+<h2 id="实战：从识别一个文件开始"><a href="#实战：从识别一个文件开始" class="headerlink" title="实战：从识别一个文件开始"></a>实战：从识别一个文件开始</h2><p>前面聊的是路线图，接下来按 misc 最常见的三类出题场景——<strong>文件分离、隐写、压缩包解密</strong>——把上手套路真正过一遍。</p>
+<h3 id="文件类型识别"><a href="#文件类型识别" class="headerlink" title="文件类型识别"></a>文件类型识别</h3><p>杂项题目主要以文件附件作为题目载体，但给的文件不一定有后缀名，这就需要我们先识别文件。你可以用 <code>010editor</code> &#x2F; <code>winhex</code> 等工具查看 16 进制 &#x2F; ASCII 码特征判断类型，也可以用 file 命令：</p>
+<p>file 命令实际上是一个命令行工具，用来查看文件类型。使用方法很简单——将文件复制到 Kali 或者带有 file 工具的系统中，直接执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file flag.png</span><br></pre></td></tr></table></figure>
+
+<p><img src="/imgs/misc/1.webp" alt="file 命令查看真实类型"></p>
+<p>看穿它的真身之后，把后缀名补上就可以正常打开了。</p>
+<p>另一个方法是 <strong>010 Editor &#x2F; WinHex</strong> 直接读文件头。010Editor 是一款快速且强大的十六进制编辑器，用来编辑二进制文件，界面友好，支持无限次 undo &#x2F; redo，还能以书签的方式标出重要的字节。我们通过查看文件的头部来判断类型。</p>
+<p>以下是积累总结出的常见文件头：</p>
+<table>
+<thead>
+<tr>
+<th align="left">文件类型</th>
+<th align="left">文件头</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">JPEG (jpg)</td>
+<td align="left">FFD8FFE1</td>
+</tr>
+<tr>
+<td align="left">PNG (png)</td>
+<td align="left">89504E47</td>
+</tr>
+<tr>
+<td align="left">GIF (gif)</td>
+<td align="left">47494638</td>
+</tr>
+<tr>
+<td align="left">TIFF (tif)</td>
+<td align="left">49492A00</td>
+</tr>
+<tr>
+<td align="left">Windows Bitmap (bmp)</td>
+<td align="left">424DC001</td>
+</tr>
+<tr>
+<td align="left">ZIP Archive (zip)</td>
+<td align="left">504B0304</td>
+</tr>
+<tr>
+<td align="left">RAR Archive (rar)</td>
+<td align="left">52617221</td>
+</tr>
+<tr>
+<td align="left">Adobe Photoshop (psd)</td>
+<td align="left">38425053</td>
+</tr>
+<tr>
+<td align="left">Rich Text Format (rtf)</td>
+<td align="left">7B5C727466</td>
+</tr>
+<tr>
+<td align="left">XML (xml)</td>
+<td align="left">3C3F786D6C</td>
+</tr>
+<tr>
+<td align="left">Adobe Acrobat (pdf)</td>
+<td align="left">255044462D312E</td>
+</tr>
+<tr>
+<td align="left">Wave (wav)</td>
+<td align="left">57415645</td>
+</tr>
+<tr>
+<td align="left">pcap (pcap)</td>
+<td align="left">D4C3B2A1</td>
+</tr>
+<tr>
+<td align="left">HTML (html)</td>
+<td align="left">68746D6C3E</td>
+</tr>
+</tbody></table>
+<p>用 010editor 举个例子：</p>
+<p><img src="/imgs/misc/2.webp" alt="010 Editor 中查看文件头"></p>
+<blockquote>
+<p>这里的文件头将贯穿你的 MISC 生涯，务必牢记这些文件头特征，以备不时之需！</p>
+</blockquote>
+<h3 id="文件分离"><a href="#文件分离" class="headerlink" title="文件分离"></a>文件分离</h3><p>认识了文件类型，接下来讲文件分离。</p>
+<p>为什么要分离？在 CTF 这个充满脑洞的比赛中，出题人往往会以稀奇古怪的方式出题（因此你可以常常看见”暴打出题人”的字眼出现在比赛论坛中）。<strong>一个文件中隐藏着另外的文件</strong>是经常出现的情况，这就需要掌握文件分离的技巧来应对。</p>
+<h4 id="Binwalk"><a href="#Binwalk" class="headerlink" title="Binwalk"></a>Binwalk</h4><p><code>Binwalk</code> 是一个自动提取文件系统的工具，可以自动完成指定文件的扫描，智能发掘潜藏在文件中所有可疑的文件类型及文件系统。相比只能把文件识别成单一类型的 file 命令，Binwalk 能很好地看出文件里是否还藏着别的东西。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">binwalk -e misc</span><br></pre></td></tr></table></figure>
+
+<p><code>-e</code> 全名就是 extract 的缩写。若提取成功则会生成一个名为 <code>_extracted</code> 的目录，里面存放的就是提取出的文件。</p>
+<p>建议在 Linux 上安装 Binwalk，Windows 版不太推荐，比较鸡肋而且还会造成”环境污染”。</p>
+<blockquote>
+<p>后续你从事网安行业时，或者打 CTF 尤其是杂项这个方向，工具、脚本、环境配置特别多，一道 MISC 题用十个工具解答也不惊讶。稍不注意，下载破解版、私人汉化的工具可能会挂马，导致计算机中毒！！再者很多工具和环境都要求 Linux 系统，所以建议还是安装一台 Kali 或者 Ubuntu 虚拟机更好。</p>
+<p>作者的 MISC 工具，忒多！！！</p>
+</blockquote>
+<p><img src="/imgs/misc/6.webp" alt="图片隐写"></p>
+<p><img src="/imgs/misc/7.webp" alt="其它隐写"></p>
+<p><img src="/imgs/misc/8.webp" alt="编码解码"></p>
+<p>binwalk 如何安装？自行解决。</p>
+<h4 id="Foremost"><a href="#Foremost" class="headerlink" title="Foremost"></a>Foremost</h4><p>foremost 通过分析不同类型文件的头、尾和内部数据结构，同镜像文件的数据进行比对以还原文件，默认支持 19 种类型文件的恢复，还可以通过配置文件扩展支持其他文件类型。</p>
+<p>有时候 binwalk 无法正确分离出文件，这时候就可以换 foremost 试试。将目标文件复制到 Kali 中，在终端中使用命令行进入文件所在文件夹，然后：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">foremost -o MISC</span><br></pre></td></tr></table></figure>
+
+<p>执行成功后会在目录下生成我们设置的输出目录，其中按照文件类型分离出了文件。</p>
+<h4 id="手动提取"><a href="#手动提取" class="headerlink" title="手动提取"></a>手动提取</h4><p>这个需要掌握！！手动分离文件就用之前介绍过的 010 Editor：拖动选中想要分离的部分，</p>
+<p><img src="/imgs/misc/3.webp" alt="010 Editor 手动选择提取"></p>
+<p>然后右键 → 选择 → 保存选择，再根据需要分离的文件类型选择后缀名即可。</p>
+<h4 id="文件分离小总结"><a href="#文件分离小总结" class="headerlink" title="文件分离小总结"></a>文件分离小总结</h4><p>凡事不要慌，<strong>binwalk + foremost 合体</strong>！</p>
+<h3 id="隐写术"><a href="#隐写术" class="headerlink" title="隐写术"></a>隐写术</h3><h4 id="图片隐写术"><a href="#图片隐写术" class="headerlink" title="图片隐写术"></a>图片隐写术</h4><p>遇到图片隐写，直接 binwalk + foremost 连招起手。连招没收获时，就要考虑更细的隐写手法了。</p>
+<h5 id="LSB-隐写"><a href="#LSB-隐写" class="headerlink" title="LSB 隐写"></a>LSB 隐写</h5><p>LSB 隐写，也就是最低有效位（Least Significant Bit）。图片中的像素一般由三原色组成，由这三种原色可以组成其他各种颜色。例如在 PNG 图片的储存中，每个颜色会有 8 bit，LSB 隐写就是修改了像素中最低的 1 bit，写入加密信息，而人眼无法注意到前后的变化。</p>
+<p>例如某张图看起来只是六只环保色猪头，但其中包含了一张隐藏的二维码。我们用 Stegsolve.jar 打开此图，通过下方的按钮切换通道直到 Gray bits，可以看到左上角出现了隐写在该通道的二维码，扫描二维码即可得到 flag。</p>
+<p><img src="/imgs/misc/4.webp" alt="Stegsolve 切换通道发现隐藏二维码"></p>
+<h5 id="文件格式缺失-GIF-帧分析"><a href="#文件格式缺失-GIF-帧分析" class="headerlink" title="文件格式缺失 &amp; GIF 帧分析"></a>文件格式缺失 &amp; GIF 帧分析</h5><p>一张名为 “此为 gif 图片.gif” 的文件，打开发现了报错。</p>
+<p>我们将其拖入 WinHex 中查看。在 CTF 中有时会需要我们去修复图片，这要求我们对图片的文件结构有了解。找到 gif 的文件格式规范，对照破损的文件进行修复。修复前后可以用一帧一帧观察的工具确认，Stegsolve 就带有这种功能：</p>
+<p>Stegsolve → Analyse → Frame Browser</p>
+<p><img src="/imgs/misc/5.webp" alt="stegsolve 的帧浏览器"></p>
+<h5 id="图片隐写神器-——-stegsolve"><a href="#图片隐写神器-——-stegsolve" class="headerlink" title="图片隐写神器 —— stegsolve"></a>图片隐写神器 —— stegsolve</h5><p>LSB 隐写、逐帧观察动图，都用到了这个工具。今天做 CTF 隐写术的题偶然发现这款隐写图片查看的神器 —— stegsolve，分享给大家。</p>
+<p>下载地址：<a target="_blank" rel="noopener" href="http://www.caesum.com/handbook/Stegsolve.jar">http://www.caesum.com/handbook/Stegsolve.jar</a></p>
+<p>安装配置：需要先安装 Java 并配好环境变量（具体配置过程网上一搜一堆，这里不赘述），之后直接双击打开就可以使用😄。</p>
+<p>软件界面简单，核心功能都在 Analyse 菜单下，作简单介绍：</p>
 <ul>
-<li>内存分析：<strong>Volatility</strong></li>
-<li>磁盘取证：<strong>VeraCrypt</strong>（处理加密卷）、<strong>Elcomsoft Forensic Disk Decryptor</strong> 等</li>
-<li>还有 VMware（有时候会给你扔一整个虚拟机来分析。4G 的超大附件 vs 百度网盘）</li>
+<li><strong>File Format</strong>：文件格式，查看图片的具体信息；</li>
+<li><strong>Data Extract</strong>：数据抽取，对图片中隐藏数据进行抽取；</li>
+<li><strong>Frame Browser</strong>：帧浏览器，主要对 GIF 之类的动图进行分解，动图变成一张张图片便于查看；</li>
+<li><strong>Image Combiner</strong>：拼图，图片拼接。</li>
 </ul>
-<h3 id="Traffic（流量分析）"><a href="#Traffic（流量分析）" class="headerlink" title="Traffic（流量分析）"></a>Traffic（流量分析）</h3><p>“为什么我偷偷发了点奇奇怪怪的东西就被警察蜀黍发现了 TAT”</p>
-<p>流量分析就是通过捕获网络中的流量包，分析协议等等，可以获取传输的各种文件，或者是通信的设备名称。在 CTF 中，这类题目大多是给一个捕获的流量包（<code>.pcap</code> &#x2F; <code>.pcapng</code>），然后从中分析数据，但难点在于如何定位到我们需要的那部分传输文件等等的流量。</p>
-<p>当然，流量并不全是明文传输的，有的流量是经过加密的，这时候就需要一些其他的手段来解密流量。</p>
-<p>流量分析常用的工具是 <strong>Wireshark</strong>，可以去网上搜搜如何使用哦！</p>
-<h3 id="SandBox（沙箱逃逸）"><a href="#SandBox（沙箱逃逸）" class="headerlink" title="SandBox（沙箱逃逸）"></a>SandBox（沙箱逃逸）</h3><p>SS<br>今年单拿出来成模块了，starwalking 大手子负责出题，详情请移步 Python 沙箱逃逸入门指北。</p>
-<h3 id="Blockchain（区块链）"><a href="#Blockchain（区块链）" class="headerlink" title="Blockchain（区块链）"></a>Blockchain（区块链）</h3><p>笔者还没做过，贴个区块链的链接 orz</p>
-<h3 id="AI"><a href="#AI" class="headerlink" title="AI"></a>AI</h3><p>很神奇的方向。笔者做过套 AI 大模型的话获取 flag 的、分析模型漏洞获取 flag 的、根据会话记录还原 flag 的（和 Clover 讨论了一下感觉这个更像隐写）——像 misc 一样的脑洞大开，笔者做不出来，欢迎尝试 CloverDaysss 为各位准备的大语言模型应用安全。</p>
+<h4 id="音视频隐写术"><a href="#音视频隐写术" class="headerlink" title="音视频隐写术"></a>音视频隐写术</h4><p>音频相关的 CTF 题目主要使用的隐写策略分为 MP3 隐写、LSB 隐写、波形隐写、频谱隐写等。常用工具：</p>
+<ul>
+<li><strong>Audacity &#x2F; ocenaudio</strong>：音频编辑工具软件；</li>
+<li><strong>Mp3Stego</strong>：将需要加密的数据压缩加密隐藏在 MP3 文件中；</li>
+<li><strong>Video to Picture</strong>：将视频的每帧提取转换成图片；</li>
+<li><strong>QR Research</strong>：CTF 中常用的二维码识别软件；</li>
+<li><strong>ImageMagick</strong>：免费的创建、编辑、合成图片的软件。</li>
+</ul>
+<p>频谱题里最常见的搭档是摩斯密码，先贴一张摩斯密码表备用：</p>
+<p><img src="/imgs/misc/9.webp" alt="摩斯密码表"></p>
+<p><img src="/imgs/misc/10.webp" alt="频谱隐写的摩斯密码解码"></p>
+<p>除了摩斯密码还有 SSTV 等等，可以上网搜。</p>
+<h5 id="MP3-隐写术"><a href="#MP3-隐写术" class="headerlink" title="MP3 隐写术"></a>MP3 隐写术</h5><p>MP3 隐写两种场景：</p>
+<ol>
+<li>题目给了密码，直接用 Mp3Stego 去解密；</li>
+<li>没给 key 且附件只有一个 MP3，那就有可能是用 Mp3Stego 隐藏的数据，也有可能是在音轨的频谱中隐藏了数据。</li>
+</ol>
+<p>MP3 隐写主要使用 Mp3Stego 工具，使用方法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">encode -E hidden_text.txt -P pass svega.wav svega_stego.mp3</span><br></pre></td></tr></table></figure>
+
+<p>更多细节可以自行参考其他大佬的 MISC-WP。</p>
+<h5 id="频谱隐写"><a href="#频谱隐写" class="headerlink" title="频谱隐写"></a>频谱隐写</h5><p>频谱隐写是将字符串隐藏在音频频谱中，此类音频通常有一个较明显的特征——听起来是一段杂音或者比较刺耳。</p>
+<p>比如 moectf2025 安全杂项的 “捂住一只耳”，我们使用 Audacity 打开：</p>
+<p><img src="/imgs/misc/11.webp" alt="Audacity 打开 &quot;捂住一只耳&quot;"></p>
+<p>这道题听起来就不对劲，一只耳有滴滴嘟嘟的电频声。分离并掐头去尾：</p>
+<p><img src="/imgs/misc/12.webp" alt="分离并掐头去尾"></p>
+<p>最后拿去解密就好了。</p>
+<p>当然还有另外一种风格的频谱隐写：</p>
+<p><img src="/imgs/misc/13.webp" alt="另一种频谱隐写"></p>
+<h3 id="压缩包解密"><a href="#压缩包解密" class="headerlink" title="压缩包解密"></a>压缩包解密</h3><p>压缩包有时候给到你时会设置密码不让你打开，有可能是伪加密，也可能是真加密。</p>
+<p>通用排查方法：</p>
+<ol>
+<li>用 WinHex &#x2F; 010Editor 打开，搜索字符 <code>pass</code>、<code>key</code>、<code>ctf</code>、<code>flag</code> 等，查看是否藏有压缩包密码；</li>
+<li>要爆破的话，先拿 0-6 位纯数字来一遍；</li>
+<li>爆破不成功可以根据题意或社工猜密码组合，例如用户名叫王方，密码就有可能是 wangfang123；</li>
+<li>检查是不是伪加密；</li>
+<li>尝试明文攻击；</li>
+<li>最后还有 CRC32 爆破兜底。</li>
+</ol>
+<p>下面按顺序展开几个重点手法。</p>
+<h4 id="压缩包伪加密"><a href="#压缩包伪加密" class="headerlink" title="压缩包伪加密"></a>压缩包伪加密</h4><p>zip 文件由 3 部分组成：<strong>压缩源文件数据区 + 压缩源文件目录区 + 压缩源文件目录结束标志</strong>。</p>
+<p>在压缩源文件数据区和压缩源文件目录区各有一个 2 字节的全局方式位标记，用以标记是否加密，如下图（搬运）：</p>
+<p><img src="/imgs/misc/14.png" alt="zip 内部结构"></p>
+<p><img src="/imgs/misc/15.png" alt="两处全局方式位标记位置"></p>
+<p>若是没有加密的 zip，两处标记都是 <code>00 00</code>：</p>
+<p><img src="/imgs/misc/16.png" alt="未加密 zip 的标记为 00 00"></p>
+<p>加密的 zip 两处都不是 <code>00 00</code>（好像不同版本的压缩软件或算法，这里的值会不同，网上多见的是 <code>09 00</code>）：</p>
+<p><img src="/imgs/misc/17.png" alt="已加密 zip 的标记"></p>
+<p>若把未加密 zip 的压缩源文件目录区的全局方式位标记改为 <code>01 00</code>（或 <code>09 00</code>），就会被压缩软件认为是已加密——这就是所谓的伪加密：</p>
+<p><img src="/imgs/misc/18.png" alt="伪加密原理演示"></p>
+<p>破解伪加密的 zip 也简单：把标记改回 <code>00 00</code> 即可解压。</p>
+<h4 id="CRC32-碰撞"><a href="#CRC32-碰撞" class="headerlink" title="CRC32 碰撞"></a>CRC32 碰撞</h4><p>CRC 校验在数据存储和数据通讯领域为了保证数据的正确性而被广泛使用。CRC 的全称是循环冗余校验。</p>
+<p>总之，每个文件都有唯一的 CRC32 值，即便数据中一个 bit 发生变化，也会导致 CRC32 值不同。若是知道一段数据的长度和 CRC32 值，便可穷举数据并与其 CRC32 对照，以此达到暴力猜解的目的——但通常只适用于较小的文本文件。</p>
+<p>比如这里有一个加密的 rar，直接双击就可以看见其中文件的信息，而且已知其中全是数字，便可写脚本爆破：</p>
+<p><img src="/imgs/misc/19.webp" alt="已知长度和 CRC32 的 rar 样例"></p>
+<p>脚本可以用 Python 手搓或者让 AI 写都可以。</p>
+<h4 id="已知明文攻击"><a href="#已知明文攻击" class="headerlink" title="已知明文攻击"></a>已知明文攻击</h4><p>所谓明文攻击，就是已经通过其他手段知道 zip 加密文件中的某些内容。比如在某些网站上见过它的 readme.txt 或某个文件，这时就可以尝试破解。</p>
+<p>举个例子：拿到 <code>明文攻击.zip</code>，打开发现里面有一个之前见过的 hash.exe 和一些其他加密文件。于是把我们手中已有的 hash.exe 单独压缩成 zip 作为明文样本。注意：打包完成后需要确认二者采用的压缩算法相同——一个简单的判断方法是用 WinRAR 打开文件，同一个文件压缩后的体积是否基本相同，且 CRC32 必须相同，这说明你用的压缩算法是对的；如果不同，就尝试另一种压缩算法。</p>
+<p>接下来就用神器 ARCHPR 进行明文破解。如果得到了加密压缩包中的某个文件，就可以通过明文攻击来获取压缩密码：</p>
+<p><img src="/imgs/misc/20.png" alt="ARCHPR 明文攻击"></p>
+<p><img src="/imgs/misc/22.png" alt="明文攻击得到密码"></p>
+<h4 id="直接爆破"><a href="#直接爆破" class="headerlink" title="直接爆破"></a>直接爆破</h4><p>ARCHPR 还利用 GPU 进行爆破，速度比较快，支持三种模式：</p>
+<ol>
+<li><strong>暴力</strong>：选择密码范围、长度等，由软件组合生成密码进行爆破；</li>
+<li><strong>掩码</strong>：知道密码中的一部分，只需按规则构造其余部分；</li>
+<li><strong>字典</strong>：导入常用密码集合字典文件进行爆破。</li>
+</ol>
+<p>我还是建议优先使用 ARCHPR。至此，文件爆破工具的套路基本就这么多……</p>
+<p><img src="/imgs/misc/21.webp" alt="暴力破解工具全家桶"></p>
 <h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="如何更快提升自己"><a href="#如何更快提升自己" class="headerlink" title="如何更快提升自己"></a>如何更快提升自己</h3><p>笔者开始于：”这是什么？这怎么搞？” 学长的建议是，或许可以自己找一些题目自己练练手，或许就对 misc 方向的考点更加得心应手了。</p>
 <p>可以去 <a target="_blank" rel="noopener" href="https://buuoj.cn/">BUUCTF</a> 和 ctfshow（笔者有些工具从这找的）上找一些题目做做。可以先从简单的题目（一般解出人数最多）上手；如果完全没有思路的话可以看看题解（善用搜索引擎），因为做不出来有可能是题目涉及到了你之前没见过的考点，直接去看题解可以帮助你更快地掌握知识！当然，你也可以选择不看题解来锻炼自己的解题思维。总之，哪种方法适合你就去做！</p>
 <h3 id="工具的获取"><a href="#工具的获取" class="headerlink" title="工具的获取"></a>工具的获取</h3><p>随着 misc 题做得越来越多，你会接触到各种各样的工具。这些工具大多可以从 GitHub 上下载，或者有专门的官方网站。但是有一些商业软件是要付费的，可以到一些网站上寻找破解版，但是不一定安全。这里推荐一下<strong>随波逐流解码工具</strong>，至于怎么获取？善用搜索引擎喵 OvO。</p>
@@ -439,13 +615,13 @@
                 
                 <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
     
-    <a href="/tags/CTF/" style="font-size: 11.929749103600962px;" class="tag-cloud-link">CTF</a>
+    <a href="/tags/CTF/" style="font-size: 13.923704872982636px;" class="tag-cloud-link">CTF</a>
     
-    <a href="/tags/misc/" style="font-size: 8.328187124220857px;" class="tag-cloud-link">misc</a>
+    <a href="/tags/misc/" style="font-size: 18.285978659191304px;" class="tag-cloud-link">misc</a>
     
-    <a href="/tags/%E5%8F%96%E8%AF%81%E4%B8%8E%E5%AE%89%E5%85%A8%E6%9D%82%E9%A1%B9/" style="font-size: 8.816032799371154px;" class="tag-cloud-link">取证与安全杂项</a>
+    <a href="/tags/%E5%8F%96%E8%AF%81%E4%B8%8E%E5%AE%89%E5%85%A8%E6%9D%82%E9%A1%B9/" style="font-size: 13.647101208289776px;" class="tag-cloud-link">取证与安全杂项</a>
     
-    <a href="/tags/xu/" style="font-size: 16.77174855742955px;" class="tag-cloud-link">xu</a>
+    <a href="/tags/xu/" style="font-size: 13.601482147764328px;" class="tag-cloud-link">xu</a>
     
 </div>
                 
