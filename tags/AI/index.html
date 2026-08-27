@@ -61,7 +61,7 @@
 <meta name="generator" content="Hexo 8.1.2"></head>
 <body>
     <!-- 背景轮播图功能 -->
-    <section class="hidden-xs">
+    <section>
     <ul class="cb-slideshow">
         <li><span>天若</span></li>
         <li><span>有情</span></li>
@@ -441,35 +441,35 @@
                 
                 <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
     
-    <a href="/tags/CTF/" style="font-size: 15.30087674557278px;" class="tag-cloud-link">CTF</a>
+    <a href="/tags/CTF/" style="font-size: 16.58832118172232px;" class="tag-cloud-link">CTF</a>
     
-    <a href="/tags/misc/" style="font-size: 15.992890622979385px;" class="tag-cloud-link">misc</a>
+    <a href="/tags/misc/" style="font-size: 9.977925681348392px;" class="tag-cloud-link">misc</a>
     
-    <a href="/tags/%E5%8F%96%E8%AF%81%E4%B8%8E%E5%AE%89%E5%85%A8%E6%9D%82%E9%A1%B9/" style="font-size: 16.97407277408295px;" class="tag-cloud-link">取证与安全杂项</a>
+    <a href="/tags/%E5%8F%96%E8%AF%81%E4%B8%8E%E5%AE%89%E5%85%A8%E6%9D%82%E9%A1%B9/" style="font-size: 13.647929520188356px;" class="tag-cloud-link">取证与安全杂项</a>
     
-    <a href="/tags/Bing/" style="font-size: 19.381800036378227px;" class="tag-cloud-link">Bing</a>
+    <a href="/tags/Bing/" style="font-size: 17.316085217197553px;" class="tag-cloud-link">Bing</a>
     
-    <a href="/tags/Google/" style="font-size: 14.592051154634165px;" class="tag-cloud-link">Google</a>
+    <a href="/tags/Google/" style="font-size: 9.408725683436126px;" class="tag-cloud-link">Google</a>
     
-    <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 16.320990293806297px;" class="tag-cloud-link">虚拟机</a>
+    <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 14.255939053969758px;" class="tag-cloud-link">虚拟机</a>
     
-    <a href="/tags/Linux/" style="font-size: 19.390463083236504px;" class="tag-cloud-link">Linux</a>
+    <a href="/tags/Linux/" style="font-size: 10.517542385318325px;" class="tag-cloud-link">Linux</a>
     
-    <a href="/tags/Recon/" style="font-size: 19.46816833238588px;" class="tag-cloud-link">Recon</a>
+    <a href="/tags/Recon/" style="font-size: 19.985354867430523px;" class="tag-cloud-link">Recon</a>
     
-    <a href="/tags/Encoding/" style="font-size: 19.04425086323052px;" class="tag-cloud-link">Encoding</a>
+    <a href="/tags/Encoding/" style="font-size: 10.141631467502565px;" class="tag-cloud-link">Encoding</a>
     
-    <a href="/tags/Stego/" style="font-size: 17.45074678203401px;" class="tag-cloud-link">Stego</a>
+    <a href="/tags/Stego/" style="font-size: 9.94096944149382px;" class="tag-cloud-link">Stego</a>
     
-    <a href="/tags/Forensics/" style="font-size: 14.862324746658727px;" class="tag-cloud-link">Forensics</a>
+    <a href="/tags/Forensics/" style="font-size: 18.507206765917736px;" class="tag-cloud-link">Forensics</a>
     
-    <a href="/tags/Traffic/" style="font-size: 9.814215406593057px;" class="tag-cloud-link">Traffic</a>
+    <a href="/tags/Traffic/" style="font-size: 10.062145069389947px;" class="tag-cloud-link">Traffic</a>
     
-    <a href="/tags/SandBox/" style="font-size: 11.701841798593538px;" class="tag-cloud-link">SandBox</a>
+    <a href="/tags/SandBox/" style="font-size: 18.70595529531383px;" class="tag-cloud-link">SandBox</a>
     
-    <a href="/tags/Blockchain/" style="font-size: 16.648431510851076px;" class="tag-cloud-link">Blockchain</a>
+    <a href="/tags/Blockchain/" style="font-size: 19.969727788587367px;" class="tag-cloud-link">Blockchain</a>
     
-    <a href="/tags/AI/" style="font-size: 12.885420732656941px;" class="tag-cloud-link">AI</a>
+    <a href="/tags/AI/" style="font-size: 8.566056381031304px;" class="tag-cloud-link">AI</a>
     
 </div>
                 
@@ -706,6 +706,24 @@
     var seeking = false;
     var autoMutedByBrowser = false;
 
+    // 记住播放进度：页面跳转后自动接着上次的位置继续播放
+    var STATE_KEY = 'gal-music-state';
+    var resumeTime = 0;
+    function restoreState() {
+        try { return JSON.parse(localStorage.getItem(STATE_KEY) || 'null'); }
+        catch (e) { return null; }
+    }
+    function saveState() {
+        try {
+            localStorage.setItem(STATE_KEY, JSON.stringify({
+                i: current,
+                t: audio.currentTime || 0,
+                r: audio.playbackRate,
+                v: audio.volume
+            }));
+        } catch (e) {}
+    }
+
     function formatTime(s) {
         if (!isFinite(s) || s < 0) s = 0;
         s = Math.floor(s);
@@ -726,6 +744,9 @@
         progressEl.value = 0;
         curEl.textContent = '0:00';
         durEl.textContent = '0:00';
+        // 若本地记录的就是这首歌，则恢复到上次播放位置
+        var st = restoreState();
+        resumeTime = (st && st.i === current && st.t > 1) ? st.t : 0;
     }
 
     function togglePlay() {
@@ -772,7 +793,8 @@
     });
     volumeBtn.addEventListener('click', function () {
         audio.muted = !audio.muted;
-        setVolumeIcon();
+        autoMutedByBrowser = false;
+        setVolumeUI();
     });
     playBtn.addEventListener('click', togglePlay);
     nextBtn.addEventListener('click', next);
@@ -814,7 +836,23 @@
 
     // 打开网站默认自动播放；若被浏览器拦截则静音自动播放，
     // 待用户首次点击页面任意位置后恢复声音
-    load(0);
+    var saved = restoreState();
+    if (saved && typeof saved.i === 'number' && saved.i >= 0 && saved.i < songs.length) {
+        // 恢复上次的歌曲、进度、倍速和音量
+        load(saved.i);
+        if (saved.r && speeds.indexOf(saved.r) !== -1) {
+            speedIndex = speeds.indexOf(saved.r);
+            audio.playbackRate = saved.r;
+            speedBtn.textContent = saved.r + 'x';
+        }
+        if (typeof saved.v === 'number' && saved.v > 0 && saved.v <= 1) {
+            audio.volume = saved.v;
+            volEl.value = Math.round(saved.v * 100);
+        }
+    } else {
+        load(0);
+    }
+    setVolumeUI();
     var autoPlay = audio.play();
     if (autoPlay && typeof autoPlay.catch === 'function') {
         autoPlay.catch(function () {
@@ -824,6 +862,18 @@
             audio.play().catch(function () {});
         });
     }
+
+    // 播放时预加载下一首，减少切歌等待
+    var preloadedUrl = '';
+    audio.addEventListener('playing', function () {
+        var nxt = songs[(current + 1) % songs.length].url;
+        if (nxt !== preloadedUrl) {
+            var pre = new Audio();
+            pre.preload = 'auto';
+            pre.src = nxt;
+            preloadedUrl = nxt;
+        }
+    });
 })();
 </script>
 
