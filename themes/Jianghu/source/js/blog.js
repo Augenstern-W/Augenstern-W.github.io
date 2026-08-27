@@ -33,7 +33,16 @@
 
 	var cdSlideShow = $('.cb-slideshow')
 	cdSlideShow.find('span').each(function (i, span) {
-		$(this).css('backgroundImage', 'url(\'' + prefix + slideList[i] + ext + '\')')
+		var url = 'url(\'' + prefix + slideList[i] + ext + '\')'
+		if (i === 0) {
+			// 首屏只加载第一张，避免和页面内容抢带宽
+			$(this).css('backgroundImage', url)
+		} else {
+			// 其余图在各自出场前 3 秒再加载（轮播每 6 秒切换一张）
+			setTimeout(function () {
+				$(span).css('backgroundImage', url)
+			}, i * 6000 - 3000)
+		}
 	})
 
 	// ------- 处理背景图结束 -----------
