@@ -3,11 +3,11 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: 剑行随记————忘江湖の博客
+title: 剑行随记————忘江湖之博客
 subtitle: 长酬千里路，把酒忘江湖
 description: 仗剑观书，落笔留痕，记录行路所见所闻，分享所思所想。
 keywords: 博客，计算机，网络空间安全，生活
-author: Augenstern-W
+author: 忘江湖
 language: zh-CN
 timezone: Asia/Shanghai
 
@@ -96,7 +96,7 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: gal
+theme: Jianghu
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
