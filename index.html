@@ -362,7 +362,7 @@
                 <a href="/2026/08/27/CTF%E5%88%9D%E8%AF%86%E4%B9%8Bmisc/">
                     <div class="img">
                         
-                        <img src="/imgs/preview/preview3.jpg" alt="CTF初识之misc">
+                        <img src="/imgs/preview/preview1.jpg" alt="CTF初识之misc">
                     </div>
                     <div class="info">
                         <p>欢迎诸位来到 misc 的世界</p>
@@ -429,7 +429,7 @@
             <p style="text-align: center;">
                 <a href="/2026/08/27/CTF%E5%88%9D%E8%AF%86%E4%B9%8Bmisc/">
                     
-                    <img src="/imgs/preview/preview2.jpg" alt="CTF初识之misc">
+                    <img src="/imgs/preview/preview4.jpg" alt="CTF初识之misc">
                 </a>
             </p>
         </div>
@@ -584,35 +584,35 @@
                 
                 <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
     
-    <a href="/tags/CTF/" style="font-size: 12.7645348171237px;" class="tag-cloud-link">CTF</a>
+    <a href="/tags/CTF/" style="font-size: 19.70703373392829px;" class="tag-cloud-link">CTF</a>
     
-    <a href="/tags/misc/" style="font-size: 8.936328540410404px;" class="tag-cloud-link">misc</a>
+    <a href="/tags/misc/" style="font-size: 9.434571275239303px;" class="tag-cloud-link">misc</a>
     
-    <a href="/tags/%E5%8F%96%E8%AF%81%E4%B8%8E%E5%AE%89%E5%85%A8%E6%9D%82%E9%A1%B9/" style="font-size: 18.279752267877953px;" class="tag-cloud-link">取证与安全杂项</a>
+    <a href="/tags/%E5%8F%96%E8%AF%81%E4%B8%8E%E5%AE%89%E5%85%A8%E6%9D%82%E9%A1%B9/" style="font-size: 13.715520791924227px;" class="tag-cloud-link">取证与安全杂项</a>
     
-    <a href="/tags/Bing/" style="font-size: 19.93833238319935px;" class="tag-cloud-link">Bing</a>
+    <a href="/tags/Bing/" style="font-size: 18.51865748539759px;" class="tag-cloud-link">Bing</a>
     
-    <a href="/tags/Google/" style="font-size: 8.009249898500203px;" class="tag-cloud-link">Google</a>
+    <a href="/tags/Google/" style="font-size: 11.365408231978913px;" class="tag-cloud-link">Google</a>
     
-    <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 11.139285663493132px;" class="tag-cloud-link">虚拟机</a>
+    <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 10.900215535099981px;" class="tag-cloud-link">虚拟机</a>
     
-    <a href="/tags/Linux/" style="font-size: 15.377671061066561px;" class="tag-cloud-link">Linux</a>
+    <a href="/tags/Linux/" style="font-size: 10.938408282011581px;" class="tag-cloud-link">Linux</a>
     
-    <a href="/tags/Recon/" style="font-size: 16.07785718767904px;" class="tag-cloud-link">Recon</a>
+    <a href="/tags/Recon/" style="font-size: 18.584497288288542px;" class="tag-cloud-link">Recon</a>
     
-    <a href="/tags/Encoding/" style="font-size: 11.51841231945762px;" class="tag-cloud-link">Encoding</a>
+    <a href="/tags/Encoding/" style="font-size: 8.018666559989367px;" class="tag-cloud-link">Encoding</a>
     
-    <a href="/tags/Stego/" style="font-size: 10.709773353703104px;" class="tag-cloud-link">Stego</a>
+    <a href="/tags/Stego/" style="font-size: 8.995630200490377px;" class="tag-cloud-link">Stego</a>
     
-    <a href="/tags/Forensics/" style="font-size: 14.312898571192346px;" class="tag-cloud-link">Forensics</a>
+    <a href="/tags/Forensics/" style="font-size: 17.738662987596737px;" class="tag-cloud-link">Forensics</a>
     
-    <a href="/tags/Traffic/" style="font-size: 12.51571970740751px;" class="tag-cloud-link">Traffic</a>
+    <a href="/tags/Traffic/" style="font-size: 8.102093954511357px;" class="tag-cloud-link">Traffic</a>
     
-    <a href="/tags/SandBox/" style="font-size: 13.896417531370846px;" class="tag-cloud-link">SandBox</a>
+    <a href="/tags/SandBox/" style="font-size: 9.835480571428759px;" class="tag-cloud-link">SandBox</a>
     
-    <a href="/tags/Blockchain/" style="font-size: 17.55336595132098px;" class="tag-cloud-link">Blockchain</a>
+    <a href="/tags/Blockchain/" style="font-size: 17.49392834052911px;" class="tag-cloud-link">Blockchain</a>
     
-    <a href="/tags/AI/" style="font-size: 8.352767982577358px;" class="tag-cloud-link">AI</a>
+    <a href="/tags/AI/" style="font-size: 14.955758298334281px;" class="tag-cloud-link">AI</a>
     
 </div>
                 
@@ -698,7 +698,7 @@
             <button type="button" id="music-next" title="下一首"><i class="fa fa-forward"></i></button>
             <button type="button" id="music-speed" title="切换倍速">1.0x</button>
         </div>
-        <audio id="music-audio" preload="auto" autoplay muted></audio>
+        <audio id="music-audio" preload="metadata" autoplay muted></audio>
     </div>
 </div>
 
@@ -1048,17 +1048,6 @@
         });
     }
 
-    // 播放时预加载下一首，减少切歌等待
-    var preloadedUrl = '';
-    audio.addEventListener('playing', function () {
-        var nxt = songs[(current + 1) % songs.length].url;
-        if (nxt !== preloadedUrl) {
-            var pre = new Audio();
-            pre.preload = 'auto';
-            pre.src = nxt;
-            preloadedUrl = nxt;
-        }
-    });
 })();
 </script>
 

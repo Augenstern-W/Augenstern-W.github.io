@@ -441,35 +441,35 @@
                 
                 <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
     
-    <a href="/tags/CTF/" style="font-size: 9.539906305779775px;" class="tag-cloud-link">CTF</a>
+    <a href="/tags/CTF/" style="font-size: 11.764168647509809px;" class="tag-cloud-link">CTF</a>
     
-    <a href="/tags/misc/" style="font-size: 9.143686710459123px;" class="tag-cloud-link">misc</a>
+    <a href="/tags/misc/" style="font-size: 12.119448625708468px;" class="tag-cloud-link">misc</a>
     
-    <a href="/tags/%E5%8F%96%E8%AF%81%E4%B8%8E%E5%AE%89%E5%85%A8%E6%9D%82%E9%A1%B9/" style="font-size: 11.281885855291215px;" class="tag-cloud-link">取证与安全杂项</a>
+    <a href="/tags/%E5%8F%96%E8%AF%81%E4%B8%8E%E5%AE%89%E5%85%A8%E6%9D%82%E9%A1%B9/" style="font-size: 19.301512666285774px;" class="tag-cloud-link">取证与安全杂项</a>
     
-    <a href="/tags/Bing/" style="font-size: 12.7477549044768px;" class="tag-cloud-link">Bing</a>
+    <a href="/tags/Bing/" style="font-size: 11.52088488950016px;" class="tag-cloud-link">Bing</a>
     
-    <a href="/tags/Google/" style="font-size: 13.607150551855705px;" class="tag-cloud-link">Google</a>
+    <a href="/tags/Google/" style="font-size: 11.986642265907133px;" class="tag-cloud-link">Google</a>
     
-    <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 12.215696278336727px;" class="tag-cloud-link">虚拟机</a>
+    <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 9.135640178809844px;" class="tag-cloud-link">虚拟机</a>
     
-    <a href="/tags/Linux/" style="font-size: 19.600073119758857px;" class="tag-cloud-link">Linux</a>
+    <a href="/tags/Linux/" style="font-size: 10.292405354713342px;" class="tag-cloud-link">Linux</a>
     
-    <a href="/tags/Recon/" style="font-size: 9.904691015726655px;" class="tag-cloud-link">Recon</a>
+    <a href="/tags/Recon/" style="font-size: 19.895183323607505px;" class="tag-cloud-link">Recon</a>
     
-    <a href="/tags/Encoding/" style="font-size: 10.17243615661443px;" class="tag-cloud-link">Encoding</a>
+    <a href="/tags/Encoding/" style="font-size: 9.0324271049337px;" class="tag-cloud-link">Encoding</a>
     
-    <a href="/tags/Stego/" style="font-size: 12.365626848369615px;" class="tag-cloud-link">Stego</a>
+    <a href="/tags/Stego/" style="font-size: 8.82633778301761px;" class="tag-cloud-link">Stego</a>
     
-    <a href="/tags/Forensics/" style="font-size: 12.002152179035308px;" class="tag-cloud-link">Forensics</a>
+    <a href="/tags/Forensics/" style="font-size: 9.724820811825891px;" class="tag-cloud-link">Forensics</a>
     
-    <a href="/tags/Traffic/" style="font-size: 10.14543268194801px;" class="tag-cloud-link">Traffic</a>
+    <a href="/tags/Traffic/" style="font-size: 16.190076745076755px;" class="tag-cloud-link">Traffic</a>
     
-    <a href="/tags/SandBox/" style="font-size: 12.38262388402456px;" class="tag-cloud-link">SandBox</a>
+    <a href="/tags/SandBox/" style="font-size: 19.49882673793274px;" class="tag-cloud-link">SandBox</a>
     
-    <a href="/tags/Blockchain/" style="font-size: 17.36781699612571px;" class="tag-cloud-link">Blockchain</a>
+    <a href="/tags/Blockchain/" style="font-size: 10.624352582018233px;" class="tag-cloud-link">Blockchain</a>
     
-    <a href="/tags/AI/" style="font-size: 14.033541348210614px;" class="tag-cloud-link">AI</a>
+    <a href="/tags/AI/" style="font-size: 13.188228615247525px;" class="tag-cloud-link">AI</a>
     
 </div>
                 
@@ -555,7 +555,7 @@
             <button type="button" id="music-next" title="下一首"><i class="fa fa-forward"></i></button>
             <button type="button" id="music-speed" title="切换倍速">1.0x</button>
         </div>
-        <audio id="music-audio" preload="auto" autoplay muted></audio>
+        <audio id="music-audio" preload="metadata" autoplay muted></audio>
     </div>
 </div>
 
@@ -905,17 +905,6 @@
         });
     }
 
-    // 播放时预加载下一首，减少切歌等待
-    var preloadedUrl = '';
-    audio.addEventListener('playing', function () {
-        var nxt = songs[(current + 1) % songs.length].url;
-        if (nxt !== preloadedUrl) {
-            var pre = new Audio();
-            pre.preload = 'auto';
-            pre.src = nxt;
-            preloadedUrl = nxt;
-        }
-    });
 })();
 </script>
 
