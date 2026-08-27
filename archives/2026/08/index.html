@@ -39,8 +39,9 @@
         @media (max-width: 768px) {
             body {
                 background-color: #f0f0f0;
-                background: url('/imgs/xsbg.gif');
-                background-attachment: fixed;
+                /* 手机浏览器(尤其iOS/微信)对 fixed 背景不渲染导致背景图消失，改用 scroll */
+                background-image: url('/imgs/xsbg.gif');
+                background-attachment: scroll;
             }
         }
     </style>
