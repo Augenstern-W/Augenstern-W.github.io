@@ -483,35 +483,35 @@
                 
                 <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
     
-    <a href="/tags/CTF/" style="font-size: 11.777066528526202px;" class="tag-cloud-link">CTF</a>
+    <a href="/tags/CTF/" style="font-size: 10.748968808725389px;" class="tag-cloud-link">CTF</a>
     
-    <a href="/tags/misc/" style="font-size: 8.657120803110699px;" class="tag-cloud-link">misc</a>
+    <a href="/tags/misc/" style="font-size: 10.328471483073972px;" class="tag-cloud-link">misc</a>
     
-    <a href="/tags/%E5%8F%96%E8%AF%81%E4%B8%8E%E5%AE%89%E5%85%A8%E6%9D%82%E9%A1%B9/" style="font-size: 15.085624868511283px;" class="tag-cloud-link">取证与安全杂项</a>
+    <a href="/tags/%E5%8F%96%E8%AF%81%E4%B8%8E%E5%AE%89%E5%85%A8%E6%9D%82%E9%A1%B9/" style="font-size: 11.041788525480596px;" class="tag-cloud-link">取证与安全杂项</a>
     
-    <a href="/tags/Bing/" style="font-size: 10.353521349457399px;" class="tag-cloud-link">Bing</a>
+    <a href="/tags/Bing/" style="font-size: 12.06278441786817px;" class="tag-cloud-link">Bing</a>
     
-    <a href="/tags/Google/" style="font-size: 10.873233215905213px;" class="tag-cloud-link">Google</a>
+    <a href="/tags/Google/" style="font-size: 14.846584582398084px;" class="tag-cloud-link">Google</a>
     
-    <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 19.868030948484844px;" class="tag-cloud-link">虚拟机</a>
+    <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 13.05421831893674px;" class="tag-cloud-link">虚拟机</a>
     
-    <a href="/tags/Linux/" style="font-size: 13.262211830258455px;" class="tag-cloud-link">Linux</a>
+    <a href="/tags/Linux/" style="font-size: 19.47634561195213px;" class="tag-cloud-link">Linux</a>
     
-    <a href="/tags/Recon/" style="font-size: 14.610087397122768px;" class="tag-cloud-link">Recon</a>
+    <a href="/tags/Recon/" style="font-size: 16.80931159615784px;" class="tag-cloud-link">Recon</a>
     
-    <a href="/tags/Encoding/" style="font-size: 19.229447946743598px;" class="tag-cloud-link">Encoding</a>
+    <a href="/tags/Encoding/" style="font-size: 9.559747467547208px;" class="tag-cloud-link">Encoding</a>
     
-    <a href="/tags/Stego/" style="font-size: 8.642338897394113px;" class="tag-cloud-link">Stego</a>
+    <a href="/tags/Stego/" style="font-size: 10.613440724476904px;" class="tag-cloud-link">Stego</a>
     
-    <a href="/tags/Forensics/" style="font-size: 19.54030524962779px;" class="tag-cloud-link">Forensics</a>
+    <a href="/tags/Forensics/" style="font-size: 19.75771273107205px;" class="tag-cloud-link">Forensics</a>
     
-    <a href="/tags/Traffic/" style="font-size: 10.517920215779377px;" class="tag-cloud-link">Traffic</a>
+    <a href="/tags/Traffic/" style="font-size: 10.476298297455038px;" class="tag-cloud-link">Traffic</a>
     
-    <a href="/tags/SandBox/" style="font-size: 9.992991318975811px;" class="tag-cloud-link">SandBox</a>
+    <a href="/tags/SandBox/" style="font-size: 11.834545551572837px;" class="tag-cloud-link">SandBox</a>
     
-    <a href="/tags/Blockchain/" style="font-size: 19.994940106793543px;" class="tag-cloud-link">Blockchain</a>
+    <a href="/tags/Blockchain/" style="font-size: 10.20539992714533px;" class="tag-cloud-link">Blockchain</a>
     
-    <a href="/tags/AI/" style="font-size: 8.848418873585649px;" class="tag-cloud-link">AI</a>
+    <a href="/tags/AI/" style="font-size: 16.049663782877595px;" class="tag-cloud-link">AI</a>
     
 </div>
                 
@@ -692,25 +692,30 @@
     transform: translateX(-50%);
     bottom: 100%;
     width: 36px;
-    padding: 8px 0 6px;
+    height: 106px;
     border-top: 12px solid transparent;
     background: rgba(20, 20, 20, 0.95) padding-box;
     border-radius: 8px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
 }
 #gal-music .music-vol-wrap:hover .music-vol-pop {
-    display: flex;
+    display: block;
 }
 #gal-music .music-vol-pop #music-vol {
+    position: absolute;
     width: 88px;
+    left: 50%;
+    top: 44px;
+    transform: translate(-50%, -50%) rotate(-90deg);
     margin: 0;
-    transform: rotate(-90deg);
     cursor: pointer;
 }
 #gal-music .music-vol-pop #music-val {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 6px;
+    text-align: center;
     font-size: 10px;
     color: #bbb;
     line-height: 1;
