@@ -7,7 +7,13 @@
         <div class="music-head">
             <span id="music-title">♫ 未播放</span>
             <div class="music-head-btns">
-                <button type="button" id="music-volume" class="music-close" title="静音 / 取消静音"><i class="fa fa-volume-up"></i></button>
+                <div class="music-vol-wrap">
+                    <button type="button" id="music-volume" class="music-close" title="静音 / 取消静音（悬停调音量）"><i class="fa fa-volume-up"></i></button>
+                    <div class="music-vol-pop">
+                        <input type="range" id="music-vol" min="0" max="100" step="1" value="70">
+                        <span id="music-val">70%</span>
+                    </div>
+                </div>
                 <button type="button" id="music-close" class="music-close" title="收起"><i class="fa fa-chevron-down"></i></button>
             </div>
         </div>
@@ -105,23 +111,40 @@
     margin: 0;
     cursor: pointer;
 }
-#gal-music .music-volume {
+#gal-music .music-vol-wrap {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 6px;
-    margin-bottom: 10px;
-    font-size: 11px;
-    color: #bbb;
 }
-#gal-music .music-volume input[type="range"] {
-    flex: 1;
+#gal-music .music-vol-pop {
+    display: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 100%;
+    width: 36px;
+    padding: 8px 0 6px;
+    border-top: 12px solid transparent;
+    background: rgba(20, 20, 20, 0.95) padding-box;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+#gal-music .music-vol-wrap:hover .music-vol-pop {
+    display: flex;
+}
+#gal-music .music-vol-pop #music-vol {
+    width: 88px;
     margin: 0;
-    height: auto;
+    transform: rotate(-90deg);
     cursor: pointer;
 }
-#gal-music .music-volume #music-val {
-    min-width: 30px;
-    text-align: right;
+#gal-music .music-vol-pop #music-val {
+    font-size: 10px;
+    color: #bbb;
+    line-height: 1;
 }
 #gal-music input[type="range"] {
     accent-color: #6cf;
