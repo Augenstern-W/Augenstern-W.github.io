@@ -162,3 +162,23 @@ node_sass:
   outputStyle: compressed
   precision: 5
   sourceComments: false
+
+# 左下角音乐播放器
+music_player:
+  enable: true
+  # 歌曲列表, 文件放在 source/music/ 目录下, file 只填文件名
+  songs:
+    - name: 兰亭序
+      file: 兰亭序.mp3
+    - name: 发如雪
+      file: 发如雪.mp3
+    - name: 天涯过客
+      file: 天涯过客.mp3
+    - name: 烟花易冷
+      file: 烟花易冷.mp3
+    - name: 红尘客栈
+      file: 红尘客栈.mp3
+    - name: 红颜如霜
+      file: 红颜如霜.mp3
+    - name: 青花瓷
+      file: 青花瓷.mp3
