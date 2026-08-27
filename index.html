@@ -434,6 +434,180 @@
 <div id="gal-gotop">
     <i class="fa fa-angle-up"></i>
 </div>
+    
+<div id="gal-music">
+    <button type="button" id="music-fab" class="music-fab" title="音乐">
+        <i class="fa fa-music"></i>
+    </button>
+    <div id="music-panel" class="music-panel">
+        <div class="music-head">
+            <span id="music-title">♫ 未播放</span>
+            <button type="button" id="music-close" class="music-close" title="收起">
+                <i class="fa fa-chevron-down"></i>
+            </button>
+        </div>
+        <div class="music-bar">
+            <button type="button" id="music-prev" title="上一首"><i class="fa fa-backward"></i></button>
+            <button type="button" id="music-play" title="播放 / 暂停"><i class="fa fa-play"></i></button>
+            <button type="button" id="music-next" title="下一首"><i class="fa fa-forward"></i></button>
+            <button type="button" id="music-speed" title="切换倍速">1.0x</button>
+        </div>
+        <audio id="music-audio" preload="none"></audio>
+    </div>
+</div>
+
+<style>
+#gal-music {
+    position: fixed;
+    left: 16px;
+    bottom: 16px;
+    z-index: 9999;
+}
+#gal-music .music-fab {
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(30, 30, 30, 0.65);
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+    transition: background 0.2s, transform 0.2s;
+}
+#gal-music .music-fab:hover {
+    background: rgba(30, 30, 30, 0.9);
+    transform: scale(1.08);
+}
+#gal-music .music-panel {
+    display: none;
+    position: absolute;
+    left: 0;
+    bottom: 58px;
+    width: 230px;
+    background: rgba(20, 20, 20, 0.82);
+    color: #eee;
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+#gal-music .music-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+#gal-music .music-head #music-title {
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+}
+#gal-music .music-close {
+    border: none;
+    background: transparent;
+    color: #ccc;
+    cursor: pointer;
+    font-size: 14px;
+}
+#gal-music .music-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+#gal-music .music-bar button {
+    flex: 1;
+    border: none;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    border-radius: 6px;
+    padding: 8px 0;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+#gal-music .music-bar button:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+#gal-music .music-bar #music-speed {
+    flex: 0 0 52px;
+    font-size: 12px;
+}
+</style>
+
+<script>
+(function () {
+    var songs = [{"name":"兰亭序","url":"/music/%E5%85%B0%E4%BA%AD%E5%BA%8F.mp3"},{"name":"发如雪","url":"/music/%E5%8F%91%E5%A6%82%E9%9B%AA.mp3"},{"name":"天涯过客","url":"/music/%E5%A4%A9%E6%B6%AF%E8%BF%87%E5%AE%A2.mp3"},{"name":"烟花易冷","url":"/music/%E7%83%9F%E8%8A%B1%E6%98%93%E5%86%B7.mp3"},{"name":"红尘客栈","url":"/music/%E7%BA%A2%E5%B0%98%E5%AE%A2%E6%A0%88.mp3"},{"name":"红颜如霜","url":"/music/%E7%BA%A2%E9%A2%9C%E5%A6%82%E9%9C%9C.mp3"},{"name":"青花瓷","url":"/music/%E9%9D%92%E8%8A%B1%E7%93%B7.mp3"}];
+    if (!songs.length) return;
+
+    var audio = document.getElementById('music-audio');
+    var fab = document.getElementById('music-fab');
+    var panel = document.getElementById('music-panel');
+    var closeBtn = document.getElementById('music-close');
+    var titleEl = document.getElementById('music-title');
+    var playBtn = document.getElementById('music-play');
+    var prevBtn = document.getElementById('music-prev');
+    var nextBtn = document.getElementById('music-next');
+    var speedBtn = document.getElementById('music-speed');
+
+    var speeds = [0.75, 1, 1.25, 1.5, 2];
+    var current = 0;
+    var speedIndex = 1;
+    var playing = false;
+
+    function load(index) {
+        current = (index + songs.length) % songs.length;
+        audio.src = encodeURI(songs[current].url);
+        titleEl.textContent = '♫ ' + songs[current].name;
+    }
+
+    function togglePlay() {
+        if (playing) {
+            audio.pause();
+        } else {
+            if (!audio.src) load(current);
+            audio.play();
+        }
+    }
+
+    function next() { load(current + 1); if (playing) audio.play(); }
+    function prev() { load(current - 1); if (playing) audio.play(); }
+
+    audio.addEventListener('play', function () {
+        playing = true;
+        playBtn.innerHTML = '<i class="fa fa-pause"></i>';
+    });
+    audio.addEventListener('pause', function () {
+        playing = false;
+        playBtn.innerHTML = '<i class="fa fa-play"></i>';
+    });
+    audio.addEventListener('ended', function () {
+        // 列表循环，播放完自动切下一首
+        load(current + 1);
+        audio.play();
+    });
+
+    fab.addEventListener('click', function () {
+        panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+    });
+    closeBtn.addEventListener('click', function () {
+        panel.style.display = 'none';
+    });
+    playBtn.addEventListener('click', togglePlay);
+    nextBtn.addEventListener('click', next);
+    prevBtn.addEventListener('click', prev);
+    speedBtn.addEventListener('click', function () {
+        speedIndex = (speedIndex + 1) % speeds.length;
+        audio.playbackRate = speeds[speedIndex];
+        speedBtn.textContent = speeds[speedIndex] + 'x';
+    });
+
+    load(0);
+})();
+</script>
+
+
 </body>
 
 <script src="/js/activate-power-mode.js"></script>
