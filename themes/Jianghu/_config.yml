@@ -75,7 +75,7 @@ friend_links:
 # 个人链接配置, 要先开启上面的links
 links:
   - name: Github
-    link: https://github.com/ZEROKISEKI/
+    link: https://github.com/Augenstern-W/
   - name: Coding
     link: https://coding.net/u/SORA1
   - name: 知乎
