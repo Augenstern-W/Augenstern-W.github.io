@@ -64,20 +64,90 @@ sidebar:
   links: true             # 个人链接, 默认开启
 
 # 友情链接配置, 要先开启上面的friend_links
+# 支持两种格式:
+#   分类格式: - category: 分类名 / items: 下属链接列表(name + link)
+#   扁平格式: - name: xxx / link: xxx (不分组的直接写法)
 friend_links:
-  - name: OI Wiki
-    link: https://oi-wiki.org/
-  - name: CTF WikiWiki
-    link: https://ctf-wiki.org/
-  - name: Yanyan's wiki
-    link: https://jyywiki.cn/
-
+  - category: 综合学习
+    items:
+      - name: 《马克思主义大辞典》
+        link: https://mkszydcd.netlify.app/
+      - name: 菜鸟教程
+        link: https://www.runoob.com/
+      - name: 浙江大学课程攻略共享计划
+        link: https://qsctech.github.io/zju-icicles/
+      - name: Developer Roadmap
+        link: https://roadmap.sh/
+      - name: CS自学指南
+        link: https://csdiy.wiki/
+      - name: Mozilla Developer Network (MDN)——查HTML和Javascript和HTTP和浏览器行为
+        link: https://developer.mozilla.org/zh-CN/
+      - name: 博客园
+        link: https://www.cnblogs.com/
+  - category: 算法刷题
+    items:
+      - name: 力扣(Leetcode)
+        link: https://leetcode.cn/
+      - name: 洛谷(luogu)
+        link: https://www.luogu.com.cn/
+      - name: PTA
+        link: https://pintia.cn/home
+      - name: 蓝桥云课
+        link: https://www.lanqiao.cn/
+      - name: 码蹄集
+        link: https://www.matiji.net/exam/
+  - category: CTF平台
+    items:
+      - name: CTFHub
+        link: https://www.ctfhub.com/#/index
+      - name: CTF²
+        link: https://ctf2.dasctf.com/explorer
+      - name: 功防世界
+        link: https://adworld.xctf.org.cn/home
+      - name: NSSCTF
+        link: https://www.nssctf.cn/problem
+      - name: CTF秀
+        link: https://ctf.show/challenges
+      - name: PolarD&N
+        link: https://www.polarctf.com/#/page/challenges
+      - name: XSS Platform
+        link: https://xss.pt/
+      - name: CyLab Security Academy——面向新手的综合练习入口
+        link: https://cylabacademy.org/
+  - category: 安全学习
+    items:
+      - name: 看雪学苑——专业信息安全学习平台
+        link: https://www.kanxue.com/
+      - name: i春秋
+        link: https://www.ichunqiu.com/
+      - name: OI Wiki
+        link: https://oi-wiki.org/
+      - name: CTF Wiki
+        link: https://ctf-wiki.org/
+      - name: Yanyan's wiki——操作系统、生成式软件工程
+        link: https://jyywiki.cn/
+      - name: PortSwigger Web Security Academy——免费Web安全课和交互式实验
+        link: https://portswigger.net/
+      - name: OverTheWire——Linux、命令行和安全基础入门
+        link: https://overthewire.org/wargames/
+      - name: CryptoHack——现代密码学交互练习
+        link: https://cryptohack.org/
+      - name: CTF All In One
+        link: https://firmianay.gitbooks.io/ctf-all-in-one/content/
+  - category: 实用工具
+    items:
+      - name: md5在线解密破解
+        link: https://cmd5.com/
+      - name: CTF在线工具
+        link: http://www.hiencode.com/
+      - name: Sage Cell Server
+        link: https://sagecell.sagemath.org/
 # 个人链接配置, 要先开启上面的links
 links:
   - name: Github
     link: https://github.com/Augenstern-W/
   - name: Gitee
-    link: https://gitee.com/wangjjjjjhhhh
+    link: https://gitee.com/wangjjjjjhhhh/
   - name: 知乎
     link: https://www.zhihu.com/people/13-42-56-81-95
 

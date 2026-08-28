@@ -154,6 +154,25 @@ ul.pills-gal {
   color: #fff;
 }
 
+// 友情链接: 限高可滚动(与顶部下拉菜单同款效果) + 分类标题
+.friend-links {
+  max-height: 45vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+
+  .friend-links-category {
+    margin-top: 6px;
+    padding: 4px 0 2px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #999;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}
+
 .cloud-tags a {
   display: inline-block;
   color: #fff;

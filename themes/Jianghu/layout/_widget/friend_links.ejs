@@ -1,7 +1,31 @@
+<%
+// 兼容两种配置格式:
+//   1. 分类格式: - category: xxx / items: [{name, link}, ...]
+//   2. 扁平格式: - name: xxx / link: xxx (自动归入一个无标题分组)
+var friendGroups = []
+var flatGroup = null
+theme.friend_links.forEach(function (friend) {
+    if (friend.category && friend.items) {
+        friendGroups.push({ category: friend.category, items: friend.items })
+    } else {
+        if (!flatGroup) {
+            flatGroup = { category: '', items: [] }
+            friendGroups.push(flatGroup)
+        }
+        flatGroup.items.push(friend)
+    }
+})
+var friendHasCategory = friendGroups.some(function (g) { return g.category })
+%>
 <div class="friend-links tab-pane nav bs-sidenav fade" id="sidebar-friend-links">
-    <% theme.friend_links.forEach(function (friend) { %>
+    <% friendGroups.forEach(function (group) { %>
+    <% if (friendHasCategory && group.category) { %>
+    <li class="friend-links-category"><%= group.category %></li>
+    <% } %>
+    <% group.items.forEach(function (friend) { %>
     <li>
         <a href="<%= friend.link %>" target="_blank"><%= friend.name %></a>
     </li>
+    <% }) %>
     <% }) %>
 </div>
