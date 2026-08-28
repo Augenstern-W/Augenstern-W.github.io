@@ -79,7 +79,7 @@
 <%- js('js/comment/leancloud.js') %>
 <% } %>
 <% if( theme.use_comment === true && (is_home() || page.comments === true )){ %>
-<script src="https://myau.moe/js/comment/gitment.browser.js"></script>
+<%- js('js/comment/gitment.browser.js') %>
 <script>
     if(window.commentConfig) {
       window.commentConfig.id = '<%= page.date %>'
