@@ -11,14 +11,15 @@
             var topPosts = site.posts.filter(function (post) {
                 return typeof post.top !== 'undefined' && post.top === true
             }).sort('date', -1)
-            topPosts.forEach(function (post) { %>
-            <%- partial('_partial/excerpt', { item: post, top: true }) %>
+            var topCount = topPosts.length
+            topPosts.forEach(function (post, ti) { %>
+            <%- partial('_partial/excerpt', { item: post, top: true, index: ti }) %>
             <% })
         } %>
      <% page.posts.filter(function (post) {
          return typeof post.top === 'undefined' || post.top === false
-     }).forEach(function (post) { %>
-     <%- partial('_partial/excerpt', { item: post }) %>
+     }).forEach(function (post, index) { %>
+     <%- partial('_partial/excerpt', { item: post, index: (page.prev === 0 ? topCount : 0) + index }) %>
      <% }) %>
 </div>
 <%- partial('_partial/pagination', { page: page }) %>

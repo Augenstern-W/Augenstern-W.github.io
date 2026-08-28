@@ -19,9 +19,10 @@
             <% if(item.tags.data.length > 0) { %>
             <span class="label label-gal">
                 <i class="fa fa-tags"></i>
-                <% item.tags.data.forEach(function (tag, index) { %>
-                <a href="<%- url_for(tag.path) %>"><%= tag.name %></a><%= index === item.tags.data.length - 1 ? '' : ', ' %>
-                <% }) %>
+                <% var showTags = item.tags.data.slice(0, 3) %>
+                <% showTags.forEach(function (tag, index) { %>
+                <a href="<%- url_for(tag.path) %>"><%= tag.name %></a><%= index === showTags.length - 1 ? '' : ', ' %>
+                <% }) %><% if(item.tags.data.length > 3) { %>, ...<% } %>
             </span>
             <% } %>
             <% if(theme.leancloud.appid && theme.leancloud.appkey) { %>
@@ -39,7 +40,7 @@
             <div class="item">
                 <a href="<%- url_for(item.path) %>">
                     <div class="img">
-                        <% var num = Math.floor(Math.random() * theme.default_preview.length) %>
+                        <% var num = (typeof index !== 'undefined' && index !== null) ? index % theme.default_preview.length : Math.floor(Math.random() * theme.default_preview.length) %>
                         <img src="<%- item.preview ? item.preview : (/https?:\/\//.test(theme.default_preview[num]) ? theme.default_preview[num] : url_for(`imgs/preview/${theme.default_preview[num]}`)) %>" alt="<%= item.title %>">
                     </div>
                     <div class="info">
@@ -68,9 +69,10 @@
         <center>
             <% if(item.tags.data.length > 0) { %>
             <i class="fa fa-tags"></i>
-            <% item.tags.data.forEach(function (tag, index) { %>
-            <a href="<%- url_for(tag.path) %>"><%= tag.name %></a><%= index === item.tags.data.length - 1 ? '' : ', ' %>
-            <% }) %>
+            <% var showTags = item.tags.data.slice(0, 3) %>
+            <% showTags.forEach(function (tag, index) { %>
+            <a href="<%- url_for(tag.path) %>"><%= tag.name %></a><%= index === showTags.length - 1 ? '' : ', ' %>
+            <% }) %><% if(item.tags.data.length > 3) { %>, ...<% } %>
             <% } %>
             <% if(theme.leancloud.appid && theme.leancloud.appkey) { %>
             <i class="fa fa-eye"></i>
@@ -80,7 +82,7 @@
         <div class="alert alert-gal article-body content-article">
             <p style="text-align: center;">
                 <a href="<%- url_for(item.path) %>">
-                    <% var num = Math.floor(Math.random() * theme.default_preview.length) %>
+                    <% var num = (typeof index !== 'undefined' && index !== null) ? index % theme.default_preview.length : Math.floor(Math.random() * theme.default_preview.length) %>
                     <img src="<%- item.preview ? item.preview : (/https?:\/\//.test(theme.default_preview[num]) ? theme.default_preview[num] : url_for(`imgs/preview/${theme.default_preview[num]}`)) %>" alt="<%= item.title %>">
                 </a>
             </p>
