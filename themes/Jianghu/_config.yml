@@ -148,15 +148,15 @@ leancloud:
 # 如果不用的话要把下面的use_comment设置为false
 comment:
   gitment:
-      owner: # 必填项, 你的GitHub ID
-      repo: # 必填项  你的存储评论的repo
+      owner: Augenstern-W
+      repo: Augenstern-W.github.io
       oauth:
-        client_id:  # 必填项
-        client_secret: # 必填项
-        redirect_uri: # 可以填也可以不填
+        client_id: Ov23liUSEEYfmODNR2ef
+        client_secret: f8168771ed44144cd6dac98791eed9c81fadab7a
+        redirect_uri: # 可以填也可以不填, 留空则登录后回跳当前页
 
 # 是否使用评论系统
-use_comment: false
+use_comment: true
 
 node_sass:
   outputStyle: compressed
