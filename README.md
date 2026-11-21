@@ -4,7 +4,7 @@
 
 基于 **Hexo** + **江湖 主题** 搭建的个人博客，部署在 **GitHub Pages** 上。
 
-🔗 在线访问：[https://Augenstern-W.github.io](https://Augenstern-W.github.io)
+🔗 在线访问：[https://augenstern-w.github.io](https://augenstern-w.github.io)
 
 ---
 
